@@ -3,153 +3,147 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ULTRON ARCADE - Edición Ultra Estable</title>
+    <title>ULTRON 0.3 - Estable</title>
     <style>
         :root { --bg-color: #050508; --card-bg: #0d0f16; --border-color: #16192b; --neon-blue: #00d2ff; --neon-pink: #ff0055; }
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; background-color: var(--bg-color); font-family: 'Segoe UI', sans-serif; color: white; overflow-x: hidden; }
+        
+        /* HEADER ESTILO ORIGINAL */
         header { text-align: center; padding: 30px 20px 10px 20px; }
         h1 { margin: 0; font-size: 2.5rem; font-weight: 900; letter-spacing: 3px; color: var(--neon-blue); text-shadow: 0 0 20px rgba(0, 210, 255, 0.4); text-transform: uppercase; }
         .subtitle { color: #4b5275; font-size: 0.9rem; margin-top: 4px; letter-spacing: 2px; text-transform: uppercase; }
+
+        /* CONTENEDORES */
         .main-container { max-width: 1400px; margin: 0 auto; padding: 20px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 20px; margin-bottom: 40px; }
         .section-title { font-size: 1.3rem; color: #fff; border-left: 4px solid var(--neon-pink); padding-left: 10px; margin: 30px 0 20px 0; text-transform: uppercase; letter-spacing: 1px; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 20px; }
-        .card { background: var(--card-bg); border-radius: 8px; overflow: hidden; border: 2px solid var(--border-color); display: flex; flex-direction: column; cursor: pointer; transition: transform 0.2s, border-color 0.2s; position: relative; aspect-ratio: 2/3; }
-        .card:hover { transform: scale(1.04); border-color: var(--neon-blue); }
-        .card-thumb { width: 100%; flex-grow: 1; background-size: cover; background-position: center; background-color: #11131c; display: flex; align-items: center; justify-content: center; }
-        .empty-thumb { font-size: 3.5rem; font-weight: 900; color: #1f243a; user-select: none; }
-        .card-footer { padding: 10px; background: rgba(5, 5, 8, 0.8); text-align: center; }
-        .card-title { font-size: 0.85rem; font-weight: bold; margin: 0; color: #e1e4ed; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .card-status { font-size: 0.75rem; color: #525a82; margin-top: 2px; }
-        #loading-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #050508; z-index: 100; display: flex; flex-direction: column; align-items: center; justify-content: center; display: none; }
-        .spinner { width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(90deg, #ff0055, #ffcc00, #00ff66, #00d2ff); animation: spin 1s linear infinite; position: relative; display: flex; align-items: center; justify-content: center; }
-        .spinner::before { content: ''; width: 48px; height: 48px; background: #050508; border-radius: 50%; position: absolute; }
-        .loading-text { margin-top: 20px; font-size: 1.1rem; letter-spacing: 3px; font-weight: bold; text-transform: uppercase; color: #fff; }
-        #game-runtime { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 90; display: none; }
-        #game-frame { width: 100%; height: 100%; border: none; }
-        #back-menu-btn { position: fixed; bottom: 20px; right: 20px; z-index: 99; padding: 10px 20px; background: #111; color: white; border: 2px solid #333; border-radius: 30px; cursor: pointer; font-size: 12px; font-weight: bold; text-transform: uppercase; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* TARJETAS ESTILO ORIGINAL */
+        .card { background: var(--card-bg); border-radius: 8px; overflow: hidden; border: 2px solid var(--border-color); display: flex; flex-direction: column; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); aspect-ratio: 2/3; position: relative; }
+        .card:hover { transform: translateY(-5px); border-color: var(--neon-blue); box-shadow: 0 10px 30px rgba(0, 210, 255, 0.2); }
+        .card-thumb { width: 100%; flex-grow: 1; background: linear-gradient(45deg, #0d0f16, #16192b); display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .card-thumb span { font-size: 3rem; color: #1f243a; font-weight: bold; }
+        .card-footer { padding: 12px; background: rgba(5, 5, 8, 0.9); border-top: 1px solid var(--border-color); text-align: center; }
+        .card-title { font-weight: bold; font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .card-status { font-size: 0.7rem; color: var(--neon-blue); margin-top: 4px; text-transform: uppercase; opacity: 0.7; }
+
+        /* PANTALLAS DE JUEGO Y CARGA */
+        #menu-view { display: block; }
+        #loading-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #050508; z-index: 9999; display: none; flex-direction: column; align-items: center; justify-content: center; }
+        #game-runtime { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 10000; display: none; }
+        #game-frame { width: 100%; height: 100%; border: none; background: #000; }
+        
+        /* BOTÓN VOLVER REFORZADO */
+        #back-btn { position: absolute; top: 20px; right: 20px; padding: 12px 24px; background: var(--neon-pink); color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; z-index: 10001; text-transform: uppercase; box-shadow: 0 0 20px rgba(255, 0, 85, 0.4); }
+
+        .spinner { width: 40px; height: 40px; border: 4px solid #111; border-top-color: var(--neon-blue); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 15px; }
+        @keyframes spin { to { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
 
     <div id="menu-view">
-        <header><h1>Ultron</h1><div class="subtitle">Catálogo de Ejecución Optimizada</div></header>
+        <header>
+            <h1>Ultron</h1>
+            <div class="subtitle">System Architecture 0.3</div>
+        </header>
         <div class="main-container">
-            <div class="section-title">Biblioteca Estándar</div>
+            <div class="section-title">Biblioteca Principal</div>
             <div class="grid" id="grid-estandar"></div>
-            <div class="section-title">Biblioteca Personalizable</div>
+            <div class="section-title">Slots de Expansión</div>
             <div class="grid" id="grid-personalizable"></div>
         </div>
     </div>
 
-    <div id="loading-screen"><div class="spinner"></div><div class="loading-text" id="loader-msg">Iniciando entorno...</div></div>
-    <div id="game-runtime"><button id="back-menu-btn" onclick="cerrarJuego()">Volver al menú</button><iframe id="game-frame"></iframe></div>
+    <div id="loading-screen">
+        <div class="spinner"></div>
+        <div id="loader-msg">ESTABLECIENDO CONEXIÓN...</div>
+    </div>
+
+    <div id="game-runtime">
+        <button id="back-btn" onclick="cerrarJuego()">Volver al Menú</button>
+        <iframe id="game-frame"></iframe>
+    </div>
 
     <script>
-        /***********************************************************
-         *  ZONA DE CONFIGURACIÓN FÁCIL Y LIMPIA (No se rompe)
-         ***********************************************************/
-        const CONFIGURACION_INTERNA = {
-            // RANURA 1 (Ejemplo usando un juego limpio desde un servidor en la nube)
-            1: { 
-                titulo: "Jelly Run", 
-                imagen: "", 
-                urlJuego: "https://play.famobi.com/jelly-run-2048/A1000-10A" // Un enlace directo al código puro (RAW)
-            },
-            
-            // RANURA 2 (Configura aquí tu juego de Itch o GitHub)
-            2: { 
-                titulo: "Ball Survivor", 
-                imagen: "Pon la URL de la foto de portada aquí", 
-                urlJuego: "https://gist.githubusercontent.com/derekonsio1023-gif/a31ac8dd3df1bdd1a7fb41d8560180a5/raw/f1988c35e2685d4b7b89f0158a602ea3bb6af780/gistfile1.txt" 
-            },
-
-            // Añade más números (3, 4... hasta el 24) manteniendo la misma estructura limpia.
+        // CONFIGURACIÓN DE URLS (GitHack para evitar errores)
+        const CONFIG = {
+            1: { titulo: "Backrooms", url: "https://raw.githack.com/derekonsio1023-gif/Fluffy-totus/main/backrooms.html" },
+            2: { titulo: "Ball Survivor", url: "https://raw.githack.com/derekonsio1023-gif/Fluffy-totus/main/Ball_Survivor.html" }
         };
 
-        /***********************************************************
-         *  NÚCLEO DEL SISTEMA ULTRON (Carga inteligente sin fallas)
-         ***********************************************************/
         const TOTAL_SLOTS = 24;
         let biblioteca = [];
 
-        function inicializarBiblioteca() {
+        function inicializar() {
             for (let i = 1; i <= TOTAL_SLOTS; i++) {
-                const config = CONFIGURACION_INTERNA[i] || {};
-                const esActivo = config.titulo && config.urlJuego && config.urlJuego.startsWith("http");
-                
                 biblioteca.push({
-                    id: i - 1,
-                    activo: !!esActivo,
-                    titulo: esActivo ? config.titulo : (i <= 12 ? "Próximamente" : "Personalizable"),
-                    imagen: config.imagen || "",
-                    urlJuego: config.urlJuego || ""
+                    id: i,
+                    titulo: CONFIG[i] ? CONFIG[i].titulo : (i <= 12 ? "Próximamente" : "Disponible"),
+                    url: CONFIG[i] ? CONFIG[i].url : "",
+                    activo: !!CONFIG[i]
                 });
             }
         }
 
-        function dibujarCatalogo() {
+        function renderizar() {
             const ge = document.getElementById('grid-estandar');
             const gp = document.getElementById('grid-personalizable');
             ge.innerHTML = gp.innerHTML = '';
 
-            biblioteca.forEach((slot, index) => {
+            biblioteca.forEach((item, index) => {
                 const card = document.createElement('div');
-                card.className = 'card';
-                if(slot.activo) card.onclick = () => lanzarJuego(index);
+                card.className = `card ${!item.activo ? 'locked' : ''}`;
+                if(item.activo) card.onclick = () => lanzarJuego(item.url);
 
-                let thumb = `<div class="empty-thumb">?</div>`;
-                if(slot.activo && slot.imagen) thumb = `<div class="card-thumb" style="background-image: url('${slot.imagen}')"></div>`;
-                else if(slot.activo) thumb = `<div class="card-thumb" style="background: linear-gradient(45deg, #1a1a2e, #16213e)"></div>`;
-                else thumb = `<div class="card-thumb">${thumb}</div>`;
-
-                card.innerHTML = `${thumb}<div class="card-footer"><div class="card-title">${slot.titulo}</div><div class="card-status">${slot.activo ? 'Jugar' : 'Disponible'}</div></div>`;
+                card.innerHTML = `
+                    <div class="card-thumb">
+                        ${item.activo ? '' : '<span>?</span>'}
+                    </div>
+                    <div class="card-footer">
+                        <div class="card-title">${item.titulo}</div>
+                        <div class="card-status">${item.activo ? 'Online' : 'Offline'}</div>
+                    </div>`;
+                
                 (index < 12 ? ge : gp).appendChild(card);
             });
         }
 
-        async function lanzarJuego(idx) {
-            const j = biblioteca[idx];
-            const msg = document.getElementById('loader-msg');
-            
+        function lanzarJuego(url) {
+            const runtime = document.getElementById('game-runtime');
+            const frame = document.getElementById('game-frame');
+            const loader = document.getElementById('loading-screen');
+
+            // 1. Reset e inicio de carga
+            frame.src = "about:blank";
             document.getElementById('menu-view').style.display = 'none';
-            document.getElementById('loading-screen').style.display = 'flex';
-            msg.innerText = "Descargando juego...";
+            loader.style.display = 'flex';
 
-            try {
-                // Descarga el código del juego en tiempo real de forma segura
-                const respuesta = await fetch(j.urlJuego);
-                if (!respuesta.ok) throw new Error();
-                const codigoHtml = await respuesta.text();
+            // 2. Cargar URL directa
+            frame.src = url;
 
-                msg.innerText = "Inyectando en about:blank...";
-
-                setTimeout(() => {
-                    document.getElementById('loading-screen').style.display = 'none';
-                    document.getElementById('game-runtime').style.display = 'block';
-                    
-                    const blob = new Blob([codigoHtml], { type: 'text/html' });
-                    document.getElementById('game-frame').src = URL.createObjectURL(blob);
-                }, 1000);
-
-            } catch (error) {
-                alert("Error crítico: No se pudo obtener el archivo del juego. Asegúrate de que la URL es pública y directa.");
-                cerrarJuego();
-            }
+            // 3. Mostrar cuando esté listo
+            frame.onload = () => {
+                if(frame.src !== "about:blank") {
+                    loader.style.display = 'none';
+                    runtime.style.display = 'block';
+                }
+            };
         }
 
         function cerrarJuego() {
+            // 1. Limpiar el frame
+            document.getElementById('game-frame').src = "about:blank";
+            // 2. Ocultar capas de juego
             document.getElementById('game-runtime').style.display = 'none';
-            document.getElementById('game-frame').src = '';
+            document.getElementById('loading-screen').style.display = 'none';
+            // 3. Mostrar menú
             document.getElementById('menu-view').style.display = 'block';
+            window.scrollTo(0,0);
         }
 
-        // Limpieza absoluta de memorias previas corruptas
-        localStorage.removeItem('ultron_slots');
-        localStorage.removeItem('ultron_v2_slots');
-
-        inicializarBiblioteca();
-        dibujarCatalogo();
+        inicializar();
+        renderizar();
     </script>
 </body>
 </html>
