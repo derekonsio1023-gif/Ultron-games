@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ULTRON 0.3 - Rainbow Edition</title>
+    <style>
+        :root { 
+            --bg-color: #050508; 
+            --card-bg: #0d0f16; 
+            --border-color: #16192b; 
+            --neon-blue: #00d2ff; 
+            --neon-pink: #ff0055; 
+        }
+
+        body, html { 
+            margin: 0; padding: 0; width: 100%; height: 100%; 
+            background-color: var(--bg-color); 
+            font-family: 'Segoe UI', sans-serif; color: white; 
+            overflow-x: hidden; 
+        }
+        
+        header { text-align: center; padding: 40px 20px; }
+        h1 { 
+            margin: 0; font-size: 3rem; font-weight: 900; letter-spacing: 5px; 
+            color: var(--neon-blue); text-shadow: 0 0 20px rgba(0, 210, 255, 0.5); 
+            text-transform: uppercase; 
+        }
+        
+        .main-container { max-width: 1600px; margin: 0 auto; padding: 20px; }
+        .section-title { 
+            font-size: 1.4rem; color: #fff; border-left: 5px solid var(--neon-pink); 
+            padding-left: 15px; margin: 40px 0 20px 0; text-transform: uppercase; 
+        }
+        
+        .grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); 
+            gap: 25px; 
+        }
+
+        /* DISEÑO DE TARJETA */
+        .card { 
+            background: var(--card-bg); border-radius: 12px; overflow: hidden; 
+            border: 2px solid var(--border-color); display: flex; 
+            flex-direction: column; cursor: pointer; 
+            transition: all 0.3s ease; aspect-ratio: 2/3; 
+        }
+        .card:hover { 
+            transform: translateY(-10px); border-color: var(--neon-blue); 
+            box-shadow: 0 10px 30px rgba(0, 210, 255, 0.3); 
+        }
+        
+        /* PORTADA (ARRIBA) */
+        .card-thumb { 
+            width: 100%; height: 75%; 
+            background-size: cover; background-position: center; 
+            background-color: #0a0c12; display: flex; 
+            align-items: center; justify-content: center; 
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .empty-icon { 
+            font-size: 5rem; font-weight: 900; color: #1f243a; 
+            user-select: none; 
+        }
+
+        /* TÍTULO (ABAJO) */
+        .card-footer { 
+            height: 25%; display: flex; flex-direction: column; 
+            justify-content: center; align-items: center; padding: 5px 10px;
+            background: linear-gradient(to bottom, #0d0f16, #050508);
+        }
+        .card-title { 
+            font-size: 0.9rem; font-weight: 800; text-align: center; 
+            text-transform: uppercase; color: #fff; width: 100%; 
+            overflow: hidden; text-overflow: ellipsis; white-space: nowrap; 
+        }
+        .card-status { font-size: 0.65rem; color: var(--neon-blue); margin-top: 4px; font-weight: bold; }
+
+        /* PANTALLA DE CARGA MEJORADA */
+        #loading-screen { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: #000; z-index: 10000; display: none; 
+            flex-direction: column; align-items: center; justify-content: center; 
+        }
+
+        .progress-container {
+            width: 80%; max-width: 400px; height: 12px;
+            background: #11131c; border-radius: 20px;
+            margin-top: 30px; border: 1px solid #16192b;
+            overflow: hidden;
+        }
+
+        #progress-bar {
+            width: 0%; height: 100%;
+            background: linear-gradient(90deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8b00ff);
+            background-size: 200% 100%;
+            animation: rainbow-scroll 2s linear infinite;
+            transition: width 0.3s ease;
+        }
+
+        .loading-info {
+            margin-top: 15px; font-family: monospace; 
+            color: var(--neon-blue); font-size: 0.8rem;
+            letter-spacing: 2px;
+        }
+
+        @keyframes rainbow-scroll {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 200% 50%; }
+        }
+
+        /* RUNTIME JUEGO */
+        #game-runtime { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 9998; display: none; }
+        #game-frame { width: 100%; height: 100%; border: none; }
+        #back-btn { 
+            position: fixed; bottom: 25px; right: 25px; z-index: 9999; 
+            padding: 12px 25px; background: var(--neon-pink); color: white; 
+            border: none; border-radius: 5px; cursor: pointer; font-weight: bold; 
+            text-transform: uppercase; box-shadow: 0 0 15px var(--neon-pink); 
+        }
+
+        .spinner { 
+            width: 50px; height: 50px; border: 5px solid #111; 
+            border-top-color: var(--neon-blue); border-radius: 50%; 
+            animation: spin 1s linear infinite; 
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+    <div id="menu-view">
+        <header><h1>Ultron</h1></header>
+        <div class="main-container">
+            <div class="section-title">Nodos de Red (1-100)</div>
+            <div id="main-grid" class="grid"></div>
+        </div>
+    </div>
+
+    <div id="loading-screen">
+        <div class="spinner"></div>
+        <div class="progress-container">
+            <div id="progress-bar"></div>
+        </div>
+        <div class="loading-info" id="loading-stats">SINCRONIZANDO: 0%</div>
+    </div>
+
+    <div id="game-runtime">
+        <button id="back-btn" onclick="cerrarJuego()">Desconectar</button>
+        <iframe id="game-frame"></iframe>
+    </div>
+
+    <script>
+        const CONFIG = {
+            1: { titulo: "Backrooms", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSKKh1u918ZKxGm7x_Zul7wNIYK2soB4y2EFQ&s", url: "https://raw.githack.com/derekonsio1023-gif/Fluffy-totus/main/backrooms.html" },
+            2: { titulo: "Ball Survivor", img: "", url: "https://raw.githack.com/derekonsio1023-gif/Fluffy-totus/main/Ball_Survivor.html" },
+            // A PARTIR DE AQUÍ USA Ultron-games
+            3: { titulo: "Baldis Basics", img: "https://static.wikia.nocookie.net/baldis-basics-in-education-and-learning/images/2/2f/ClassicRender.png/revision/latest?cb=20231020225027", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/main/baldisbasics.html" },
+            4: { titulo: "Among Us", img: "https://upload.wikimedia.org/wikipedia/en/9/9a/Among_Us_cover_art.jpg", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/main/amongus.html" },
+            5: { titulo: "Pou", img: "https://static.wikia.nocookie.net/pou/images/8/8d/Pou.png/revision/latest/thumbnail/width/360/height/360?cb=20220622133315", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/main/pou.html" },
+            6: { titulo: "Plantas contra Zombies", img: "https://media.contentapi.ea.com/content/dam/gin/images/2025/07/pvzr-key-art.png.adapt.crop1x1.767p.png", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/main/plantsvszombies.html" }
+        };
+
+        const TOTAL_SLOTS = 100;
+
+        function generarMenu() {
+            const grid = document.getElementById('main-grid');
+            for (let i = 1; i <= TOTAL_SLOTS; i++) {
+                const j = CONFIG[i];
+                const card = document.createElement('div');
+                card.className = 'card';
+                
+                const tieneImagen = j && j.img && j.img !== "";
+                const bgStyle = tieneImagen ? `background-image: url('${j.img}')` : "";
+                const titulo = j ? j.titulo : "Próximamente";
+
+                card.innerHTML = `
+                    <div class="card-thumb" style="${bgStyle}">
+                        ${tieneImagen ? '' : '<span class="empty-icon">?</span>'}
+                    </div>
+                    <div class="card-footer">
+                        <div class="card-title">${titulo}</div>
+                        <div class="card-status">${j ? 'ONLINE' : 'OFFLINE'}</div>
+                    </div>
+                `;
+
+                if (j && j.url) {
+                    card.onclick = () => lanzarJuego(j.url);
+                }
+                grid.appendChild(card);
+            }
+        }
+
+        function lanzarJuego(url) {
+            const menu = document.getElementById('menu-view');
+            const loader = document.getElementById('loading-screen');
+            const runtime = document.getElementById('game-runtime');
+            const frame = document.getElementById('game-frame');
+            const progressBar = document.getElementById('progress-bar');
+            const loadingStats = document.getElementById('loading-stats');
+
+            menu.style.display = 'none';
+            loader.style.display = 'flex';
+            
+            // Reset de barra
+            let progreso = 0;
+            progressBar.style.width = '0%';
+            frame.src = "about:blank";
+
+            // Simulación de carga (ideal para archivos de 47MB)
+            const intervalo = setInterval(() => {
+                if (progreso < 92) {
+                    progreso += Math.random() * 2;
+                    if (progreso > 92) progreso = 92;
+                    progressBar.style.width = progreso + '%';
+                    loadingStats.innerText = `DESCOMPRIMIENDO: ${Math.round(progreso)}%`;
+                }
+            }, 350);
+
+            frame.src = url;
+
+            frame.onload = () => {
+                if(frame.src !== "about:blank") {
+                    clearInterval(intervalo);
+                    progressBar.style.width = '100%';
+                    loadingStats.innerText = "¡SISTEMA LISTO!";
+                    
+                    setTimeout(() => {
+                        loader.style.display = 'none';
+                        runtime.style.display = 'block';
+                    }, 1000);
+                }
+            };
+        }
+
+        function cerrarJuego() {
+            document.getElementById('game-runtime').style.display = 'none';
+            document.getElementById('game-frame').src = "about:blank";
+            document.getElementById('menu-view').style.display = 'block';
+            window.scrollTo(0,0);
+        }
+
+        window.onload = generarMenu;
+    </script>
+</body>
+</html>
