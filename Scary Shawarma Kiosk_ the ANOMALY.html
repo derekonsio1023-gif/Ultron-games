@@ -169,16 +169,21 @@ console.log("Yandex SDK disabled");
 })();
 </script>
   <script>
-setInterval(() => {
-  document.querySelectorAll("*").forEach(el => {
+const observer = new MutationObserver(() => {
+  document.querySelectorAll("div, span").forEach(el => {
     if (
-      el.innerText &&
-      el.innerText.includes("реклама")
+      el.textContent &&
+      el.textContent.includes("реклама через")
     ) {
-      el.style.display = "none";
+      el.remove();
     }
   });
-}, 100);
+});
+
+observer.observe(document.body, {
+  childList: true,
+  subtree: true
+});
 </script>
 </body>
 </html>
