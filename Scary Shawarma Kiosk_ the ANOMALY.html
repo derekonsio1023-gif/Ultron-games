@@ -135,14 +135,9 @@ function loadScript(url) {
 
 (async () => {
   try {
-    await loadScript(base + "sdk.js");
-    try {
-      const sdkPromise = YaGames.init();
-      const timeout = new Promise((_, r) => setTimeout(() => r("timeout"), 3500));
-      ysdk = await Promise.race([sdkPromise, timeout]);
-      if(ysdk !== "timeout") { await RequestingEnvironmentData(); await InitPlayer(); await LoadCloud(); }
-    } catch (e) { console.log("SDK Bypass"); }
-
+    //await loadScript(base + "sdk.js");
+    ysdk = null;
+console.log("Yandex SDK disabled");
     await loadScript(base + "Build/Builds.loader.js");
 
     const [dataUrl, wasmUrl, frameworkUrl] = await Promise.all([
@@ -162,7 +157,7 @@ function loadScript(url) {
     }).then(i => {
       ygGameInstance = i;
       loadingText.remove();
-      YG2Instance('InitSDKComplete');
+      //YG2Instance('InitSDKComplete');
     }).catch(e => {
       loadingText.textContent = "Unity Load Error: " + e.message;
       console.error(e);
