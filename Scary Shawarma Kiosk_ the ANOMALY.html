@@ -120,8 +120,8 @@ function SaveCloud(j, f) { if(player) player.setData({ saves: [j] }, f); }
 function InitPayments() { YG2Instance('PaymentsEntries', NO_DATA); }
 function ConsumePurchases() { if(ysdk && ysdk.getPayments) { ysdk.getPayments().then(p => p.getPurchases().then(ps => ps.forEach(x => { p.consumePurchase(x.purchaseToken); YG2Instance('OnPurchaseSuccess', x.productID); }))); } }
 function InitLeaderboards() { YG2Instance('LeaderboardEntries', NO_DATA); }
-function InterAdvShow() { if(ysdk) ysdk.adv.showFullscreenAdv({ callbacks: { onOpen:()=>{nowFullAdOpen=true;YG2Instance('OpenInterAdv');}, onClose:(s)=>{nowFullAdOpen=false;YG2Instance('CloseInterAdv',s.toString());window.focus();}, onError:()=> {nowFullAdOpen=false;YG2Instance('ErrorInterAdv');} } }); }
-function RewardedAdvShow(id) { if(ysdk) ysdk.adv.showRewardedVideo({ callbacks: { onOpen:()=>YG2Instance('OpenRewardedAdv'), onClose:()=>{YG2Instance('CloseRewardedAdv');window.focus();}, onRewarded:()=>YG2Instance('RewardAdv', id), onError:()=>YG2Instance('ErrorRewardedAdv') } }); }
+function InterAdvShow() {}
+function RewardedAdvShow(id) {}
 
 function loadScript(url) {
   return new Promise((resolve, reject) => {
