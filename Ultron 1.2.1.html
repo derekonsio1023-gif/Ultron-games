@@ -19,6 +19,37 @@
             font-family: 'Segoe UI', sans-serif; color: white; 
             overflow-x: hidden; 
         }
+
+        /* FONDO DINÁMICO DE ULTRON */
+        #menu-view {
+            position: relative;
+            background-color: var(--bg-color);
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            transition: background-image 0.5s ease, filter 0.5s ease;
+            filter: brightness(1) saturate(1);
+        }
+
+        /* Overlay para efecto de oscurecimiento */
+        #menu-view::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(5, 5, 8, 0.3);
+            pointer-events: none;
+            z-index: 1;
+            transition: background-color 0.5s ease;
+        }
+
+        /* Contenido del menú por encima del overlay */
+        #menu-view > * {
+            position: relative;
+            z-index: 2;
+        }
         
         header { text-align: center; padding: 40px 20px; }
         h1 { 
@@ -34,6 +65,8 @@
             margin: 20px auto;
             max-width: 600px;
             padding: 0 20px;
+            position: relative;
+            z-index: 2;
         }
 
         #search-input {
@@ -62,9 +95,15 @@
             padding: 40px 20px;
             color: #999;
             font-size: 1.2rem;
+            position: relative;
+            z-index: 2;
         }
         
-        .main-container { max-width: 1600px; margin: 0 auto; padding: 20px; }
+        .main-container { 
+            max-width: 1600px; margin: 0 auto; padding: 20px; 
+            position: relative;
+            z-index: 2;
+        }
         .section-title { 
             font-size: 1.4rem; color: #fff; border-left: 5px solid var(--neon-pink); 
             padding-left: 15px; margin: 40px 0 20px 0; text-transform: uppercase; 
@@ -211,6 +250,16 @@
         .hidden {
             display: none !important;
         }
+
+        /* Efecto de iluminación dinámica */
+        @keyframes glow-pulse {
+            0%, 100% { box-shadow: 0 0 20px rgba(0, 210, 255, 0.3); }
+            50% { box-shadow: 0 0 40px rgba(0, 210, 255, 0.6); }
+        }
+
+        .card.bg-active {
+            animation: glow-pulse 2s ease-in-out;
+        }
     </style>
 </head>
 <body>
@@ -244,93 +293,95 @@
 
     <script>
         const CONFIG = {
-            1: { titulo: "Backrooms", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSKKh1u918ZKxGm7x_Zul7wNIYK2soB4y2EFQ&s", bgFondo: "https://img.itch.zone/aW1nLzExNDcyNzQ2LnBuZw==/original/MGStRC.png", url: "https://raw.githack.com/derekonsio1023-gif/Fluffy-totus[...]" },
+            1: { titulo: "Backrooms", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSKKh1u918ZKxGm7x_Zul7wNIYK2soB4y2EFQ&s", bgFondo: "https://img.itch.zone/aW1nLzExNDcyNzQ2LnBuZw==/orig..." },
             2: { titulo: "Ball Survivor", img: "", bgFondo: "", url: "https://raw.githack.com/derekonsio1023-gif/Fluffy-totus/main/Ball_Survivor.html" },
-            3: { titulo: "Trees Hate You", img: "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/cob3ai.jpg", bgFondo: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Tre[...]" },
-            4: { titulo: "Among Us", img: "https://upload.wikimedia.org/wikipedia/en/9/9a/Among_Us_cover_art.jpg", bgFondo: "https://images.unsplash.com/photo-1611339555312-e607c04352fa?w=800", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/main/amongus.html" },
-            5: { titulo: "Pou", img: "https://static.wikia.nocookie.net/pou/images/8/8d/Pou.png/revision/latest/thumbnail/width/360/height/360?cb=20220622133315", bgFondo: "https://images.unsplash.com/photo-1614613535308-eb5fbd8952e7?w=800", url: "https://raw.githack.com/derekon[...]" },
-            6: { titulo: "Plantas contra Zombies", img: "https://media.api.ea.com//dam/gin/images/2025/07/pvzr-key-art.png.adapt.crop1x1.767p.png", bgFondo: "https://images.unsplash.com/photo-1552820728-8ac41f1ce891?w=800", url: "https://raw.githack.com/derekonsio1023-gif/Ult[...]" },
-            7: { titulo: "Super Mario 64", img: "https://m.media-amazon.com/images/M/MV5BY2QzZTVhYjctZWMyNy00MDlhLThhYTktZDg2M2EwNTE3ZDZkXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg", bgFondo: "https://images.unsplash.com/photo-1535016120754-188fbb846c8f?w=800", url: "https://raw.githack.[...]" },
-            8: { titulo: "Super Mario 63", img: "https://static-cdn.jtvnw.net/ttv-boxart/215028170_IGDB-272x380.jpg", bgFondo: "https://images.unsplash.com/photo-1535016120754-188fbb846c8f?w=800", url: "https://raw.githack.com/CoolDude2349/Offline-HTML-Games-Pack/refs/heads/mast[...]" },
-            9: { titulo: "Subway Surfers", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRqaiUofERu5Ih_zo_ya5K44KEzoCKROAylKw&s", bgFondo: "https://images.unsplash.com/photo-1533900298318-6b8da08a523e?w=800", url: "https://raw.githack.com/CoolDude2349/Offline-HTML-[...]" },
-            10: { titulo: "Minecraft(1.12)", img: "https://static.planetminecraft.com/files/image/minecraft/texture-pack/2021/406/14998532-pack_xl.webp", bgFondo: "https://images.unsplash.com/photo-1552820728-8ac41f1ce891?w=800", url: "https://raw.githack.com/derekonsio1023-g[...]" },
-            11: { titulo: "Geometry Dash", img: "https://e.snmc.io/lk/f/x/d2886defe7ca77323a01e50dc0d964e9/11618485", bgFondo: "https://images.unsplash.com/photo-1611339555312-e607c04352fa?w=800", url: "https://raw.githack.com/CoolDude2349/Offline-HTML-Games-Pack/refs/heads/mast[...]" },
-            12: { titulo: "Happy Wheels", img: "https://m.media-amazon.com/images/M/MV5BYTY1YWQxMTAtMjhiNy00NTJhLTg3NTMtM2NlOTA3ZDdlMTYxXkEyXkFqcGc@._V1_.jpg", bgFondo: "https://images.unsplash.com/photo-1550355291-bbee04a92027?w=800", url: "https://raw.githack.com/CoolDude23[...]" },
-            13: { titulo: "Granny", img: "https://duracionde.com/storage/images/5f8c4d8e0c955.jpg", bgFondo: "https://images.unsplash.com/photo-1600298881974-6be191ceeda1?w=800", url: "https://raw.githack.com/CoolDude2349/Offline-HTML-Games-Pack/refs/heads/master/offline/granny.[...]" },
-            14: { titulo: "Granny 2", img: "https://m.media-amazon.com/images/M/MV5BMGI4MDY1ZWItMTgxYi00NTljLWJiMTUtMjg0MmY0YTBhNzRjXkEyXkFqcGc@._V1_.jpg", bgFondo: "https://images.unsplash.com/photo-1600298881974-6be191ceeda1?w=800", url: "https://raw.githack.com/CoolDude2349/O[...]" },
-            15: { titulo: "Level Devil", img: "https://www.clavecd.es/wp-/uploads/buy-level-devil-cd-key-compare-prices.jpeg", bgFondo: "https://images.unsplash.com/photo-1534531173927-c7d7fcb7f6e2?w=800", url: "https://raw.githack.com/CoolDude2349/Offline-HTML-Games-Pack/refs/h[...]" },
-            16: { titulo: "Paper.io 2", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ8RC6pkSzMJY6MlTONoAfJdrgI3T6428ShfA&s", bgFondo: "https://images.unsplash.com/photo-1538481527238-8ba00f1eeae8?w=800", url: "https://raw.githack.com/CoolDude2349/Offline-HTML-Gam[...]" },
-            17: { titulo: "Temple Run 2", img: "https://cdn.kobo.com/book-images/16218f1a-2e1d-4c29-969a-41814a2813d1/1200/1200/False/temple-run-2-tips-cheats-tricks-strategies.jpg", bgFondo: "https://images.unsplash.com/photo-1552820728-8ac41f1ce891?w=800", url: "https://raw[...]" },
-            18: { titulo: "Bad parenting", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSptG75KAc6OGwNzCHoY99bH_XzApsmpkWkUw&s", bgFondo: "", url: "https://raw.githack.com/CoolDude2349/Offline-HTML-[...]" },
-            19: { titulo: "Bad piggies", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSptG75KAc6OGwNzCHoY99bH_XzApsmpkWkUw&s", bgFondo: "https://images.unsplash.com/photo-1514432324607-2e88f1bde566?w=800", url: "https://raw.githack.com/CoolDude2349/Offline-HTML-Ga[...]" },
-            20: { titulo: "Fireboy and Watergirl", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRC6XRG6CVo8mesqiCaYPyh5-4kpu42O2OhVw&s", bgFondo: "https://images.unsplash.com/photo-1530268729831-4ca59a54d993?w=800", url: "https://raw.githack.com/CoolDude2349/Offli[...]" },
-            21: { titulo: "Five Nights at Freddy's", img: "https://store-images.s-microsoft.com/image/apps.14120.13976193533566168.c56d73e5-020f-4be5-860c-ae506c27e2ca.c96def99-b8ab-457a-bcb1-20784fa3[...]", bgFondo: "https://images.unsplash.com/photo-1600298881974-6be191ceeda1?w=800", url: "https://raw.githack.c[...]" },
-            22: { titulo: "Five Nights at Freddy's 2", img: "https://m.media-amazon.com/images/M/MV5BNmM2MjIxYmItMDdhMC00ZjRkLTg0MDYtMzgzZjY5YzlmMTc0XkEyXkFqcGc@._V1_.jpg", bgFondo: "https://images.unsplash.com/photo-1600298881974-6be191ceeda1?w=800", url: "https://raw.githack.c[...]" },
-            23: { titulo: "Five Nights at Freddy's 3", img: "https://m.media-amazon.com/images/M/MV5BZmJhNzVlYTctYmJkYy00YzRlLWE1MjQtYzU4ZDExY2Q3NjBjXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg", bgFondo: "https://images.unsplash.com/photo-1600298881974-6be191ceeda1?w=800", url: "https://[...]" },
-            24: { titulo: "Five Nights at Freddy's 4", img: "https://image.api.playstation.com/vulcan/img/cfn/11307Ro2GhaUYw-fApbXsGYVOkt3XJ5QhUFGGtQL1eyS7P0UKk_QcGWzQkPKjKKyh9_Jqo49ZVfSI3LKN3U1M5gHGU[...]", bgFondo: "https://images.unsplash.com/photo-1600298881974-6be191ceeda1?w=800", url: "https://raw.githack.com/CoolDude2349/O[...]" },
-            25: { titulo: "Chess", img: "https://platoapp.com/images/8c834300-42d3-11ef-bfb7-a598d323cbfc-chess1.webp", bgFondo: "https://images.unsplash.com/photo-1552820728-8ac41f1ce891?w=800", url: "https://raw.githack.com/CoolDude2349/Offline-HTML-Games-Pack/refs/heads/ma[...]" },
-            26: { titulo: "Cookie Clicker", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRwxJjLoTSKx5vjF124-udZ_qMVzoKso-W9rA&s", bgFondo: "https://images.unsplash.com/photo-1585238341710-4b4e6416baeb?w=800", url: "https://raw.githack.com/CoolDude2349/Offline-HTML[...]" },
-            27: { titulo: "Death Chase", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQME5IrWhmeSqw9_fCkiycsUgErnL1tVGLrZQ&s", bgFondo: "https://images.unsplash.com/photo-1533900298318-6b8da08a523e?w=800", url: "https://raw.githack.com/CoolDude2349/Offline-HTML-Ga[...]" },
-            28: { titulo: "Death Run 3D", img: "https://deathrun3d.io/rs/banner-death-run-3d.jpg", bgFondo: "https://images.unsplash.com/photo-1533900298318-6b8da08a523e?w=800", url: "https://raw.githack.com/CoolDude2349/Offline-HTML-Games-Pack/refs/heads/master/offline/deathrun[...]" },
-            29: { titulo: "Papa's Pizzeria", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSa0L7fACN2147vaqTlSal99s8r0W5KR2JmuA&s", bgFondo: "https://images.unsplash.com/photo-1585238341710-4b4e6416baeb?w=800", url: "https://raw.githack.com/CoolDude2349/Offline-HTM[...]" },
-            30: { titulo: "sandgame", img: "https://play-lh.googleusercontent.com/_PYtjNVw6RuhlnI8lUvOLnGHaE-7CNddeqs1xisFyhWbTJaIW2-tEM5E1iAe6tUk8K4", bgFondo: "", url: "https://raw.githack.com/CoolDude2349/Offli[...]" },
-            31: { titulo: "Stick fighter", img: "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=1200,height=1200,fit=cover,f=png/b584ae5c620cdc9761f9dcd28f82dc21/stick-fighter-logo.png", bgFondo: "https://images.unsplash.com/photo-1533900298318-6b8da08a523e?w=800", url: "https://raw.githack.com/CoolDude2349/Offline-HTML-Games-Pack/refs/heads/master/offline/stickfighter[...]" },
-            32: { titulo: "Bendy and the Ink Machine", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRuc2Q0Q4eRpNit9Hd9R4JqBzHtiAxxBeX_3g&s", bgFondo: "https://images.unsplash.com/photo-1600298881974-6be191ceeda1?w=800", url: "https://raw.githack.com/derekonsio1023[...]" },
-            33: { titulo: "Buckshot Roulette", img: "https://imgproxy.eneba.games/u8RhIpIc7IvN4cqpLde_Tr4Z2K2pFeK5551U5sRDUHE/rs:fit:300/ar:1/czM6Ly9wcm9kdWN0cy5lbmViYS5nYW1l/cy9wcm9kdWN0cy9f/aFM4X1J[...]", bgFondo: "https://images.unsplash.com/photo-1535016120754-188fbb846c8f?w=800", url: "https://raw.githack.com/derekonsio1023[...]" },
-            34: { titulo: "Terraria", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS2cGquk37ry9zMLKn_lIr7i1SnehsS1UJVYQ&s", bgFondo: "https://images.unsplash.com/photo-1552820728-8ac41f1ce891?w=800", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games[...]" },
-            35: { titulo: "Clover Pit", img: "https://upload.wikimedia.org/wikipedia/en/thumb/c/c3/CloverPit_cover.jpeg/250px-CloverPit_cover.jpeg", bgFondo: "", url: "https://raw.githack.com/derekonsio1023-gif/Ul[...]" },
-            36: { titulo: "Five Nights at Epstein's", img: "https://speedstarsfree.io/data/image/game/five-nights-at-epsteins.png", bgFondo: "", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/h[...]" },
-            37: { titulo: "Hollow Knight_Silksong", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTmRiY66TiKY_tvA-ax-BW-KcacCWf1VWr9Jw&s", bgFondo: "https://images.unsplash.com/photo-1538481527238-8ba00f1eeae8?w=800", url: "https://raw.githack.com/derekonsio1023-gi[...]" },
-            38: { titulo: "-3", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSlq22aglgljV8GRZj5ZtALz14bcehBwulrUg&s", bgFondo: "", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/[...]" },
-            39: { titulo: "1v1.LoL", img: "https://cdn-bgp.bluestacks.com/BGP/latam/gametiles_lol.onevone.jpg", bgFondo: "https://images.unsplash.com/photo-1538481527238-8ba00f1eeae8?w=800", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/1v1.LoL.ht[...]" },
-            40: { titulo: "Angry Birds", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQtNjW8vl1XSvlh853QSQwmg2ePkyu_g3UBeQ&s", bgFondo: "https://images.unsplash.com/photo-1514432324607-2e88f1bde566?w=800", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-ga[...]" },
-            41: { titulo: "Plants vs Zombies 2", img: "https://cdn2.steamgriddb.com/thumb/98ab6c6b42317110e4ba005e3d868643.jpg", bgFondo: "https://images.unsplash.com/photo-1552820728-8ac41f1ce891?w=800", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/head[...]" },
-            42: { titulo: "Animal Crossing", img: "https://gameongames.com/cdn/shop/products/animalcrossinggamecubefrontcover_600x600_crop_center.jpg?v=1605914457", bgFondo: "https://images.unsplash.com/photo-1614613535308-eb5fbd8952e7?w=800", url: "https://raw.githack.com/derek[...]" },
-            43: { titulo: "Amanda the Adventurer", img: "https://static.wikia.nocookie.net/amanda-the-adventurer/images/9/98/Newamanda.png/revision/latest?cb=20250113124607", bgFondo: "", url: "https://raw.githack[...]" },
-            44: { titulo: "Half Life", img: "https://static.wikia.nocookie.net/halflife7283/images/e/ec/Half-Lifeboxart.jpg/revision/latest?cb=20131211041722&path-prefix=es", bgFondo: "https://images.unsplash.com/photo-1535016120754-188fbb846c8f?w=800", url: "https://raw.githack[...]" },
-            45: { titulo: "Fruit Ninja", img: "https://m.media-amazon.com/images/M/MV5BYmIwYTAwYzctOTIyZC00ZTY2LTljOWYtODJlYWE5YmNmMGI2XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg", bgFondo: "https://images.unsplash.com/photo-1585238341710-4b4e6416baeb?w=800", url: "https://raw.githack.co[...]" },
-            46: { titulo: "Melon Playground", img: "https://www5.minijuegosgratis.com/v3/games/thumbnails/248275_7_sq.jpg", bgFondo: "", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/mai[...]" },
-            47: { titulo: "Hotline Miami", img: "https://m.media-amazon.com/images/M/MV5BYzg1YmE4NDgtNjY5Ny00MDRjLWIwYTQtY2QwMTNiOTI4M2Y1XkEyXkFqcGc@._V1_.jpg", bgFondo: "https://images.unsplash.com/photo-1533900298318-6b8da08a523e?w=800", url: "https://raw.githack.com/derekonsi[...]" },
-            48: { titulo: "Jetpack Joyride", img: "https://m.media-amazon.com/images/M/MV5BMjE0ZTYyZjktMTU3Zi00MjQwLWJiZjgtNjEyZjZhYjJiZTA4XkEyXkFqcGc@._V1_.jpg", bgFondo: "https://images.unsplash.com/photo-1534531173927-c7d7fcb7f6e2?w=800", url: "https://raw.githack.com/derekon[...]" },
-            49: { titulo: "Moto X3M", img: "https://m.media-amazon.com/images/M/MV5BNzUwYjViNDItYmI4MC00M2E2LWE1YzUtYmYyYTRmZTAyMzBiXkEyXkFqcGc@._V1_QL75_UY281_CR11,0,190,281_.jpg", bgFondo: "https://images.unsplash.com/photo-1533900298318-6b8da08a523e?w=800", url: "https://raw.[...]" },
-            50: { titulo: "Scary Shawarma Kiosk_ the ANOMALY", img: "https://m.media-amazon.com/images/M/MV5BNzUwYjViNDItYmI4MC00M2E2LWE1YzUtYmYyYTRmZTAyMzBiXkEyXkFqcGc@._V1_QL75_UY281_CR11,0,190,281_[...]", bgFondo: "", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/ScaryDiner[...]" },
-            51: { titulo: "Burrito Bison Launcha Libre", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTF8pEipJpKnbtsr7Ql_Uk1t8FN7Tn5-C2XsQ&s", bgFondo: "https://images.unsplash.com/photo-1550355291-bbee04a92027?w=800", url: "https://raw.githack.com/derekonsio10[...]" },
-            52: { titulo: "Schoolboy Runaway", img: "https://m.media-amazon.com/images/M/MV5BMjhmOGIyNzctZWEyYy00ZWIwLTg5MzctYmUzMDM3OTMwNjJmXkEyXkFqcGc@._V1_QL75_UY281_CR7,0,190,281_.jpg", bgFondo: "", url: "http[...]" },
-            53: { titulo: "ULTRAKILL", img: "https://hatorivalley.com/cdn/shop/files/ULTRAKILL_1.png?v=1757436444", bgFondo: "https://images.unsplash.com/photo-1535016120754-188fbb846c8f?w=800", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/ULTRAK[...]" },
-            54: { titulo: "Ultrapool", img: "https://images.dwncdn.net/images/t_app-icon-l/p/6a0b734c-1ec0-426b-b55f-0b3f8ba87da1/2011475881/ultrapool-logo", bgFondo: "", url: "https://raw.githack.com/derekonsio10[...]" },
-            55: { titulo: "Undertale Yellow", img: "https://upload.wikimedia.org/wikipedia/en/9/93/Undertale_Yellow.png", bgFondo: "https://images.unsplash.com/photo-1540575467063-178cb50ee898?w=800", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/[...]" },
-            56: { titulo: "Baldi's Basics", img: "https://m.media-amazon.com/images/M/MV5BZjc0ODgwMDgtYmY3Ni00NDNmLThmZWQtYTc4MjExY2E1NTkyXkEyXkFqcGc@._V1_QL75_UX140_CR0,1,140,207_.jpg", bgFondo: "https://images.unsplash.com/photo-1600298881974-6be191ceeda1?w=800", url: "https:/[...]" },
-            57: { titulo: "Doom", img: "https://static.wikia.nocookie.net/wadguia/images/c/c3/Doom_cover.png/revision/latest?cb=20160522155501", bgFondo: "https://images.unsplash.com/photo-1535016120754-188fbb846c8f?w=800", url: "https://raw.githack.com/derekonsio1023-gif/Ultron[...]" },
-            58: { titulo: "Bloxorz", img: "https://bloxorz.org/wp-content/uploads/sites/55/2025/12/bloxorz.webp", bgFondo: "", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Bloxorz[...]" },
-            59: { titulo: "Cuphead", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT6Bp0Xpzeft0Ht7kRCPlHMlcFlTTOHec2HTQ&s", bgFondo: "https://images.unsplash.com/photo-1535016120754-188fbb846c8f?w=800", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/[...]" },
-            60: { titulo: "R.E.P.O", img: "https://images.g2a.com/360x600/1x1x1/repo-p10000510013/33d5982d7aca4b5ebffc8f63", bgFondo: "https://images.unsplash.com/photo-1533900298318-6b8da08a523e?w=800", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/R[...]" },
-            61: { titulo: "Raft", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTMerQl6ciu6J1VfbwJVg4OXEFlWSBdt8JQqA&s", bgFondo: "https://images.unsplash.com/photo-1552820728-8ac41f1ce891?w=800", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/ref[...]" },
-            62: { titulo: "Slope", img: "https://1games.io/data/image/game/slope/banner/slope.jpg", bgFondo: "https://images.unsplash.com/photo-1537432376769-f8b7e4d56c6a?w=800", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Slope.html" },
-            63: { titulo: "Tetris", img: "https://m.media-amazon.com/images/I/61M3rDwh4qL.png", bgFondo: "https://images.unsplash.com/photo-1538481527238-8ba00f1eeae8?w=800", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Tetris.html" },
-            64: { titulo: "Stardew Valley", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQcqHdYh-E2kXt8La0P7zz4AQKcM6RSi41zdw&s", bgFondo: "https://images.unsplash.com/photo-1614613535308-eb5fbd8952e7?w=800", url: "https://raw.githack.com/derekonsio1023-gif/Ultron[...]" },
-            65: { titulo: "Sonic.EXE", img: "https://www.speedrun.com/static/game/2687r9dp/cover.jpg?v=09142d0", bgFondo: "https://images.unsplash.com/photo-1600298881974-6be191ceeda1?w=800", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Sonic.EXE[...]" },
-            66: { titulo: "Sonic CD", img: "https://m.media-amazon.com/images/M/MV5BMGMwMmUyZGYtOTI2MS00MWEyLWI3OWMtZTYyYzZhMDJmZGExXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg", bgFondo: "https://images.unsplash.com/photo-1534531173927-c7d7fcb7f6e2?w=800", url: "https://raw.githack.com/d[...]" },
-            67: { titulo: "Plague Inc", img: "https://store-images.microsoft.com/image/apps.39696.13510798882964918.84c62c00-331b-45af-af2b-3a3e606cf731.573cd12b-dd2a-4227-b689-ef1931cac634", bgFondo: "", url: "ht[...]" },
-            68: { titulo: "Super Mario Bros Remastered", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSYDxnU1N8fLqni_IEVmXs3w9m4KfxtTkyV3A&s", bgFondo: "https://images.unsplash.com/photo-1535016120754-188fbb846c8f?w=800", url: "https://raw.githack.com/derekonsio10[...]" },
-            69: { titulo: "That's Not My Neighbor", img: "https://images.g2a.com/323x433/1x1x1/thats-not-my-neighbor-p10000510251/25e3d2266ee84526bc8b7160", bgFondo: "", url: "https://raw.githack.com/derekonsio102[...]" },
-            70: { titulo: "Sonic the Hedgehog 2", img: "https://www.speedrun.com/static/game/o6gl9nod/cover.png?v=97b4851", bgFondo: "https://images.unsplash.com/photo-1534531173927-c7d7fcb7f6e2?w=800", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/mai[...]" },
-            71: { titulo: "Sonic the Hedgehog 3_ Angel Island Remastered", img: "https://m.media-amazon.com/images/I/91B6PQcmMhL._UF1000,1000_QL80_.jpg", bgFondo: "https://images.unsplash.com/photo-1534531173927-c7d7fcb7f6e2?w=800", url: "https://raw.githack.com/derekonsio1023-g[...]" },
-            72: { titulo: "A Difficult Game About Climbing", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRbLn1sXT5gXskVA2pH807L01eE8NZLMoMU3w&s", bgFondo: "https://images.unsplash.com/photo-1552820728-8ac41f1ce891?w=800", url: "https://raw.githack.com/derekons[...]" },
-            73: { titulo: "Amaze", img: "https://www.crazylabs.com/wp-content/uploads/2022/03/amaze-icon-512.png", bgFondo: "", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Amaze.h[...]" },
-            74: { titulo: "Antonblast", img: "https://m.media-amazon.com/images/M/MV5BOGZhYjZkMDEtODdjMS00NjgxLWFjZTctNTFkOTdmYmFjMWJmXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg", bgFondo: "https://images.unsplash.com/photo-1535016120754-188fbb846c8f?w=800", url: "https://raw.githack.com[...]" },
-            75: { titulo: "BitLife", img: "https://modyolo.com/wp-content/uploads/2021/09/bitlife-life-simulator-150x150.jpg", bgFondo: "", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/[...]" },
-            76: { titulo: "Block Blast", img: "https://games.gg/cdn-cgi/image/width=1920,quality=75,format=auto,fit=scale-down,metadata=none,onerror=redirect/https://assets.games.gg/block_blast_cover_[...]", bgFondo: "", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Block[...]" },
-            77: { titulo: "Gorilla Tag", img: "https://images.g2a.com/360x600/1x1x1/gorilla-tag-pc-steam-regalo-europa-i10000337885002/48527d135f684e09b4e6947e", bgFondo: "https://images.unsplash.com/photo-1533900298318-6b8da08a523e?w=800", url: "https://raw.githack.com/derekons[...]" },
-            78: { titulo: "Jeffrey Epstein Basics In Education And Kidnapping", img: "https://i.ytimg.com/vi/6OsEjG8UxR8/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLD2a[...]", bgFondo: "", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Offlin[...]" },
-            79: { titulo: "Phoenix Wright - Ace Attorney", img: "https://m.media-amazon.com/images/M/MV5BYzM3NjY4YmItMGM2Mi00ODljLTk0YmItYTJiN2VhMzFjOGI2XkEyXkFqcGc@._V1_.jpgf/Ultron-games/refs/heads/[...]", bgFondo: "https://images.unsplash.com/photo-1538481527238-8ba00f1eeae8?w=800", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Phoe[...]" },
-            80: { titulo: "Ragdoll Archers", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQfeqr1IxxVVe16B1DZIPqQACDj-FZ2lStevQ&s", bgFondo: "https://images.unsplash.com/photo-1550355291-bbee04a92027?w=800", url: "https://raw.githack.com/derekonsio1023-gif/Ultro[...]" },
-            81: { titulo: "World Box", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSB9SdYGTnB4eSuhSGaRdVOM9HGPSpJnpWYHg&s", bgFondo: "", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-game[...]" },
-            82: { titulo: "Steal a Brainrot", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSKt9Od6egkcelHNZ8o76TQ06CcKt8pivLyCQ&s", bgFondo: "", url: "https://raw.githack.com/derekonsio1023-gif/Ultr[...]" },
-            83: { titulo: "Drift Hunters", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUJdAOR4vMArlZu7aPjiEtEemD9xR4d1851A&s", bgFondo: "https://images.unsplash.com/photo-1533900298318-6b8da08a523e?w=800", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-[...]" },
+            3: { titulo: "Trees Hate You", img: "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/cob3ai.jpg", bgFondo: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800" },
+            4: { titulo: "Among Us", img: "https://upload.wikimedia.org/wikipedia/en/9/9a/Among_Us_cover_art.jpg", bgFondo: "https://images.unsplash.com/photo-1611339555312-e607c04352fa?w=800", url: "" },
+            5: { titulo: "Pou", img: "https://static.wikia.nocookie.net/pou/images/8/8d/Pou.png/revision/latest/thumbnail/width/360/height/360?cb=20220622133315", bgFondo: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=800" },
+            6: { titulo: "Plantas contra Zombies", img: "https://media.api.ea.com//dam/gin/images/2025/07/pvzr-key-art.png.adapt.crop1x1.767p.png", bgFondo: "https://images.unsplash.com/photo-1552607352-192416582147?w=800" },
+            7: { titulo: "Super Mario 64", img: "https://m.media-amazon.com/images/M/MV5BY2QzZTVhYjctZWMyNy00MDlhLThhYTktZDg2M2EwNTE3ZDZkXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg", bgFondo: "https://images.unsplash.com/photo-1535016120754-188fbb846c8f?w=800" },
+            8: { titulo: "Super Mario 63", img: "https://static-cdn.jtvnw.net/ttv-boxart/215028170_IGDB-272x380.jpg", bgFondo: "https://images.unsplash.com/photo-1535016120754-188fbb846c8f?w=800", url: "" },
+            9: { titulo: "Subway Surfers", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRqaiUofERu5Ih_zo_ya5K44KEzoCKROAylKw&s", bgFondo: "https://images.unsplash.com/photo-1533900298318-6b8da08a523e?w=800" },
+            10: { titulo: "Minecraft(1.12)", img: "https://static.planetminecraft.com/files/image/minecraft/texture-pack/2021/406/14998532-pack_xl.webp", bgFondo: "https://images.unsplash.com/photo-1518152006812-3f530888e8e0?w=800" },
+            11: { titulo: "Geometry Dash", img: "https://e.snmc.io/lk/f/x/d2886defe7ca77323a01e50dc0d964e9/11618485", bgFondo: "https://images.unsplash.com/photo-1611339555312-e607c04352fa?w=800", url: "" },
+            12: { titulo: "Happy Wheels", img: "https://m.media-amazon.com/images/M/MV5BYTY1YWQxMTAtMjhiNy00NTJhLTg3NTMtM2NlOTA3ZDdlMTYxXkEyXkFqcGc@._V1_.jpg", bgFondo: "https://images.unsplash.com/photo-1534531173927-c7d7fcb7f6e2?w=800" },
+            13: { titulo: "Granny", img: "https://duracionde.com/storage/images/5f8c4d8e0c955.jpg", bgFondo: "https://images.unsplash.com/photo-1600298881974-6be191ceeda1?w=800", url: "" },
+            14: { titulo: "Granny 2", img: "https://m.media-amazon.com/images/M/MV5BMGI4MDY1ZWItMTgxYi00NTljLWJiMTUtMjg0MmY0YTBhNzRjXkEyXkFqcGc@._V1_.jpg", bgFondo: "https://images.unsplash.com/photo-1535016120754-188fbb846c8f?w=800" },
+            15: { titulo: "Level Devil", img: "https://www.clavecd.es/wp-/uploads/buy-level-devil-cd-key-compare-prices.jpeg", bgFondo: "https://images.unsplash.com/photo-1534531173927-c7d7fcb7f6e2?w=800" },
+            16: { titulo: "Paper.io 2", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ8RC6pkSzMJY6MlTONoAfJdrgI3T6428ShfA&s", bgFondo: "https://images.unsplash.com/photo-1538481527238-8ba00f1eeae8?w=800" },
+            17: { titulo: "Temple Run 2", img: "https://cdn.kobo.com/book-images/16218f1a-2e1d-4c29-969a-41814a2813d1/1200/1200/False/temple-run-2-tips-cheats-tricks-strategies.jpg", bgFondo: "https://images.unsplash.com/photo-1533900298318-6b8da08a523e?w=800" },
+            18: { titulo: "Bad parenting", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSptG75KAc6OGwNzCHoY99bH_XzApsmpkWkUw&s", bgFondo: "", url: "" },
+            19: { titulo: "Bad piggies", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSptG75KAc6OGwNzCHoY99bH_XzApsmpkWkUw&s", bgFondo: "https://images.unsplash.com/photo-1514432324607-c3367e0ffa4a?w=800" },
+            20: { titulo: "Fireboy and Watergirl", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRC6XRG6CVo8mesqiCaYPyh5-4kpu42O2OhVw&s", bgFondo: "https://images.unsplash.com/photo-1535016120754-188fbb846c8f?w=800" },
+            21: { titulo: "Five Nights at Freddy's", img: "https://store-images.s-microsoft.com/image/apps.14120.13976193533566168.c56d73e5-020f-4be5-860c-ae506c27e2ca.c96def99-b8ab-457a-bcb1-20784fa3e10c", bgFondo: "https://images.unsplash.com/photo-1600298881974-6be191ceeda1?w=800", url: "" },
+            22: { titulo: "Five Nights at Freddy's 2", img: "https://m.media-amazon.com/images/M/MV5BNmM2MjIxYmItMDdhMC00ZjRkLTg0MDYtMzgzZjY5YzlmMTc0XkEyXkFqcGc@._V1_.jpg", bgFondo: "https://images.unsplash.com/photo-1600298881974-6be191ceeda1?w=800" },
+            23: { titulo: "Five Nights at Freddy's 3", img: "https://m.media-amazon.com/images/M/MV5BZmJhNzVlYTctYmJkYy00YzRlLWE1MjQtYzU4ZDExY2Q3NjBjXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg", bgFondo: "https://images.unsplash.com/photo-1600298881974-6be191ceeda1?w=800" },
+            24: { titulo: "Five Nights at Freddy's 4", img: "https://image.api.playstation.com/vulcan/img/cfn/11307Ro2GhaUYw-fApbXsGYVOkt3XJ5QhUFGGtQL1eyS7P0UKk_QcGWzQkPKjKKyh9_Jqo49ZVfSI3LKN3U1M5gHGU", bgFondo: "https://images.unsplash.com/photo-1600298881974-6be191ceeda1?w=800" },
+            25: { titulo: "Chess", img: "https://platoapp.com/images/8c834300-42d3-11ef-bfb7-a598d323cbfc-chess1.webp", bgFondo: "https://images.unsplash.com/photo-1552820728-8ac41f1ce891?w=800", url: "" },
+            26: { titulo: "Cookie Clicker", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRwxJjLoTSKx5vjF124-udZ_qMVzoKso-W9rA&s", bgFondo: "https://images.unsplash.com/photo-1585238341965-f3ae4f91a0b6?w=800" },
+            27: { titulo: "Death Chase", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQME5IrWhmeSqw9_fCkiycsUgErnL1tVGLrZQ&s", bgFondo: "https://images.unsplash.com/photo-1533900298318-6b8da08a523e?w=800" },
+            28: { titulo: "Death Run 3D", img: "https://deathrun3d.io/rs/banner-death-run-3d.jpg", bgFondo: "https://images.unsplash.com/photo-1533900298318-6b8da08a523e?w=800", url: "" },
+            29: { titulo: "Papa's Pizzeria", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSa0L7fACN2147vaqTlSal99s8r0W5KR2JmuA&s", bgFondo: "https://images.unsplash.com/photo-1585238341965-f3ae4f91a0b6?w=800" },
+            30: { titulo: "sandgame", img: "https://play-lh.googleusercontent.com/_PYtjNVw6RuhlnI8lUvOLnGHaE-7CNddeqs1xisFyhWbTJaIW2-tEM5E1iAe6tUk8K4", bgFondo: "", url: "" },
+            31: { titulo: "Stick fighter", img: "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=1200,height=1200,fit=cover,f=png/b584ae5c620cdc9761f9dcd28f82dc21/stick-fighter-logo.png", bgFondo: "" },
+            32: { titulo: "Bendy and the Ink Machine", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRuc2Q0Q4eRpNit9Hd9R4JqBzHtiAxxBeX_3g&s", bgFondo: "https://images.unsplash.com/photo-1600298881974-6be191ceeda1?w=800" },
+            33: { titulo: "Buckshot Roulette", img: "https://imgproxy.eneba.games/u8RhIpIc7IvN4cqpLde_Tr4Z2K2pFeK5551U5sRDUHE/rs:fit:300/ar:1/czM6Ly9wcm9kdWN0cy5lbmViYS5nYW1lcy9wcm9kdWN0cy9feFh0",bgFondo: "https://images.unsplash.com/photo-1516975080664-ed2fc6a32937?w=800" },
+            34: { titulo: "Terraria", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS2cGquk37ry9zMLKn_lIr7i1SnehsS1UJVYQ&s", bgFondo: "https://images.unsplash.com/photo-1552820728-8ac41f1ce891?w=800" },
+            35: { titulo: "Clover Pit", img: "https://upload.wikimedia.org/wikipedia/en/thumb/c/c3/CloverPit_cover.jpeg/250px-CloverPit_cover.jpeg", bgFondo: "", url: "" },
+            36: { titulo: "Five Nights at Epstein's", img: "https://speedstarsfree.io/data/image/game/five-nights-at-epsteins.png", bgFondo: "", url: "" },
+            37: { titulo: "Hollow Knight_Silksong", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTmRiY66TiKY_tvA-ax-BW-KcacCWf1VWr9Jw&s", bgFondo: "https://images.unsplash.com/photo-1535016120754-188fbb846c8f?w=800" },
+            38: { titulo: "-3", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSlq22aglgljV8GRZj5ZtALz14bcehBwulrUg&s", bgFondo: "", url: "" },
+            39: { titulo: "1v1.LoL", img: "https://cdn-bgp.bluestacks.com/BGP/latam/gametiles_lol.onevone.jpg", bgFondo: "https://images.unsplash.com/photo-1538481527238-8ba00f1eeae8?w=800", url: "" },
+            40: { titulo: "Angry Birds", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQtNjW8vl1XSvlh853QSQwmg2ePkyu_g3UBeQ&s", bgFondo: "https://images.unsplash.com/photo-1514432324607-c3367e0ffa4a?w=800" },
+            41: { titulo: "Plants vs Zombies 2", img: "https://cdn2.steamgriddb.com/thumb/98ab6c6b42317110e4ba005e3d868643.jpg", bgFondo: "https://images.unsplash.com/photo-1552820728-8ac41f1ce891?w=800" },
+            42: { titulo: "Animal Crossing", img: "https://gameongames.com/cdn/shop/products/animalcrossinggamecubefrontcover_600x600_crop_center.jpg?v=1605914457", bgFondo: "https://images.unsplash.com/photo-1552820728-8ac41f1ce891?w=800" },
+            43: { titulo: "Amanda the Adventurer", img: "https://static.wikia.nocookie.net/amanda-the-adventurer/images/9/98/Newamanda.png/revision/latest?cb=20250113124607", bgFondo: "", url: "" },
+            44: { titulo: "Half Life", img: "https://static.wikia.nocookie.net/halflife7283/images/e/ec/Half-Lifeboxart.jpg/revision/latest?cb=20131211041722&path-prefix=es", bgFondo: "https://images.unsplash.com/photo-1535016120754-188fbb846c8f?w=800" },
+            45: { titulo: "Fruit Ninja", img: "https://m.media-amazon.com/images/M/MV5BYmIwYTAwYzctOTIyZC00ZTY2LTljOWYtODJlYWE5YmNmMGI2XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg", bgFondo: "https://images.unsplash.com/photo-1552820728-8ac41f1ce891?w=800" },
+            46: { titulo: "Melon Playground", img: "https://www5.minijuegosgratis.com/v3/games/thumbnails/248275_7_sq.jpg", bgFondo: "", url: "" },
+            47: { titulo: "Hotline Miami", img: "https://m.media-amazon.com/images/M/MV5BYzg1YmE4NDgtNjY5Ny00MDRjLWIwYTQtY2QwMTNiOTI4M2Y1XkEyXkFqcGc@._V1_.jpg", bgFondo: "https://images.unsplash.com/photo-1533900298318-6b8da08a523e?w=800" },
+            48: { titulo: "Jetpack Joyride", img: "https://m.media-amazon.com/images/M/MV5BMjE0ZTYyZjktMTU3Zi00MjQwLWJiZjgtNjEyZjZhYjJiZTA4XkEyXkFqcGc@._V1_.jpg", bgFondo: "https://images.unsplash.com/photo-1552820728-8ac41f1ce891?w=800" },
+            49: { titulo: "Moto X3M", img: "https://m.media-amazon.com/images/M/MV5BNzUwYjViNDItYmI4MC00M2E2LWE1YzUtYmYyYTRmZTAyMzBiXkEyXkFqcGc@._V1_QL75_UY281_CR11,0,190,281_.jpg", bgFondo: "https://images.unsplash.com/photo-1533900298318-6b8da08a523e?w=800" },
+            50: { titulo: "Scary Shawarma Kiosk: the ANOMALY", img: "https://m.media-amazon.com/images/M/MV5BNzUwYjViNDItYmI4MC00M2E2LWE1YzUtYmYyYTRmZTAyMzBiXkEyXkFqcGc@._V1_QL75_UY281_CR11,0,190,281_.jpg", bgFondo: "https://images.unsplash.com/photo-1533900298318-6b8da08a523e?w=800" },
+            51: { titulo: "Burrito Bison Launcha Libre", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTF8pEipJpKnbtsr7Ql_Uk1t8FN7Tn5-C2XsQ&s", bgFondo: "https://images.unsplash.com/photo-1585238341965-f3ae4f91a0b6?w=800" },
+            52: { titulo: "Schoolboy Runaway", img: "https://m.media-amazon.com/images/M/MV5BMjhmOGIyNzctZWEyYy00ZWIwLTg5MzctYmUzMDM3OTMwNjJmXkEyXkFqcGc@._V1_QL75_UY281_CR7,0,190,281_.jpg", bgFondo: "" },
+            53: { titulo: "ULTRAKILL", img: "https://hatorivalley.com/cdn/shop/files/ULTRAKILL_1.png?v=1757436444", bgFondo: "https://images.unsplash.com/photo-1535016120754-188fbb846c8f?w=800", url: "" },
+            54: { titulo: "Ultrapool", img: "https://images.dwncdn.net/images/t_app-icon-l/p/6a0b734c-1ec0-426b-b55f-0b3f8ba87da1/2011475881/ultrapool-logo", bgFondo: "", url: "" },
+            55: { titulo: "Undertale Yellow", img: "https://upload.wikimedia.org/wikipedia/en/9/93/Undertale_Yellow.png", bgFondo: "https://images.unsplash.com/photo-1540575467063-178cb50ee898?w=800", url: "" },
+            56: { titulo: "Baldi's Basics", img: "https://m.media-amazon.com/images/M/MV5BZjc0ODgwMDgtYmY3Ni00NDNmLThmZWQtYTc4MjExY2E1NTkyXkEyXkFqcGc@._V1_QL75_UX140_CR0,1,140,207_.jpg", bgFondo: "https://images.unsplash.com/photo-1600298881974-6be191ceeda1?w=800" },
+            57: { titulo: "Doom", img: "https://static.wikia.nocookie.net/wadguia/images/c/c3/Doom_cover.png/revision/latest?cb=20160522155501", bgFondo: "https://images.unsplash.com/photo-1535016120754-188fbb846c8f?w=800" },
+            58: { titulo: "Bloxorz", img: "https://bloxorz.org/wp-content/uploads/sites/55/2025/12/bloxorz.webp", bgFondo: "", url: "" },
+            59: { titulo: "Cuphead", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT6Bp0Xpzeft0Ht7kRCPlHMlcFlTTOHec2HTQ&s", bgFondo: "https://images.unsplash.com/photo-1535016120754-188fbb846c8f?w=800" },
+            60: { titulo: "R.E.P.O", img: "https://images.g2a.com/360x600/1x1x1/repo-p10000510013/33d5982d7aca4b5ebffc8f63", bgFondo: "https://images.unsplash.com/photo-1533900298318-6b8da08a523e?w=800" },
+            61: { titulo: "Raft", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTMerQl6ciu6J1VfbwJVg4OXEFlWSBdt8JQqA&s", bgFondo: "https://images.unsplash.com/photo-1552820728-8ac41f1ce891?w=800" },
+            62: { titulo: "Slope", img: "https://1games.io/data/image/game/slope/banner/slope.jpg", bgFondo: "https://images.unsplash.com/photo-1537432376769-f8b7e4d56c6a?w=800", url: "" },
+            63: { titulo: "Tetris", img: "https://m.media-amazon.com/images/I/61M3rDwh4qL.png", bgFondo: "https://images.unsplash.com/photo-1538481527238-8ba00f1eeae8?w=800", url: "" },
+            64: { titulo: "Stardew Valley", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQcqHdYh-E2kXt8La0P7zz4AQKcM6RSi41zdw&s", bgFondo: "https://images.unsplash.com/photo-1614613535308-eb5fbd8220c7?w=800" },
+            65: { titulo: "Sonic.EXE", img: "https://www.speedrun.com/static/game/2687r9dp/cover.jpg?v=09142d0", bgFondo: "https://images.unsplash.com/photo-1600298881974-6be191ceeda1?w=800", url: "" },
+            66: { titulo: "Sonic CD", img: "https://m.media-amazon.com/images/M/MV5BMGMwMmUyZGYtOTI2MS00MWEyLWI3OWMtZTYyYzZhMDJmZGExXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg", bgFondo: "https://images.unsplash.com/photo-1535016120754-188fbb846c8f?w=800" },
+            67: { titulo: "Plague Inc", img: "https://store-images.microsoft.com/image/apps.39696.13510798882964918.84c62c00-331b-45af-af2b-3a3e606cf731.573cd12b-dd2a-4227-b689-ef1931cac634", bgFondo: "" },
+            68: { titulo: "Super Mario Bros Remastered", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSYDxnU1N8fLqni_IEVmXs3w9m4KfxtTkyV3A&s", bgFondo: "https://images.unsplash.com/photo-1535016120754-188fbb846c8f?w=800" },
+            69: { titulo: "That's Not My Neighbor", img: "https://images.g2a.com/323x433/1x1x1/thats-not-my-neighbor-p10000510251/25e3d2266ee84526bc8b7160", bgFondo: "", url: "" },
+            70: { titulo: "Sonic the Hedgehog 2", img: "https://www.speedrun.com/static/game/o6gl9nod/cover.png?v=97b4851", bgFondo: "https://images.unsplash.com/photo-1534531173927-c7d7fcb7f6e2?w=800" },
+            71: { titulo: "Sonic the Hedgehog 3: Angel Island Remastered", img: "https://m.media-amazon.com/images/I/91B6PQcmMhL._UF1000,1000_QL80_.jpg", bgFondo: "https://images.unsplash.com/photo-1535016120754-188fbb846c8f?w=800" },
+            72: { titulo: "A Difficult Game About Climbing", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRbLn1sXT5gXskVA2pH807L01eE8NZLMoMU3w&s", bgFondo: "https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1?w=800" },
+            73: { titulo: "Amaze", img: "https://www.crazylabs.com/wp-content/uploads/2022/03/amaze-icon-512.png", bgFondo: "", url: "" },
+            74: { titulo: "Antonblast", img: "https://m.media-amazon.com/images/M/MV5BOGZhYjZkMDEtODdjMS00NjgxLWFjZTctNTFkOTdmYmFjMWJmXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg", bgFondo: "https://images.unsplash.com/photo-1535016120754-188fbb846c8f?w=800" },
+            75: { titulo: "BitLife", img: "https://modyolo.com/wp-content/uploads/2021/09/bitlife-life-simulator-150x150.jpg", bgFondo: "", url: "" },
+            76: { titulo: "Block Blast", img: "https://games.gg/cdn-cgi/image/width=1920,quality=75,format=auto,fit=scale-down,metadata=none,onerror=redirect/https://assets.games.gg/block_blast_cover_art.png", bgFondo: "" },
+            77: { titulo: "Gorilla Tag", img: "https://images.g2a.com/360x600/1x1x1/gorilla-tag-pc-steam-regalo-europa-i10000337885002/48527d135f684e09b4e6947e", bgFondo: "https://images.unsplash.com/photo-1552820728-8ac41f1ce891?w=800" },
+            78: { titulo: "Jeffrey Epstein Basics In Education And Kidnapping", img: "https://i.ytimg.com/vi/6OsEjG8UxR8/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLD2a", bgFondo: "" },
+            79: { titulo: "Phoenix Wright - Ace Attorney", img: "https://m.media-amazon.com/images/M/MV5BYzM3NjY4YmItMGM2Mi00ODljLTk0YmItYTJiN2VhMzFjOGI2XkEyXkFqcGc@._V1_.jpg", bgFondo: "" },
+            80: { titulo: "Ragdoll Archers", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQfeqr1IxxVVe16B1DZIPqQACDj-FZ2lStevQ&s", bgFondo: "https://images.unsplash.com/photo-1550355291-bbee04a92027?w=800" },
+            81: { titulo: "World Box", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSB9SdYGTnB4eSuhSGaRdVOM9HGPSpJnpWYHg&s", bgFondo: "", url: "" },
+            82: { titulo: "Steal a Brainrot", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSKt9Od6egkcelHNZ8o76TQ06CcKt8pivLyCQ&s", bgFondo: "", url: "" },
+            83: { titulo: "Drift Hunters", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUJdAOR4vMArlZu7aPjiEtEemD9xR4d1851A&s", bgFondo: "https://images.unsplash.com/photo-1533900298318-6b8da08a523e?w=800" },
         };
 
         const TOTAL_SLOTS = 100;
         let allCards = [];
+        const menuView = document.getElementById('menu-view');
+        let currentBgCard = null;
 
         function generarMenu() {
             const grid = document.getElementById('main-grid');
@@ -343,15 +394,14 @@
                 card.className = 'card';
                 card.dataset.index = i;
                 card.dataset.searchText = j ? j.titulo.toLowerCase() : "próximamente";
+                card.dataset.bgFondo = (j && j.bgFondo) ? j.bgFondo : "";
                 
                 const tieneImagen = j && j.img && j.img !== "";
                 const bgStyle = tieneImagen ? `background-image: url('${j.img}')` : "";
-                const tieneBgFondo = j && j.bgFondo && j.bgFondo !== "";
-                const bgFondoStyle = tieneBgFondo ? `background-image: url('${j.bgFondo}')` : "";
                 const titulo = j ? j.titulo : "Próximamente";
 
                 card.innerHTML = `
-                    <div class="card-thumb" style="${bgStyle}" data-bg-fondo="${bgFondoStyle}">
+                    <div class="card-thumb" style="${bgStyle}">
                         ${tieneImagen ? '' : '<span class="empty-icon">?</span>'}
                     </div>
                     <div class="card-footer">
@@ -360,16 +410,18 @@
                     </div>
                 `;
 
-                // Aplicar efecto de fondo personalizado al hover
-                if (tieneBgFondo) {
-                    const cardThumb = card.querySelector('.card-thumb');
+                // Eventos de hover para cambiar fondo de Ultron
+                if (j && j.bgFondo && j.bgFondo !== "") {
                     card.addEventListener('mouseenter', () => {
-                        const bgFondoUrl = cardThumb.getAttribute('data-bg-fondo').replace('background-image: ', '');
-                        cardThumb.style.cssText += bgFondoUrl;
+                        cambiarFondoUltron(j.bgFondo);
+                        card.classList.add('bg-active');
+                        currentBgCard = card;
                     });
                     
                     card.addEventListener('mouseleave', () => {
-                        cardThumb.style.backgroundImage = `url('${j.img}')`;
+                        restaurarFondoUltron();
+                        card.classList.remove('bg-active');
+                        currentBgCard = null;
                     });
                 }
 
@@ -380,6 +432,23 @@
                 grid.appendChild(card);
                 allCards.push(card);
             }
+        }
+
+        // Cambiar fondo de Ultron
+        function cambiarFondoUltron(bgUrl) {
+            menuView.style.backgroundImage = `url('${bgUrl}')`;
+            // Efecto de iluminación (aumentar brillo y saturación)
+            menuView.style.filter = 'brightness(1.3) saturate(1.2) blur(0.5px)';
+            // Aumentar el overlay
+            const overlay = menuView.querySelector('::before');
+            menuView.style.setProperty('--overlay-opacity', '0.5');
+        }
+
+        // Restaurar fondo de Ultron
+        function restaurarFondoUltron() {
+            menuView.style.backgroundImage = 'none';
+            menuView.style.filter = 'brightness(1) saturate(1)';
+            menuView.style.setProperty('--overlay-opacity', '0.3');
         }
 
         // Función de búsqueda
@@ -409,14 +478,13 @@
         document.getElementById('search-input').addEventListener('input', filtrarJuegos);
 
         function lanzarJuego(url) {
-            const menu = document.getElementById('menu-view');
             const loader = document.getElementById('loading-screen');
             const runtime = document.getElementById('game-runtime');
             const frame = document.getElementById('game-frame');
             const progressBar = document.getElementById('progress-bar');
             const loadingStats = document.getElementById('loading-stats');
 
-            menu.style.display = 'none';
+            menuView.style.display = 'none';
             loader.style.display = 'flex';
             
             // Reset de barra
@@ -453,7 +521,8 @@
         function cerrarJuego() {
             document.getElementById('game-runtime').style.display = 'none';
             document.getElementById('game-frame').src = "about:blank";
-            document.getElementById('menu-view').style.display = 'block';
+            menuView.style.display = 'block';
+            restaurarFondoUltron();
             window.scrollTo(0,0);
         }
 
