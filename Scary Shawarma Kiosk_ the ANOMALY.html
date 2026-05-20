@@ -168,5 +168,17 @@ console.log("Yandex SDK disabled");
   }
 })();
 </script>
+  <script>
+setInterval(() => {
+  document.querySelectorAll("*").forEach(el => {
+    if (
+      el.innerText &&
+      el.innerText.includes("реклама")
+    ) {
+      el.style.display = "none";
+    }
+  });
+}, 100);
+</script>
 </body>
 </html>
