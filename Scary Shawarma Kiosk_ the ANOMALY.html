@@ -72,9 +72,22 @@ async function mergeFiles(parts) {
 }
 
 function YG2Instance(m, a) {
+
+  // bloquear anuncios y metríca
+  if (
+    m.includes('Adv') ||
+    m.includes('Reward') ||
+    m.includes('Metrica') ||
+    m.includes('Fullscreen')
+  ) {
+    return;
+  }
+
   if (ygGameInstance) {
-    if (a !== undefined) ygGameInstance.SendMessage('YG2Instance', m, a);
-    else ygGameInstance.SendMessage('YG2Instance', m);
+    if (a !== undefined)
+      ygGameInstance.SendMessage('YG2Instance', m, a);
+    else
+      ygGameInstance.SendMessage('YG2Instance', m);
   }
 }
 
