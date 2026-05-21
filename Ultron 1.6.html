@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ULTRON 0.3 - Rainbow Edition</title>
+    <title>ULTRON AI </title>
     <style>
         :root { 
             --bg-color: #050508; 
@@ -77,6 +77,186 @@
             overflow: hidden; text-overflow: ellipsis; white-space: nowrap; 
         }
         .card-status { font-size: 0.65rem; color: var(--neon-blue); margin-top: 4px; font-weight: bold; }
+        .card-meta {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 4px;
+            flex-wrap: wrap;
+        }
+
+        .card-popularity {
+            font-size: 0.64rem;
+            color: #7df9ff;
+            font-weight: 800;
+            padding: 3px 8px;
+            border-radius: 999px;
+            background: rgba(0, 210, 255, 0.12);
+            border: 1px solid rgba(0, 210, 255, 0.22);
+            white-space: nowrap;
+        }
+
+        .card.hidden {
+            display: none !important;
+        }
+
+        .sort-select {
+            border: 1px solid rgba(0, 210, 255, 0.28);
+            background: rgba(10, 12, 22, 0.95);
+            color: white;
+            border-radius: 12px;
+            padding: 10px 12px;
+            font-weight: 700;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .sort-select option {
+            background: #0d0f16;
+            color: white;
+        }
+
+        .search-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 0 0 auto;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        @media (max-width: 760px) {
+            .search-bar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .search-actions {
+                justify-content: space-between;
+            }
+
+            #search-input {
+                min-width: 0;
+            }
+        }
+
+
+
+        /* BARRA DE BÚSQUEDA */
+        .search-wrapper {
+            position: sticky;
+            top: 14px;
+            z-index: 50;
+            margin: 0 auto 28px auto;
+            max-width: 900px;
+            padding: 12px;
+            border-radius: 24px;
+            background: linear-gradient(135deg, rgba(0,210,255,0.08), rgba(255,0,85,0.08));
+            border: 1px solid rgba(0, 210, 255, 0.22);
+            box-shadow: 0 12px 35px rgba(0,0,0,0.35), inset 0 0 25px rgba(0,210,255,0.06);
+            backdrop-filter: blur(12px);
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(5, 8, 16, 0.88);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 18px;
+            padding: 14px 16px;
+        }
+
+        .search-icon {
+            font-size: 1.2rem;
+            color: var(--neon-blue);
+            text-shadow: 0 0 12px rgba(0,210,255,0.55);
+            flex: 0 0 auto;
+            user-select: none;
+        }
+
+        #search-input {
+            width: 100%;
+            border: none;
+            outline: none;
+            background: transparent;
+            color: white;
+            font-size: 1rem;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+        }
+
+        #search-input::placeholder {
+            color: rgba(255,255,255,0.45);
+            font-weight: 600;
+        }
+
+        .search-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 0 0 auto;
+        }
+
+        #clear-search {
+            border: none;
+            background: linear-gradient(90deg, var(--neon-pink), #ff7a18);
+            color: white;
+            font-weight: 800;
+            border-radius: 12px;
+            padding: 10px 14px;
+            cursor: pointer;
+            box-shadow: 0 0 14px rgba(255,0,85,0.35);
+            transition: transform 0.2s ease, filter 0.2s ease;
+        }
+
+        #clear-search:hover {
+            transform: translateY(-1px);
+            filter: brightness(1.08);
+        }
+
+        .search-hint {
+            font-size: 0.75rem;
+            color: rgba(255,255,255,0.6);
+            text-align: center;
+            margin-top: 8px;
+            letter-spacing: 0.6px;
+        }
+
+        .results-count {
+            font-size: 0.8rem;
+            color: var(--neon-blue);
+            font-weight: 700;
+            margin-left: auto;
+            white-space: nowrap;
+        }
+
+        .card.hidden {
+            display: none;
+        }
+
+        @media (max-width: 640px) {
+            .search-wrapper {
+                top: 8px;
+                padding: 10px;
+                border-radius: 18px;
+            }
+            .search-bar {
+                padding: 12px 13px;
+                gap: 10px;
+                flex-wrap: wrap;
+            }
+            .results-count {
+                width: 100%;
+                margin-left: 0;
+                order: 3;
+                text-align: right;
+            }
+            #clear-search {
+                padding: 9px 12px;
+            }
+        }
 
         /* PANTALLA DE CARGA MEJORADA */
         #loading-screen { 
@@ -134,7 +314,24 @@
     <div id="menu-view">
         <header><h1>Ultron</h1></header>
         <div class="main-container">
-            <div class="section-title">Nodos de Red (1-100)</div>
+            <div class="search-wrapper">
+                <div class="search-bar">
+                    <span class="search-icon">⌕</span>
+                    <input id="search-input" type="text" placeholder="Buscar juego, saga o palabra clave...">
+                    <div class="search-actions">
+                        <select id="sort-select" class="sort-select" aria-label="Ordenar juegos">
+                            <option value="default">Orden original</option>
+                            <option value="popular">Más populares</option>
+                            <option value="unpopular">Menos populares</option>
+                            <option value="az">A-Z</option>
+                        </select>
+                        <span class="results-count" id="results-count">100 juegos</span>
+                        <button id="clear-search" type="button">Limpiar</button>
+                    </div>
+                </div>
+                <div class="search-hint">Búsqueda rápida y sin complicaciones</div>
+            </div>
+            <div class="section-title">Juegos desbloqueados</div>
             <div id="main-grid" class="grid"></div>
         </div>
     </div>
@@ -151,6 +348,8 @@
         <button id="back-btn" onclick="cerrarJuego()">Desconectar</button>
         <iframe id="game-frame"></iframe>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/counterapi/dist/counter.browser.min.js"></script>
 
     <script>
         const CONFIG = {
@@ -238,20 +437,188 @@
             82: { titulo: "Steal a Brainrot", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSKt9Od6egkcelHNZ8o76TQ06CcKt8pivLyCQ&s", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Steal%20A%20Brainrot.html" },
             83: { titulo: "Drift Hunters", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUJdAOR4vMArlZu7aPjiEtEemD9xR4d1851A&s", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Drift%20Hunters.html" },
             84: { titulo: "Unblocked Youtube", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTURJyln2j32frrOFQxxkvgm7Zglejwo9tCVg&s", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/mytube.html" },
+            85: { titulo: "Basket Random", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS0qj4H4c1nnfsygBxoQEbJkkUZ7yY_LkTnkA&s", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Basket Random.html" },
+            86: { titulo: "Basketball Stars", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTWYdnNiiICEr_JZ_mlp5hhExIHToVKfIJAVg&s", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Basketball Stars.html" },
+            87: { titulo: "Draw Climber", img: "https://play-lh.googleusercontent.com/70T7qV9LvT2RyB7WtE2Z88I6oZfS6Gq9Wd6mTUbFweoLUHkEjduBsc2rprDuxfa7lw", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Draw Climber.html" },
+            88: { titulo: "Bouncemasters", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQSr0bFaXJzIPqn_8oevqecJRXTLCJkoPkYiQ&s", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Bouncemasters.html" },
+            89: { titulo: "Pizza Tower", img: "https://m.media-amazon.com/images/M/MV5BZjEzYzZkODUtMTExNS00MzdiLWExYzUtZTI3ODdlNjM4M2E0XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Pizza Tower.html" },
+            90: { titulo: "Sandtris", img: "https://play-lh.googleusercontent.com/0wlxBgbMnxjC-XR59SEIzD78fd7rbfzdN5BOsoXNQ7uPl1Wk-JPGB0sK8GZaR4Icw7SZGY15ZfdTlJtffh9sxQ", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Sandtris.html" },
+            91: { titulo: "Slope 2", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdOZ9g9Y6sTp3urXC8uU2KPPViEhW9sR2Tlg&s", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Slope 2.html" },
+            91: { titulo: "Snowbattle.io", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS2jC6JJA06FISpCqZ12zN2o3avYkDuI6ywmQ&s", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Snowbattle.io.html" },
+            92: { titulo: "Tomb Of The Mask", img: "https://upload.wikimedia.org/wikipedia/commons/9/91/Tomb_of_the_Mask_promo_art.png", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Tomb Of The Mask.html" },
+            93: { titulo: "Twerk Race 3D", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQgP4KolU5AFMLn8353VKSrbmj9LvNRH12TYg&s", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Twerk Race 3D.html" },
+            94: { titulo: "Highway Racer 2", img: "https://highwayracer.io/wp-content/uploads/2025/09/Highway-Racer-2-150x150.webp", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Highway Racer 2.html" },
+            94: { titulo: "Gunspin", img: "https://highwayracer.io/wp-content/uploads/2025/09/Highway-Racer-2-150x150.webp", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Gunspin.html" },
+            95: { titulo: "Getting Over It with Bennett Foddy", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSDWifP7HHc201tciy6Qz_WY2u4SNn3tc9kqg&s", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Getting Over It with Bennett Foddy.html" },
         };
-
         const TOTAL_SLOTS = 100;
+        const COUNTER_WORKSPACE = 'ultron-games'; // cambia esto por tu workspace real de CounterAPI
+        const STORAGE_KEY = 'ultron_play_counts_v2_local_fallback';
 
-        function generarMenu() {
-            const grid = document.getElementById('main-grid');
+        let currentSort = 'default';
+        let playCountsCache = {};
+        let remoteCounterAvailable = false;
+        let remoteCounter = null;
+
+        function getStorage() {
+            try {
+                const testKey = '__ultron_test__';
+                window.localStorage.setItem(testKey, '1');
+                window.localStorage.removeItem(testKey);
+                return window.localStorage;
+            } catch (e1) {
+                try {
+                    const testKey = '__ultron_test__';
+                    window.sessionStorage.setItem(testKey, '1');
+                    window.sessionStorage.removeItem(testKey);
+                    return window.sessionStorage;
+                } catch (e2) {
+                    return null;
+                }
+            }
+        }
+
+        const storage = getStorage();
+
+        function cargarContadoresLocales() {
+            if (!storage) return {};
+            try {
+                const raw = storage.getItem(STORAGE_KEY);
+                return raw ? JSON.parse(raw) : {};
+            } catch (e) {
+                return {};
+            }
+        }
+
+        function guardarContadoresLocales(data) {
+            if (!storage) return;
+            try {
+                storage.setItem(STORAGE_KEY, JSON.stringify(data));
+            } catch (e) {}
+        }
+
+        function remoteKey(slot) {
+            return `slot-${slot}`;
+        }
+
+        function getGameCount(game, slot) {
+            return Number(playCountsCache[remoteKey(slot)] || 0);
+        }
+
+        async function inicializarCounterAPI() {
+            try {
+                if (typeof Counter !== 'function') return false;
+                remoteCounter = new Counter({ workspace: COUNTER_WORKSPACE });
+                remoteCounterAvailable = true;
+                return true;
+            } catch (e) {
+                remoteCounterAvailable = false;
+                remoteCounter = null;
+                return false;
+            }
+        }
+
+        async function cargarContadoresGlobales() {
+            const local = cargarContadoresLocales();
+            playCountsCache = { ...local };
+
+            const activeSlots = Object.keys(CONFIG)
+                .map(Number)
+                .filter((n) => CONFIG[n] && CONFIG[n].url);
+
+            if (!remoteCounterAvailable) {
+                return;
+            }
+
+            try {
+                const results = await Promise.all(activeSlots.map(async (slot) => {
+                    try {
+                        const res = await remoteCounter.get(remoteKey(slot));
+                        const value = Number(res?.value ?? res?.data ?? 0);
+                        return [remoteKey(slot), Number.isFinite(value) ? value : 0];
+                    } catch (e) {
+                        return [remoteKey(slot), Number(local[remoteKey(slot)] || 0)];
+                    }
+                }));
+
+                for (const [key, value] of results) {
+                    playCountsCache[key] = value;
+                }
+
+                guardarContadoresLocales(playCountsCache);
+            } catch (e) {
+                // si falla, seguimos con el fallback local
+            }
+        }
+
+        async function incrementarContador(game, slot) {
+            const key = remoteKey(slot);
+            playCountsCache[key] = Number(playCountsCache[key] || 0) + 1;
+            guardarContadoresLocales(playCountsCache);
+
+            if (!remoteCounterAvailable) return;
+
+            try {
+                const res = await remoteCounter.up(key);
+                const value = Number(res?.value ?? res?.data ?? playCountsCache[key]);
+                if (Number.isFinite(value)) {
+                    playCountsCache[key] = value;
+                    guardarContadoresLocales(playCountsCache);
+                }
+            } catch (e) {
+                // si la API remota falla, el fallback local mantiene la UI viva
+            }
+        }
+
+        function getEntries() {
+
+            const entries = [];
             for (let i = 1; i <= TOTAL_SLOTS; i++) {
-                const j = CONFIG[i];
+                entries.push([i, CONFIG[i] || null]);
+            }
+            return entries;
+        }
+
+        function ordenarEntradas(entries) {
+            const decorated = entries.map(([slot, game]) => {
+                const titulo = game ? game.titulo : 'Próximamente';
+                const count = game ? getGameCount(game, slot) : 0;
+                return { slot, game, titulo, count };
+            });
+
+            switch (currentSort) {
+                case 'popular':
+                    decorated.sort((a, b) => (b.count - a.count) || a.titulo.localeCompare(b.titulo, 'es'));
+                    break;
+                case 'unpopular':
+                    decorated.sort((a, b) => (a.count - b.count) || a.titulo.localeCompare(b.titulo, 'es'));
+                    break;
+                case 'az':
+                    decorated.sort((a, b) => a.titulo.localeCompare(b.titulo, 'es'));
+                    break;
+                default:
+                    decorated.sort((a, b) => a.slot - b.slot);
+            }
+            return decorated;
+        }
+
+        function renderMenu() {
+            const grid = document.getElementById('main-grid');
+            const ordered = ordenarEntradas(getEntries());
+
+            grid.innerHTML = '';
+
+            for (const item of ordered) {
+                const { slot, game } = item;
                 const card = document.createElement('div');
                 card.className = 'card';
-                
-                const tieneImagen = j && j.img && j.img !== "";
-                const bgStyle = tieneImagen ? `background-image: url('${j.img}')` : "";
-                const titulo = j ? j.titulo : "Próximamente";
+                card.dataset.title = (game ? game.titulo : 'Próximamente').toLowerCase();
+                card.dataset.slot = String(slot);
+
+                const tieneImagen = game && game.img && game.img !== '';
+                const bgStyle = tieneImagen ? `background-image: url('${game.img}')` : '';
+                const titulo = game ? game.titulo : 'Próximamente';
+                const cuenta = game ? getGameCount(game, slot) : 0;
 
                 card.innerHTML = `
                     <div class="card-thumb" style="${bgStyle}">
@@ -259,18 +626,57 @@
                     </div>
                     <div class="card-footer">
                         <div class="card-title">${titulo}</div>
-                        <div class="card-status">${j ? 'ONLINE' : 'OFFLINE'}</div>
+                        <div class="card-meta">
+                            <div class="card-status">${game ? 'ONLINE' : 'OFFLINE'}</div>
+                            <div class="card-popularity">👥 ${cuenta}</div>
+                        </div>
                     </div>
                 `;
 
-                if (j && j.url) {
-                    card.onclick = () => lanzarJuego(j.url);
+                if (game && game.url) {
+                    card.onclick = () => lanzarJuego(game, slot);
                 }
+
                 grid.appendChild(card);
+            }
+
+            actualizarBusqueda();
+            actualizarContadoresUI();
+        }
+
+        function actualizarBusqueda() {
+            const input = document.getElementById('search-input');
+            const query = (input?.value || '').trim().toLowerCase();
+            const cards = document.querySelectorAll('#main-grid .card');
+            const count = document.getElementById('results-count');
+            let visibles = 0;
+
+            cards.forEach(card => {
+                const titulo = card.dataset.title || '';
+                const coincide = !query || titulo.includes(query);
+                card.classList.toggle('hidden', !coincide);
+                if (coincide) visibles++;
+            });
+
+            if (count) {
+                count.textContent = query ? `${visibles} resultado${visibles === 1 ? '' : 's'}` : `${cards.length} juegos`;
             }
         }
 
-        function lanzarJuego(url) {
+        function actualizarContadoresUI() {
+            document.querySelectorAll('#main-grid .card').forEach(card => {
+                const slot = Number(card.dataset.slot || 0);
+                const game = CONFIG[slot];
+                const count = game ? getGameCount(game, slot) : 0;
+                const countEl = card.querySelector('.card-popularity');
+                if (countEl) countEl.textContent = `👥 ${count}`;
+            });
+        }
+
+        async function lanzarJuego(game, slot) {
+            await incrementarContador(game, slot);
+            actualizarContadoresUI();
+
             const menu = document.getElementById('menu-view');
             const loader = document.getElementById('loading-screen');
             const runtime = document.getElementById('game-runtime');
@@ -280,13 +686,11 @@
 
             menu.style.display = 'none';
             loader.style.display = 'flex';
-            
-            // Reset de barra
+
             let progreso = 0;
             progressBar.style.width = '0%';
-            frame.src = "about:blank";
+            frame.src = 'about:blank';
 
-            // Simulación de carga (ideal para archivos de 47MB)
             const intervalo = setInterval(() => {
                 if (progreso < 92) {
                     progreso += Math.random() * 2;
@@ -296,14 +700,14 @@
                 }
             }, 350);
 
-            frame.src = url;
+            frame.src = game.url;
 
             frame.onload = () => {
-                if(frame.src !== "about:blank") {
+                if (frame.src !== 'about:blank') {
                     clearInterval(intervalo);
                     progressBar.style.width = '100%';
-                    loadingStats.innerText = "¡SISTEMA LISTO!";
-                    
+                    loadingStats.innerText = '¡SISTEMA LISTO!';
+
                     setTimeout(() => {
                         loader.style.display = 'none';
                         runtime.style.display = 'block';
@@ -314,12 +718,55 @@
 
         function cerrarJuego() {
             document.getElementById('game-runtime').style.display = 'none';
-            document.getElementById('game-frame').src = "about:blank";
+            document.getElementById('game-frame').src = 'about:blank';
             document.getElementById('menu-view').style.display = 'block';
             window.scrollTo(0,0);
         }
 
-        window.onload = generarMenu;
+        async function initUltron() {
+            const input = document.getElementById('search-input');
+            const clearBtn = document.getElementById('clear-search');
+            const sortSelect = document.getElementById('sort-select');
+            const counterStatus = document.getElementById('counter-status');
+
+            if (input) {
+                input.addEventListener('input', actualizarBusqueda);
+                input.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape') {
+                        input.value = '';
+                        actualizarBusqueda();
+                        input.blur();
+                    }
+                });
+            }
+
+            if (clearBtn && input) {
+                clearBtn.addEventListener('click', () => {
+                    input.value = '';
+                    actualizarBusqueda();
+                    input.focus();
+                });
+            }
+
+            if (sortSelect) {
+                sortSelect.addEventListener('change', () => {
+                    currentSort = sortSelect.value;
+                    renderMenu();
+                });
+            }
+
+            await inicializarCounterAPI();
+            if (counterStatus) {
+                counterStatus.textContent = remoteCounterAvailable
+                    ? `CONTADOR GLOBAL: ON (${ut_kY6AL37uOU3kVlXSaTJtNyE69z7OLeAhUgK02twY})`
+                    : 'CONTADOR GLOBAL: FALLBACK LOCAL';
+            }
+            await cargarContadoresGlobales();
+            renderMenu();
+        }
+
+        window.addEventListener('load', initUltron);
     </script>
+
 </body>
 </html>
