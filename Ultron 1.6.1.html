@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ULTRON AI </title>
+    <title>ULTRON 0.3 - Rainbow Edition</title>
     <style>
         :root { 
             --bg-color: #050508; 
@@ -32,6 +32,19 @@
             font-size: 1.4rem; color: #fff; border-left: 5px solid var(--neon-pink); 
             padding-left: 15px; margin: 40px 0 20px 0; text-transform: uppercase; 
         }
+
+        .counter-banner {
+            margin: 18px auto 0;
+            max-width: 1600px;
+            padding: 12px 16px;
+            border: 1px solid rgba(0,210,255,0.35);
+            background: rgba(0, 210, 255, 0.08);
+            border-radius: 12px;
+            color: #c8f8ff;
+            font-size: 0.92rem;
+            line-height: 1.35;
+        }
+        .counter-banner strong { color: #fff; }
         
         .grid { 
             display: grid; 
@@ -329,9 +342,9 @@
                         <button id="clear-search" type="button">Limpiar</button>
                     </div>
                 </div>
-                <div class="search-hint">Búsqueda rápida y sin complicaciones</div>
+                <div class="search-hint">Ejemplos: Mario, horror, carrera, puzzle, zombies</div>
             </div>
-            <div class="section-title">Juegos desbloqueados</div>
+            <div class="section-title">Nodos de Red (1-100)</div>
             <div id="main-grid" class="grid"></div>
         </div>
     </div>
@@ -452,7 +465,7 @@
             95: { titulo: "Getting Over It with Bennett Foddy", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSDWifP7HHc201tciy6Qz_WY2u4SNn3tc9kqg&s", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Getting Over It with Bennett Foddy.html" },
         };
         const TOTAL_SLOTS = 100;
-        const COUNTER_WORKSPACE = 'ultron-games'; // cambia esto por tu workspace real de CounterAPI
+        const COUNTER_WORKSPACE = 'ut_kY6AL37uOU3kVlXSaTJtNyE69z7OLeAhUgK02twY'; // crea tu workspace en CounterAPI y ponlo aquí
         const STORAGE_KEY = 'ultron_play_counts_v2_local_fallback';
 
         let currentSort = 'default';
@@ -507,7 +520,12 @@
 
         async function inicializarCounterAPI() {
             try {
-                if (typeof Counter !== 'function') return false;
+                const placeholder = !COUNTER_WORKSPACE || COUNTER_WORKSPACE.includes('PON_AQUI');
+                if (placeholder || typeof Counter !== 'function') {
+                    remoteCounterAvailable = false;
+                    remoteCounter = null;
+                    return false;
+                }
                 remoteCounter = new Counter({ workspace: COUNTER_WORKSPACE });
                 remoteCounterAvailable = true;
                 return true;
@@ -515,6 +533,16 @@
                 remoteCounterAvailable = false;
                 remoteCounter = null;
                 return false;
+            }
+        }
+
+        function actualizarBannerCounter() {
+            const banner = document.getElementById('counter-banner');
+            if (!banner) return;
+            if (remoteCounterAvailable) {
+                banner.innerHTML = '<strong>Popularidad global activa:</strong> los contadores se están leyendo y sumando en CounterAPI.';
+            } else {
+                banner.innerHTML = '<strong>Popularidad global desactivada:</strong> crea un workspace en CounterAPI y escribe su nombre en <code>COUNTER_WORKSPACE</code>. El menú sigue funcionando con respaldo local.';
             }
         }
 
@@ -758,7 +786,7 @@
             await inicializarCounterAPI();
             if (counterStatus) {
                 counterStatus.textContent = remoteCounterAvailable
-                    ? `CONTADOR GLOBAL: ON (${ut_kY6AL37uOU3kVlXSaTJtNyE69z7OLeAhUgK02twY})`
+                    ? `CONTADOR GLOBAL: ON (${COUNTER_WORKSPACE})`
                     : 'CONTADOR GLOBAL: FALLBACK LOCAL';
             }
             await cargarContadoresGlobales();
