@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MyTube</title>
+
+<!-- Plyr CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/plyr@3.7.8/dist/plyr.css" />
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+  :root {
+    --bg: #0a0a0f;
+    --surface: #13131a;
+    --surface2: #1c1c28;
+    --border: #2a2a3d;
+    --accent: #ff2d55;
+    --accent2: #ff6b35;
+    --text: #f0f0f8;
+    --muted: #6b6b8a;
+    --card-hover: #1e1e2e;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.4;
+  }
+
+  header {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(10,10,15,0.92); backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px; height: 64px;
+    display: flex; align-items: center; gap: 32px;
+  }
+
+  .logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px; letter-spacing: 2px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    cursor: pointer;
+  }
+
+  .search-wrap { flex: 1; max-width: 600px; display: flex; }
+  .search-wrap input {
+    width: 100%; background: var(--surface2); border: 1.5px solid var(--border);
+    border-right: none; color: var(--text); padding: 10px 18px;
+    border-radius: 8px 0 0 8px; outline: none;
+  }
+  .search-wrap input:focus { border-color: var(--accent); }
+  .search-btn {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border: none; color: white; padding: 10px 20px; cursor: pointer;
+    border-radius: 0 8px 8px 0;
+  }
+
+  main { max-width: 1400px; margin: 0 auto; padding: 32px 24px; }
+
+  .hero { text-align: center; padding: 80px 20px 60px; }
+  .hero h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(56px, 10vw, 110px);
+    letter-spacing: 4px;
+    background: linear-gradient(135deg, #fff 30%, var(--accent) 70%, var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .video-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 24px;
+  }
+
+  .video-card {
+    background: var(--surface); border-radius: 12px; overflow: hidden;
+    cursor: pointer; transition: all 0.25s ease;
+  }
+  .video-card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(0,0,0,0.4); }
+
+  .thumbnail-wrap { position: relative; aspect-ratio: 16/9; overflow: hidden; }
+  .thumbnail-wrap img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s; }
+  .video-card:hover .thumbnail-wrap img { transform: scale(1.05); }
+
+  .duration-badge {
+    position: absolute; bottom: 8px; right: 8px;
+    background: rgba(0,0,0,0.82); color: white; font-size: 12px; padding: 2px 7px; border-radius: 4px;
+  }
+
+  .modal-bg {
+    display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9);
+    z-index: 500; align-items: center; justify-content: center;
+  }
+  .modal-bg.open { display: flex; }
+
+  .modal { background: var(--surface); border-radius: 16px; overflow: hidden; max-width: 900px; width: 100%; border: 1px solid var(--border); }
+  .modal-player { aspect-ratio: 16/9; background: #000; position: relative; }
+  #plyrPlayer { width: 100%; height: 100%; }
+
+  .modal-info { padding: 20px 24px; }
+  .modal-title { font-size: 18px; font-weight: 600; margin-bottom: 8px; }
+  .modal-channel { font-size: 14px; color: var(--muted); margin-bottom: 16px; }
+  .modal-actions { display: flex; gap: 12px; }
+
+  .modal-btn { padding: 9px 18px; border-radius: 8px; border: none; cursor: pointer; font-weight: 600; font-size: 13px; }
+  .btn-primary { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: white; }
+  .btn-secondary { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
+
+  .modal-close {
+    position: absolute; top: 20px; right: 20px; width: 40px; height: 40px;
+    background: rgba(255,255,255,0.1); border: none; border-radius: 50%;
+    color: white; font-size: 20px; cursor: pointer; z-index: 10;
+  }
+
+  /* Plyr styles */
+  .plyr { height: 100%; border-radius: 0; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo" onclick="goHome()">My<span>Tube</span></div>
+  <div class="search-wrap">
+    <input type="text" id="searchInput" placeholder="Busca cualquier cosa..." autocomplete="off" />
+    <button class="search-btn" onclick="doSearch()" title="Buscar">🔍</button>
+  </div>
+</header>
+
+<main id="mainContent"></main>
+
+<!-- Player Modal -->
+<div class="modal-bg" id="playerModal">
+  <div style="position:relative; width:100%; max-width:900px;">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal">
+      <div class="modal-player">
+        <div id="plyrPlayer"></div>
+      </div>
+      <div class="modal-info">
+        <div class="modal-title" id="modalTitle"></div>
+        <div class="modal-channel" id="modalChannel"></div>
+        <div class="modal-actions">
+          <button class="modal-btn btn-primary" onclick="openYouTube()">Ver en YouTube</button>
+          <button class="modal-btn btn-secondary" onclick="closeModal()">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Plyr JS -->
+<script src="https://cdn.jsdelivr.net/npm/plyr@3.7.8/dist/plyr.min.js"></script>
+
+<script>
+  const STORAGE_KEY = 'mytube_api_key';
+  const POPULAR_QUERIES = ['música', 'gaming', 'programación', 'cocina', 'deportes', 'ciencia', 'viajes', 'películas'];
+  
+  let currentVideoId = '';
+  let apiKey = '';
+  let player = null;
+  let storageAvailable = true;
+
+  function isStorageAvailable() {
+    try {
+      localStorage.setItem('test', 'test');
+      localStorage.removeItem('test');
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  window.onload = () => {
+    storageAvailable = isStorageAvailable();
+    if (!storageAvailable) {
+      document.getElementById('mainContent').innerHTML = `
+        <div style="max-width:600px;margin:100px auto;padding:40px;background:var(--surface);border:1px solid var(--accent);border-radius:16px;text-align:center;">
+          <h2>⚠️ Abre con servidor local</h2>
+          <p>Ejecuta: <code style="background:#1c1c28;padding:8px;border-radius:6px;">python3 -m http.server 8000</code></p>
+        </div>`;
+      return;
+    }
+
+    apiKey = localStorage.getItem(STORAGE_KEY) || '';
+    if (!apiKey) showSetup();
+    else showHome();
+
+    document.getElementById('searchInput').addEventListener('keydown', e => {
+      if (e.key === 'Enter') doSearch();
+    });
+  };
+
+  function showSetup() {
+    document.getElementById('mainContent').innerHTML = `
+      <div class="setup-screen" style="max-width:520px;margin:60px auto;background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:48px 40px;text-align:center;">
+        <div style="font-size:52px;margin-bottom:20px;">🔑</div>
+        <h2 style="font-family:'Bebas Neue',sans-serif;font-size:32px;">Configura tu API Key</h2>
+        <p style="color:var(--muted);margin:20px 0;">MyTube usa la YouTube Data API v3.<br>Obtén tu clave en <a href="https://console.cloud.google.com/" target="_blank">Google Cloud Console</a></p>
+        <input id="apiKeyInput" type="text" placeholder="Pega tu API Key aquí..." style="width:100%;padding:14px;margin:15px 0;background:var(--surface2);border:1.5px solid var(--border);color:var(--text);border-radius:10px;"/>
+        <button onclick="saveApiKey()" style="width:100%;padding:14px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:white;border:none;border-radius:10px;cursor:pointer;font-weight:600;">Guardar y continuar</button>
+      </div>
+    `;
+  }
+
+  function saveApiKey() {
+    const input = document.getElementById('apiKeyInput').value.trim();
+    if (!input) return alert('Ingresa tu API Key');
+    apiKey = input;
+    localStorage.setItem(STORAGE_KEY, apiKey);
+    showHome();
+  }
+
+  function showHome() {
+    document.getElementById('mainContent').innerHTML = `
+      <div class="hero">
+        <h1>Descubre<br>tu próximo<br>vídeo</h1>
+        <p>Busca cualquier tema y encuentra los mejores vídeos al instante</p>
+        <div class="hero-tags">
+          ${POPULAR_QUERIES.map(q => `<span class="tag" onclick="quickSearch('${q}')">${q}</span>`).join('')}
+          <span class="tag" onclick="changeKey()" style="color:var(--accent);">⚙ Cambiar API Key</span>
+        </div>
+      </div>
+    `;
+  }
+
+  function goHome() {
+    document.getElementById('searchInput').value = '';
+    showHome();
+  }
+
+  function quickSearch(term) {
+    document.getElementById('searchInput').value = term;
+    doSearch();
+  }
+
+  function changeKey() {
+    localStorage.removeItem(STORAGE_KEY);
+    apiKey = '';
+    showSetup();
+  }
+
+  async function doSearch() {
+    const query = document.getElementById('searchInput').value.trim();
+    if (!query) return;
+    if (!apiKey) return showSetup();
+
+    showLoading(`Buscando "${query}"...`);
+
+    try {
+      const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(query)}&type=video&maxResults=16&key=${apiKey}`;
+      const res = await fetch(url);
+      const data = await res.json();
+
+      if (data.error) throw new Error(data.error.message);
+
+      if (!data.items || data.items.length === 0) {
+        showError('Sin resultados', `No encontramos vídeos para "${query}".`);
+        return;
+      }
+
+      const ids = data.items.map(i => i.id.videoId).join(',');
+      const detailsRes = await fetch(`https://www.googleapis.com/youtube/v3/videos?part=contentDetails,statistics&id=${ids}&key=${apiKey}`);
+      const detailsData = await detailsRes.json();
+
+      const detailsMap = {};
+      (detailsData.items || []).forEach(item => {
+        detailsMap[item.id] = {
+          duration: parseDuration(item.contentDetails?.duration || ''),
+          views: formatViews(item.statistics?.viewCount || 0)
+        };
+      });
+
+      renderResults(data.items, detailsMap, query);
+    } catch (err) {
+      console.error(err);
+      showError('Error', 'Verifica tu API Key y conexión.');
+    }
+  }
+
+  function renderResults(items, detailsMap, query) {
+    const cards = items.map(item => {
+      const vid = item.id.videoId;
+      const s = item.snippet;
+      const d = detailsMap[vid] || {};
+      return `
+        <div class="video-card" onclick="openVideo('${vid}', '${s.title.replace(/'/g, "\\'")}', '${s.channelTitle.replace(/'/g, "\\'")}')">
+          <div class="thumbnail-wrap">
+            <img src="${s.thumbnails?.medium?.url}" loading="lazy">
+            ${d.duration ? `<div class="duration-badge">${d.duration}</div>` : ''}
+          </div>
+          <div class="card-info">
+            <div class="card-title">${s.title}</div>
+            <div class="card-channel">${s.channelTitle}</div>
+            <div class="card-meta">
+              ${d.views ? `<span>${d.views} vistas</span>` : ''}
+              <span>${timeAgo(s.publishedAt)}</span>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    document.getElementById('mainContent').innerHTML = `
+      <div class="section-header">
+        <div class="section-title">Resultados para "${query}"</div>
+        <div class="section-count">${items.length} vídeos</div>
+      </div>
+      <div class="video-grid">${cards}</div>
+    `;
+  }
+
+  function openVideo(videoId, title, channel) {
+    currentVideoId = videoId;
+    document.getElementById('modalTitle').textContent = title;
+    document.getElementById('modalChannel').textContent = channel;
+
+    const container = document.getElementById('plyrPlayer');
+    container.innerHTML = `<video id="plyr-video" playsinline controls><source src="https://www.youtube.com/watch?v=${videoId}" type="video/youtube"></video>`;
+
+    if (player) player.destroy();
+
+    player = new Plyr('#plyr-video', {
+      youtube: { noCookie: true, rel: 0, modestbranding: 1 },
+      controls: ['play-large', 'play', 'progress', 'current-time', 'duration', 'mute', 'volume', 'settings', 'fullscreen'],
+      settings: ['quality', 'speed'],
+      autoplay: true
+    });
+
+    document.getElementById('playerModal').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal() {
+    if (player) {
+      player.pause();
+      player.destroy();
+      player = null;
+    }
+    document.getElementById('plyrPlayer').innerHTML = '';
+    document.getElementById('playerModal').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  function openYouTube() {
+    window.open(`https://www.youtube.com/watch?v=${currentVideoId}`, '_blank');
+  }
+
+  function showLoading(msg) {
+    document.getElementById('mainContent').innerHTML = `<div style="text-align:center;padding:100px;"><div class="spinner"></div><p>${msg}</p></div>`;
+  }
+
+  function showError(title, msg) {
+    document.getElementById('mainContent').innerHTML = `
+      <div style="text-align:center;padding:80px;">
+        <h3>${title}</h3>
+        <p style="color:var(--muted);">${msg}</p>
+        <button onclick="goHome()" style="margin-top:20px;padding:12px 28px;background:linear-gradient(135deg,var(--accent),var(--accent2));color:white;border:none;border-radius:8px;cursor:pointer;">Volver</button>
+      </div>
+    `;
+  }
+
+  function parseDuration(iso) {
+    const m = iso.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
+    if (!m) return '';
+    const h = parseInt(m[1]||0), min = parseInt(m[2]||0), s = parseInt(m[3]||0);
+    return h ? `${h}:${min.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}` : `${min}:${s.toString().padStart(2,'0')}`;
+  }
+
+  function formatViews(n) {
+    n = parseInt(n);
+    if (n >= 1e6) return (n/1e6).toFixed(1) + 'M';
+    if (n >= 1e3) return (n/1e3).toFixed(1) + 'K';
+    return n;
+  }
+
+  function timeAgo(dateStr) {
+    const diff = Date.now() - new Date(dateStr).getTime();
+    const d = Math.floor(diff / 86400000);
+    if (d < 1) return 'Hoy';
+    if (d < 7) return `hace ${d} día${d>1?'s':''}`;
+    return `hace ${Math.floor(d/7)} semana${Math.floor(d/7)>1?'s':''}`;
+  }
+</script>
+</body>
+</html>
