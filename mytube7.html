@@ -27,7 +27,9 @@
     display: flex; align-items: center; gap: 32px;
   }
 
-  .logo { font-family: 'Bebas Neue', sans-serif; font-size: 28px; letter-spacing: 2px;
+  .logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px; letter-spacing: 2px;
     background: linear-gradient(135deg, var(--accent), var(--accent2));
     -webkit-background-clip: text; -webkit-text-fill-color: transparent;
     cursor: pointer;
@@ -40,6 +42,7 @@
     border-radius: 8px 0 0 8px; outline: none;
   }
   .search-wrap input:focus { border-color: var(--accent); }
+
   .search-btn {
     background: linear-gradient(135deg, var(--accent), var(--accent2));
     border: none; color: white; padding: 10px 20px; cursor: pointer;
@@ -70,22 +73,35 @@
     padding: 2px 7px; border-radius: 4px;
   }
 
+  /* MODAL */
   .modal-bg {
     display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9);
     z-index: 500; align-items: center; justify-content: center;
   }
   .modal-bg.open { display: flex; }
 
-  .modal { background: var(--surface); border-radius: 16px; overflow: hidden; max-width: 900px; width: 100%; border: 1px solid var(--border); }
-  .modal-player { aspect-ratio: 16/9; background: #000; position: relative; }
+  .modal {
+    background: var(--surface); border-radius: 16px; overflow: hidden;
+    max-width: 900px; width: 100%; border: 1px solid var(--border);
+  }
+
+  .modal-player {
+    aspect-ratio: 16/9; background: #000; position: relative;
+  }
+
   #plyrPlayer { width: 100%; height: 100%; }
+
+  .plyr { height: 100% !important; border-radius: 0; }
 
   .modal-info { padding: 20px 24px; }
   .modal-title { font-size: 18px; font-weight: 600; margin-bottom: 8px; }
   .modal-channel { font-size: 14px; color: var(--muted); margin-bottom: 16px; }
   .modal-actions { display: flex; gap: 12px; }
 
-  .modal-btn { padding: 9px 18px; border-radius: 8px; border: none; cursor: pointer; font-weight: 600; }
+  .modal-btn {
+    padding: 9px 18px; border-radius: 8px; border: none;
+    cursor: pointer; font-weight: 600;
+  }
   .btn-primary { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: white; }
   .btn-secondary { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
 
@@ -94,8 +110,6 @@
     background: rgba(255,255,255,0.1); border: none; border-radius: 50%;
     color: white; font-size: 20px; cursor: pointer; z-index: 10;
   }
-
-  .plyr { height: 100%; border-radius: 0; }
 </style>
 </head>
 <body>
@@ -116,7 +130,7 @@
     <button class="modal-close" onclick="closeModal()">✕</button>
     <div class="modal">
       <div class="modal-player">
-        <div id="plyrPlayer"></div>
+        <div id="plyrPlayer" class="plyr__video-embed"></div>
       </div>
       <div class="modal-info">
         <div class="modal-title" id="modalTitle"></div>
@@ -133,29 +147,14 @@
 <script src="https://cdn.jsdelivr.net/npm/plyr@3.7.8/dist/plyr.min.js"></script>
 
 <script>
-  const STORAGE_KEY = 'mytube_api_key';
-  const POPULAR_QUERIES = ['música', 'gaming', 'programación', 'cocina', 'deportes', 'ciencia', 'viajes', 'películas'];
-  
   let currentVideoId = '';
   let apiKey = '';
   let player = null;
-  let storageAvailable = true;
 
-  function isStorageAvailable() {
-    try {
-      localStorage.setItem('test', 'test');
-      localStorage.removeItem('test');
-      return true;
-    } catch (e) { return false; }
-  }
+  const STORAGE_KEY = 'mytube_api_key';
+  const POPULAR_QUERIES = ['música', 'gaming', 'programación', 'cocina', 'deportes', 'ciencia', 'viajes', 'películas'];
 
   window.onload = () => {
-    storageAvailable = isStorageAvailable();
-    if (!storageAvailable) {
-      document.getElementById('mainContent').innerHTML = `<div style="max-width:600px;margin:100px auto;padding:40px;background:var(--surface);border-radius:16px;text-align:center;color:var(--accent);">⚠️ Abre el archivo con un servidor local (python3 -m http.server 8000)</div>`;
-      return;
-    }
-
     apiKey = localStorage.getItem(STORAGE_KEY) || '';
     if (!apiKey) showSetup(); else showHome();
 
@@ -164,8 +163,7 @@
     });
   };
 
-  // === SETUP Y BÚSQUEDA (mismo código funcional) ===
-  function showSetup() { /* ... mismo que antes ... */ 
+  function showSetup() {
     document.getElementById('mainContent').innerHTML = `
       <div style="max-width:520px;margin:60px auto;background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:48px 40px;text-align:center;">
         <div style="font-size:52px;margin-bottom:20px;">🔑</div>
@@ -185,7 +183,7 @@
     showHome();
   }
 
-  function showHome() { /* mismo que antes */ 
+  function showHome() {
     document.getElementById('mainContent').innerHTML = `
       <div class="hero">
         <h1>Descubre<br>tu próximo<br>vídeo</h1>
@@ -202,10 +200,10 @@
   function quickSearch(term) { document.getElementById('searchInput').value = term; doSearch(); }
   function changeKey() { localStorage.removeItem(STORAGE_KEY); apiKey = ''; showSetup(); }
 
-  // === BÚSQUEDA Y RESULTADOS (funcional) ===
-  async function doSearch() { /* ... código completo anterior ... */ 
+  async function doSearch() { /* ... (mantengo el código de búsqueda anterior que ya funcionaba) */ 
     const query = document.getElementById('searchInput').value.trim();
-    if (!query || !apiKey) return showSetup();
+    if (!query) return;
+    if (!apiKey) return showSetup();
 
     showLoading(`Buscando "${query}"...`);
 
@@ -240,7 +238,7 @@
     }
   }
 
-  function renderResults(items, detailsMap, query) { /* ... mismo código anterior ... */ 
+  function renderResults(items, detailsMap, query) {
     const cards = items.map(item => {
       const vid = item.id.videoId;
       const s = item.snippet;
@@ -272,37 +270,27 @@
     `;
   }
 
-  // === REPRODUCTOR CORREGIDO (VERSIÓN MÁS ESTABLE) ===
+  // ==================== PLYR MEJORADO ====================
   function openVideo(videoId, title, channel) {
     currentVideoId = videoId;
     document.getElementById('modalTitle').textContent = title;
     document.getElementById('modalChannel').textContent = channel;
 
     const container = document.getElementById('plyrPlayer');
-    container.innerHTML = `<div id="plyr-container"></div>`;
+    container.innerHTML = `
+      <iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1&modestbranding=1&rel=0" 
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+              allowfullscreen>
+      </iframe>
+    `;
 
     if (player) player.destroy();
 
-    player = new Plyr('#plyr-container', {
-      youtube: {
-        noCookie: true,
-        rel: 0,
-        modestbranding: 1,
-        playsinline: 1
-      },
+    player = new Plyr(container.querySelector('iframe').parentElement, {
       controls: ['play-large', 'play', 'progress', 'current-time', 'duration', 'mute', 'volume', 'settings', 'fullscreen'],
       settings: ['quality', 'speed'],
-      autoplay: true,
-      loadSprite: false
+      autoplay: true
     });
-
-    // Cargar el vídeo de forma más directa
-    setTimeout(() => {
-      player.source = {
-        type: 'video',
-        sources: [{ src: videoId, provider: 'youtube' }]
-      };
-    }, 100);
 
     document.getElementById('playerModal').classList.add('open');
     document.body.style.overflow = 'hidden';
@@ -310,7 +298,6 @@
 
   function closeModal() {
     if (player) {
-      player.pause();
       player.destroy();
       player = null;
     }
@@ -323,9 +310,8 @@
     window.open(`https://www.youtube.com/watch?v=${currentVideoId}`, '_blank');
   }
 
-  // === UTILIDADES ===
   function showLoading(msg) {
-    document.getElementById('mainContent').innerHTML = `<div style="text-align:center;padding:100px;"><div style="width:50px;height:50px;border:4px solid #333;border-top-color:#ff2d55;border-radius:50%;margin:auto;animation:spin 1s linear infinite;"></div><p>${msg}</p></div>`;
+    document.getElementById('mainContent').innerHTML = `<div style="text-align:center;padding:100px;color:var(--muted);"><div style="width:50px;height:50px;border:4px solid #333;border-top-color:#ff2d55;border-radius:50%;margin:auto  auto 20px;animation:spin 1s linear infinite;"></div>${msg}</div>`;
   }
 
   function showError(title, msg) {
@@ -338,7 +324,7 @@
     `;
   }
 
-  function parseDuration(iso) { /* mismo código */ 
+  function parseDuration(iso) {
     const m = iso.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
     if (!m) return '';
     const h = parseInt(m[1]||0), min = parseInt(m[2]||0), s = parseInt(m[3]||0);
