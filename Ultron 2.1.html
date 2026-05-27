@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ULTRON 0.3 - Rainbow Edition</title>
+    <title>ULTRON AI</title>
     <style>
         :root { 
             --bg-color: #050508; 
@@ -22,7 +22,7 @@
         
         header { text-align: center; padding: 40px 20px; }
         h1 { 
-            margin: 0; font-size: 3rem; font-weight: 900; letter-spacing: 5px; 
+            margin: 0; font-size: 5rem; font-weight: 900; letter-spacing: 5px; 
             color: var(--neon-blue); text-shadow: 0 0 20px rgba(0, 210, 255, 0.5); 
             text-transform: uppercase; 
         }
@@ -217,6 +217,114 @@
     filter: drop-shadow(0 0 18px rgba(0, 210, 255, 0.35));
 }
 
+
+        h1 {
+            background: linear-gradient(90deg, var(--neon-blue), #ffffff, var(--neon-pink), var(--neon-blue));
+            background-size: 300% 100%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: title-shine 6s linear infinite, title-float 2.8s ease-in-out infinite;
+        }
+
+        @keyframes title-shine {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 300% 50%; }
+        }
+
+        @keyframes title-float {
+            0%, 100% { transform: translateY(0px) scale(1); text-shadow: 0 0 20px rgba(0, 210, 255, 0.55); }
+            50% { transform: translateY(-4px) scale(1.01); text-shadow: 0 0 30px rgba(255, 0, 85, 0.7); }
+        }
+
+        .save-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin: 16px 0 6px;
+            justify-content: center;
+        }
+
+        .save-actions button,
+        .save-actions label {
+            border: 1px solid rgba(0, 210, 255, 0.28);
+            background: rgba(10, 12, 22, 0.95);
+            color: white;
+            border-radius: 12px;
+            padding: 10px 14px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: transform 0.2s ease, border-color 0.2s ease, filter 0.2s ease;
+        }
+
+        .save-actions button:hover,
+        .save-actions label:hover {
+            transform: translateY(-1px);
+            border-color: rgba(0, 210, 255, 0.6);
+            filter: brightness(1.08);
+        }
+
+        .save-actions input[type="file"] {
+            display: none;
+        }
+
+        .card {
+            position: relative;
+        }
+
+        .fav-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 2;
+            width: 34px;
+            height: 34px;
+            border-radius: 999px;
+            border: 1px solid rgba(255,255,255,0.16);
+            background: rgba(5, 8, 16, 0.78);
+            color: #ffd54a;
+            cursor: pointer;
+            font-size: 1rem;
+            display: grid;
+            place-items: center;
+            box-shadow: 0 0 12px rgba(0,0,0,0.35);
+        }
+
+        .card.favorite {
+            border-color: rgba(255, 213, 74, 0.75);
+            box-shadow: 0 0 22px rgba(255, 213, 74, 0.16);
+        }
+
+        .card.favorite .card-title {
+            color: #fff3b0;
+        }
+
+        .favorite-empty {
+            grid-column: 1 / -1;
+            text-align: center;
+            color: rgba(255,255,255,0.65);
+            padding: 14px 10px;
+            border: 1px dashed rgba(255,255,255,0.18);
+            border-radius: 16px;
+            background: rgba(255,255,255,0.03);
+        }
+
+        #resume-last-btn {
+            border: 1px solid rgba(255, 0, 85, 0.35);
+            background: linear-gradient(90deg, rgba(255,0,85,0.92), rgba(255,122,24,0.92));
+            color: white;
+            border-radius: 12px;
+            padding: 10px 14px;
+            font-weight: 900;
+            cursor: pointer;
+            transition: transform 0.2s ease, filter 0.2s ease;
+        }
+
+        #resume-last-btn:hover {
+            transform: translateY(-1px);
+            filter: brightness(1.08);
+        }
+
         #search-input::placeholder {
             color: rgba(255,255,255,0.45);
             font-weight: 600;
@@ -337,14 +445,41 @@
             animation: spin 1s linear infinite; 
         }
         @keyframes spin { to { transform: rotate(360deg); } }
-    </style>
+    
+        .game-controls {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 10000;
+            display: none;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .game-btn {
+            border: none;
+            border-radius: 14px;
+            padding: 12px 16px;
+            font-weight: 800;
+            color: white;
+            cursor: pointer;
+            background: rgba(0,0,0,0.72);
+            border: 1px solid rgba(0,210,255,0.35);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 18px rgba(0,210,255,0.2);
+        }
+
+        .game-btn:hover {
+            transform: translateY(-2px);
+        }
+
+</style>
 </head>
 <body>
 
     <div id="menu-view">
         <header class="hero-header">
     <h1>Ultron</h1>
-    <img src="logo.png" alt="Logo Ultron" class="logo-ultron">
 </header>
         <div class="main-container">
             <div class="search-wrapper">
@@ -362,9 +497,21 @@
                         <button id="clear-search" type="button">Limpiar</button>
                     </div>
                 </div>
-                <div class="search-hint">Ejemplos: Mario, horror, carrera, puzzle, zombies</div>
+                <div class="search-hint">Búsqueda rápida sin complicaciones</div>
             </div>
-            <div class="section-title">Nodos de Red (1-100)</div>
+
+
+            <div class="save-actions" aria-label="Opciones de guardado">
+                <button id="resume-last-btn" type="button">Reanudar último juego</button>
+                <button id="manual-save-btn" type="button">Guardar manualmente</button>
+                <button id="export-save-btn" type="button">Exportar progreso</button>
+                <label for="import-save-input">Importar progreso</label>
+                <input id="import-save-input" type="file" accept="application/json">
+            </div>
+
+            <div class="section-title">Favoritos</div>
+            <div id="favorites-grid" class="grid"></div>
+            <div class="section-title">Juegos desbloqueados (1-100)</div>
             <div id="main-grid" class="grid"></div>
         </div>
     </div>
@@ -382,7 +529,15 @@
         <iframe id="game-frame"></iframe>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/counterapi/dist/counter.browser.min.js"></script>
+    
+    <div class="game-controls" id="game-controls">
+        <button class="game-btn" id="save-progress-btn">💾 Guardar</button>
+        <button class="game-btn" id="export-progress-btn">📤 Exportar</button>
+        <button class="game-btn" id="import-progress-btn">📥 Importar</button>
+        <input type="file" id="import-progress-file" accept=".json" style="display:none;">
+    </div>
+
+<script src="https://cdn.jsdelivr.net/npm/counterapi/dist/counter.browser.min.js"></script>
 
     <script>
         const CONFIG = {
@@ -498,6 +653,13 @@
         let remoteCounterAvailable = false;
         let remoteCounter = null;
 
+        let favorites = [];
+        let lastPlayedSlot = null;
+        let lastPlayedAt = null;
+        const FAVORITES_KEY = 'ultron_favorites_v1';
+        const UI_STATE_KEY = 'ultron_ui_state_v1';
+        const LAST_GAME_KEY = 'ultron_last_game_v1';
+
         function getStorage() {
             try {
                 const testKey = '__ultron_test__';
@@ -533,6 +695,111 @@
             try {
                 storage.setItem(STORAGE_KEY, JSON.stringify(data));
             } catch (e) {}
+        }
+
+        function leerJsonSeguro(key, fallback) {
+            if (!storage) return fallback;
+            try {
+                const raw = storage.getItem(key);
+                return raw ? JSON.parse(raw) : fallback;
+            } catch (e) {
+                return fallback;
+            }
+        }
+
+        function guardarJsonSeguro(key, value) {
+            if (!storage) return;
+            try {
+                storage.setItem(key, JSON.stringify(value));
+            } catch (e) {}
+        }
+
+        function guardarUIState() {
+            guardarJsonSeguro(UI_STATE_KEY, {
+                query: document.getElementById('search-input')?.value || '',
+                sort: currentSort,
+                lastPlayedSlot,
+                lastPlayedAt
+            });
+            guardarJsonSeguro(FAVORITES_KEY, favorites);
+            if (lastPlayedSlot != null) {
+                guardarJsonSeguro(LAST_GAME_KEY, { slot: lastPlayedSlot, at: lastPlayedAt });
+            }
+        }
+
+        function cargarEstadoGuardado() {
+            const storedFavorites = leerJsonSeguro(FAVORITES_KEY, []);
+            favorites = Array.isArray(storedFavorites) ? storedFavorites.map(Number).filter(Number.isFinite) : [];
+            const uiState = leerJsonSeguro(UI_STATE_KEY, {});
+            currentSort = uiState.sort || 'default';
+            lastPlayedSlot = uiState.lastPlayedSlot ?? null;
+            lastPlayedAt = uiState.lastPlayedAt ?? null;
+            const lastGame = leerJsonSeguro(LAST_GAME_KEY, {});
+            if (lastGame && typeof lastGame.slot !== 'undefined') {
+                lastPlayedSlot = lastGame.slot;
+                lastPlayedAt = lastGame.at || lastPlayedAt;
+            }
+        }
+
+        function isFavorite(slot) {
+            return favorites.includes(Number(slot));
+        }
+
+        function toggleFavorite(slot) {
+            slot = Number(slot);
+            if (favorites.includes(slot)) {
+                favorites = favorites.filter((n) => n !== slot);
+            } else {
+                favorites = [...favorites, slot].sort((a, b) => a - b);
+            }
+            guardarUIState();
+            renderMenu();
+        }
+
+        function getGameBySlot(slot) {
+            return CONFIG[Number(slot)] || null;
+        }
+
+        function buildExportData() {
+            return {
+                version: 1,
+                favorites,
+                uiState: {
+                    sort: currentSort,
+                    lastPlayedSlot,
+                    lastPlayedAt
+                },
+                playCountsCache
+            };
+        }
+
+        function aplicarImportData(data) {
+            if (!data || typeof data !== 'object') return false;
+            if (Array.isArray(data.favorites)) favorites = data.favorites.map(Number).filter(Number.isFinite);
+            if (data.uiState && typeof data.uiState === 'object') {
+                currentSort = data.uiState.sort || currentSort;
+                lastPlayedSlot = data.uiState.lastPlayedSlot ?? lastPlayedSlot;
+                lastPlayedAt = data.uiState.lastPlayedAt ?? lastPlayedAt;
+            }
+            if (data.playCountsCache && typeof data.playCountsCache === 'object') {
+                playCountsCache = { ...playCountsCache, ...data.playCountsCache };
+                guardarContadoresLocales(playCountsCache);
+            }
+            guardarUIState();
+            const sortSelect = document.getElementById('sort-select');
+            if (sortSelect) sortSelect.value = currentSort;
+            renderMenu();
+            return true;
+        }
+
+        function descargarJSON(nombre, data) {
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = nombre;
+            a.click();
+            setTimeout(() => URL.revokeObjectURL(url), 2500);
         }
 
         function remoteKey(slot) {
@@ -655,6 +922,68 @@
             return decorated;
         }
 
+        function crearCard(slot, game) {
+            const card = document.createElement('div');
+            card.className = 'card';
+            if (isFavorite(slot)) card.classList.add('favorite');
+            card.dataset.title = (game ? game.titulo : 'Próximamente').toLowerCase();
+            card.dataset.slot = String(slot);
+
+            const tieneImagen = game && game.img && game.img !== '';
+            const bgStyle = tieneImagen ? `background-image: url('${game.img}')` : '';
+            const titulo = game ? game.titulo : 'Próximamente';
+            const cuenta = game ? getGameCount(game, slot) : 0;
+            const favorito = isFavorite(slot);
+
+            card.innerHTML = `
+                <button class="fav-btn" type="button" aria-label="${favorito ? 'Quitar de favoritos' : 'Añadir a favoritos'}">${favorito ? '★' : '☆'}</button>
+                <div class="card-thumb" style="${bgStyle}">
+                    ${tieneImagen ? '' : '<span class="empty-icon">?</span>'}
+                </div>
+                <div class="card-footer">
+                    <div class="card-title">${titulo}</div>
+                    <div class="card-meta">
+                        <div class="card-status">${game ? 'ONLINE' : 'OFFLINE'}</div>
+                        <div class="card-popularity">👥 ${cuenta}</div>
+                    </div>
+                </div>
+            `;
+
+            const favBtn = card.querySelector('.fav-btn');
+            if (favBtn) {
+                favBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    toggleFavorite(slot);
+                });
+            }
+
+            if (game && game.url) {
+                card.onclick = () => lanzarJuego(game, slot);
+            }
+
+            return card;
+        }
+
+        function renderFavorites() {
+            const grid = document.getElementById('favorites-grid');
+            if (!grid) return;
+            grid.innerHTML = '';
+
+            const favoritos = favorites
+                .map((slot) => ({ slot: Number(slot), game: getGameBySlot(slot) }))
+                .filter((item) => item.game);
+
+            if (!favoritos.length) {
+                const empty = document.createElement('div');
+                empty.className = 'favorite-empty';
+                empty.textContent = 'Aún no tienes favoritos. Pulsa la estrella en cualquier juego.';
+                grid.appendChild(empty);
+                return;
+            }
+
+            favoritos.forEach(({ slot, game }) => grid.appendChild(crearCard(slot, game)));
+        }
+
         function renderMenu() {
             const grid = document.getElementById('main-grid');
             const ordered = ordenarEntradas(getEntries());
@@ -663,38 +992,12 @@
 
             for (const item of ordered) {
                 const { slot, game } = item;
-                const card = document.createElement('div');
-                card.className = 'card';
-                card.dataset.title = (game ? game.titulo : 'Próximamente').toLowerCase();
-                card.dataset.slot = String(slot);
-
-                const tieneImagen = game && game.img && game.img !== '';
-                const bgStyle = tieneImagen ? `background-image: url('${game.img}')` : '';
-                const titulo = game ? game.titulo : 'Próximamente';
-                const cuenta = game ? getGameCount(game, slot) : 0;
-
-                card.innerHTML = `
-                    <div class="card-thumb" style="${bgStyle}">
-                        ${tieneImagen ? '' : '<span class="empty-icon">?</span>'}
-                    </div>
-                    <div class="card-footer">
-                        <div class="card-title">${titulo}</div>
-                        <div class="card-meta">
-                            <div class="card-status">${game ? 'ONLINE' : 'OFFLINE'}</div>
-                            <div class="card-popularity">👥 ${cuenta}</div>
-                        </div>
-                    </div>
-                `;
-
-                if (game && game.url) {
-                    card.onclick = () => lanzarJuego(game, slot);
-                }
-
-                grid.appendChild(card);
+                grid.appendChild(crearCard(slot, game));
             }
 
             actualizarBusqueda();
             actualizarContadoresUI();
+            renderFavorites();
         }
 
         function actualizarBusqueda() {
@@ -730,6 +1033,10 @@
             await incrementarContador(game, slot);
             actualizarContadoresUI();
 
+            lastPlayedSlot = Number(slot);
+            lastPlayedAt = new Date().toISOString();
+            guardarUIState();
+
             const menu = document.getElementById('menu-view');
             const loader = document.getElementById('loading-screen');
             const runtime = document.getElementById('game-runtime');
@@ -753,6 +1060,10 @@
                 }
             }, 350);
 
+            currentGameData = game;
+            localStorage.setItem('ultron_last_game', JSON.stringify(game));
+            mostrarBotonesJuego();
+
             frame.src = game.url;
 
             frame.onload = () => {
@@ -773,7 +1084,92 @@
             document.getElementById('game-runtime').style.display = 'none';
             document.getElementById('game-frame').src = 'about:blank';
             document.getElementById('menu-view').style.display = 'block';
+            ocultarBotonesJuego();
             window.scrollTo(0,0);
+        }
+
+        function reanudarUltimoJuego() {
+            const slot = Number(lastPlayedSlot);
+            const game = getGameBySlot(slot);
+            if (!game) {
+                alert('No hay un juego reciente para reanudar.');
+                return;
+            }
+            lanzarJuego(game, slot);
+        }
+
+
+        let currentGameData = null;
+
+        function mostrarBotonesJuego() {
+            const controls = document.getElementById('game-controls');
+            if (controls) controls.style.display = 'flex';
+        }
+
+        function ocultarBotonesJuego() {
+            const controls = document.getElementById('game-controls');
+            if (controls) controls.style.display = 'none';
+        }
+
+        function guardarProgresoManual() {
+            if (!currentGameData) return;
+
+            const data = {
+                ultimoJuego: currentGameData,
+                fecha: new Date().toISOString()
+            };
+
+            localStorage.setItem('ultron_manual_save', JSON.stringify(data));
+            alert('Progreso guardado correctamente');
+        }
+
+        function exportarProgreso() {
+            const payload = {
+                favoritos: JSON.parse(localStorage.getItem('ultron_favorites') || '[]'),
+                ultimoJuego: JSON.parse(localStorage.getItem('ultron_last_game') || 'null'),
+                guardadoManual: JSON.parse(localStorage.getItem('ultron_manual_save') || 'null')
+            };
+
+            const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'ultron-save.json';
+            a.click();
+
+            URL.revokeObjectURL(url);
+        }
+
+        function importarProgreso(file) {
+            if (!file) return;
+
+            const reader = new FileReader();
+
+            reader.onload = (e) => {
+                try {
+                    const data = JSON.parse(e.target.result);
+
+                    if (data.favoritos) {
+                        localStorage.setItem('ultron_favorites', JSON.stringify(data.favoritos));
+                    }
+
+                    if (data.ultimoJuego) {
+                        localStorage.setItem('ultron_last_game', JSON.stringify(data.ultimoJuego));
+                    }
+
+                    if (data.guardadoManual) {
+                        localStorage.setItem('ultron_manual_save', JSON.stringify(data.guardadoManual));
+                    }
+
+                    alert('Progreso importado correctamente');
+                    location.reload();
+                } catch (err) {
+                    alert('Archivo inválido');
+                }
+            };
+
+            reader.readAsText(file);
         }
 
         async function initUltron() {
@@ -781,13 +1177,26 @@
             const clearBtn = document.getElementById('clear-search');
             const sortSelect = document.getElementById('sort-select');
             const counterStatus = document.getElementById('counter-status');
+            const resumeBtn = document.getElementById('resume-last-btn');
+            const manualSaveBtn = document.getElementById('manual-save-btn');
+            const exportSaveBtn = document.getElementById('export-save-btn');
+            const importInput = document.getElementById('import-save-input');
+
+            cargarEstadoGuardado();
+
+            if (sortSelect) sortSelect.value = currentSort;
+            if (input) input.value = leerJsonSeguro(UI_STATE_KEY, {})?.query || '';
 
             if (input) {
-                input.addEventListener('input', actualizarBusqueda);
+                input.addEventListener('input', () => {
+                    actualizarBusqueda();
+                    guardarUIState();
+                });
                 input.addEventListener('keydown', (e) => {
                     if (e.key === 'Escape') {
                         input.value = '';
                         actualizarBusqueda();
+                        guardarUIState();
                         input.blur();
                     }
                 });
@@ -797,6 +1206,7 @@
                 clearBtn.addEventListener('click', () => {
                     input.value = '';
                     actualizarBusqueda();
+                    guardarUIState();
                     input.focus();
                 });
             }
@@ -804,7 +1214,68 @@
             if (sortSelect) {
                 sortSelect.addEventListener('change', () => {
                     currentSort = sortSelect.value;
+                    guardarUIState();
                     renderMenu();
+                });
+            }
+
+            if (resumeBtn) resumeBtn.addEventListener('click', reanudarUltimoJuego);
+
+            if (manualSaveBtn) {
+                manualSaveBtn.addEventListener('click', () => {
+                    guardarUIState();
+                    alert('Progreso guardado en este navegador.');
+                });
+            }
+
+            if (exportSaveBtn) {
+                exportSaveBtn.addEventListener('click', () => {
+                    guardarUIState();
+                    descargarJSON('ultron-progreso.json', buildExportData());
+                });
+            }
+
+            if (importInput) {
+                importInput.addEventListener('change', async () => {
+                    const file = importInput.files?.[0];
+                    if (!file) return;
+                    try {
+                        const text = await file.text();
+                        const data = JSON.parse(text);
+                        if (aplicarImportData(data)) {
+                            alert('Progreso importado correctamente.');
+                        } else {
+                            alert('El archivo no contiene un progreso válido.');
+                        }
+                    } catch (e) {
+                        alert('No se pudo importar el archivo.');
+                    } finally {
+                        importInput.value = '';
+                    }
+                });
+            }
+
+            window.addEventListener('beforeunload', guardarUIState);
+
+
+            const saveBtn = document.getElementById('save-progress-btn');
+            const exportBtn = document.getElementById('export-progress-btn');
+            const importBtn = document.getElementById('import-progress-btn');
+            const importFile = document.getElementById('import-progress-file');
+
+            if (saveBtn) {
+                saveBtn.addEventListener('click', guardarProgresoManual);
+            }
+
+            if (exportBtn) {
+                exportBtn.addEventListener('click', exportarProgreso);
+            }
+
+            if (importBtn && importFile) {
+                importBtn.addEventListener('click', () => importFile.click());
+
+                importFile.addEventListener('change', (e) => {
+                    importarProgreso(e.target.files[0]);
                 });
             }
 
