@@ -2217,11 +2217,11 @@
 
         async function cargarSugerenciasFirebase() {
             try {
-                const res = await fetch(`${_getDB()}/sugerencias.json?limitToLast=50`);
+                const res = await fetch(`${_getDB()}/sugerencias.json`);
                 if (!res.ok) return [];
                 const data = await res.json();
                 if (!data) return [];
-                return Object.values(data).sort((a, b) => b.time > a.time ? 1 : -1);
+                return Object.values(data).sort((a, b) => b.time > a.time ? 1 : -1).slice(0, 50);
             } catch(e) { return []; }
         }
 
