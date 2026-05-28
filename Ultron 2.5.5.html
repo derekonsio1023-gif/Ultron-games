@@ -2221,18 +2221,20 @@
                 if (!res.ok) return [];
                 const data = await res.json();
                 if (!data) return [];
-                return Object.values(data).sort((a, b) => b.time > a.time ? 1 : -1).slice(0, 50);
+                return Object.values(data)
+                    .filter(s => !s.lang || s.lang === currentLang)
+                    .sort((a, b) => b.time > a.time ? 1 : -1)
+                    .slice(0, 50);
             } catch(e) { return []; }
         }
 
         async function guardarSugerenciaFirebase(text) {
             try {
-                const t = I18N[currentLang] || I18N.es;
                 const now = new Date();
                 const timeStr = now.toLocaleDateString(currentLang === 'en' ? 'en-GB' : 'es-ES', {
                     day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit'
                 });
-                const item = { text, time: now.toISOString(), timeStr };
+                const item = { text, time: now.toISOString(), timeStr, lang: currentLang };
                 const res = await fetch(`${_getDB()}/sugerencias.json`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
