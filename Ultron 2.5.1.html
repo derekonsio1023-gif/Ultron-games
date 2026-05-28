@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" id="html-root">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -473,273 +473,531 @@
             transform: translateY(-2px);
         }
 
-
-        .novelties-box {
-            margin: 18px 0 26px;
-            padding: 18px;
-            border-radius: 22px;
-            border: 1px solid rgba(0, 210, 255, 0.22);
-            background: linear-gradient(135deg, rgba(0, 210, 255, 0.09), rgba(255, 0, 85, 0.08));
-            box-shadow: 0 16px 35px rgba(0,0,0,0.28), inset 0 0 18px rgba(0,210,255,0.06);
-        }
-        .novelties-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 12px;
-            flex-wrap: wrap;
-            margin-bottom: 14px;
-        }
-        .novelties-title {
-            font-size: 1.15rem;
-            font-weight: 900;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: #fff;
-        }
-        .novelties-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 12px;
-        }
-        .novelty-card {
-            padding: 14px 16px;
-            border-radius: 18px;
-            background: rgba(5, 8, 16, 0.78);
-            border: 1px solid rgba(255,255,255,0.08);
-        }
-        .novelty-card strong {
-            display: block;
-            margin-bottom: 6px;
-            color: var(--neon-blue);
-        }
-        .novelty-card p {
-            margin: 0;
-            color: rgba(255,255,255,0.82);
-            line-height: 1.45;
-            font-size: 0.95rem;
-        }
-
-        .suggestions-box {
-            margin: 34px 0 18px;
-            padding: 18px;
-            border-radius: 22px;
-            border: 1px solid rgba(255,255,255,0.09);
-            background: rgba(13, 15, 22, 0.95);
-            box-shadow: 0 16px 35px rgba(0,0,0,0.3);
-        }
-        .suggestions-box h2 {
-            margin: 0 0 10px;
-            font-size: 1.15rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        .suggestions-box .note {
-            color: rgba(255,255,255,0.68);
-            font-size: 0.92rem;
-            margin-bottom: 14px;
-            line-height: 1.4;
-        }
-        .suggestion-form {
-            display: grid;
-            gap: 10px;
-            grid-template-columns: 1fr auto;
-            align-items: stretch;
-        }
-        #suggestion-input {
-            width: 100%;
-            min-height: 84px;
-            resize: vertical;
-            border-radius: 16px;
-            border: 1px solid rgba(0,210,255,0.22);
-            background: rgba(5, 8, 16, 0.88);
-            color: white;
-            padding: 12px 14px;
-            font: inherit;
-            outline: none;
-        }
-        #suggestion-input::placeholder {
-            color: rgba(255,255,255,0.45);
-        }
-        #suggestion-send {
-            align-self: start;
-            border: none;
-            border-radius: 16px;
-            padding: 14px 18px;
-            font-weight: 900;
-            color: white;
-            cursor: pointer;
-            background: linear-gradient(90deg, var(--neon-blue), var(--neon-pink));
-            box-shadow: 0 0 18px rgba(0,210,255,0.18);
-        }
-        .suggestions-list {
-            margin-top: 16px;
-            display: grid;
-            gap: 10px;
-        }
-        .suggestion-item {
-            padding: 12px 14px;
-            border-radius: 14px;
-            border: 1px solid rgba(255,255,255,0.08);
-            background: rgba(255,255,255,0.03);
-            color: rgba(255,255,255,0.84);
-            word-break: break-word;
-        }
-
-        .hidden-mode-btn {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            z-index: 2;
-            border: 1px solid rgba(255,255,255,0.16);
-            background: rgba(5, 8, 16, 0.84);
-            color: white;
-            border-radius: 999px;
-            padding: 6px 10px;
-            font-size: 0.7rem;
-            font-weight: 900;
-            cursor: pointer;
-            backdrop-filter: blur(8px);
-        }
-        .hidden-mode-btn:hover { filter: brightness(1.08); }
-
-        .lang-overlay, .secret-overlay, .pause-menu {
+        /* ============================================================
+           PANTALLA DE SELECCIÓN DE IDIOMA
+        ============================================================ */
+        #lang-screen {
             position: fixed;
             inset: 0;
-            z-index: 20000;
-            display: none;
+            z-index: 99999;
+            background: radial-gradient(ellipse at 50% 40%, #07091a 0%, #000 100%);
+            display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            background: radial-gradient(circle at top, rgba(0,210,255,0.14), rgba(0,0,0,0.96));
-            backdrop-filter: blur(10px);
+            gap: 48px;
         }
-        .lang-card, .secret-card, .pause-card {
-            width: min(92vw, 760px);
-            border-radius: 26px;
-            border: 1px solid rgba(0,210,255,0.22);
-            background: rgba(8,10,16,0.96);
-            box-shadow: 0 20px 60px rgba(0,0,0,0.45);
-            padding: 24px;
-        }
-        .lang-card h2, .pause-card h2, .secret-card h2 {
-            margin: 0 0 8px;
-            font-size: 1.5rem;
+
+        .lang-title {
+            font-size: 4rem;
+            font-weight: 900;
+            letter-spacing: 6px;
+            background: linear-gradient(90deg, #00d2ff, #fff, #ff0055, #00d2ff);
+            background-size: 300% 100%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: title-shine 5s linear infinite;
             text-transform: uppercase;
         }
-        .lang-card p, .pause-card p, .secret-card p {
-            margin: 0 0 18px;
-            color: rgba(255,255,255,0.72);
-            line-height: 1.45;
+
+        .lang-subtitle {
+            font-size: 1.1rem;
+            color: rgba(255,255,255,0.55);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-top: -36px;
         }
-        .lang-actions, .pause-actions, .secret-actions {
+
+        .lang-options {
             display: flex;
+            gap: 36px;
             flex-wrap: wrap;
-            gap: 12px;
+            justify-content: center;
         }
-        .lang-btn, .pause-btn, .secret-btn {
-            border: none;
-            border-radius: 16px;
-            padding: 14px 18px;
-            font-weight: 900;
-            cursor: pointer;
-            color: white;
-            background: rgba(255,255,255,0.08);
-            border: 1px solid rgba(255,255,255,0.12);
-        }
-        .lang-btn.primary, .pause-btn.primary, .secret-btn.primary {
-            background: linear-gradient(90deg, var(--neon-blue), var(--neon-pink));
-        }
-        .flag {
-            font-size: 1.5rem;
-            margin-right: 8px;
-            vertical-align: -2px;
-        }
-        .secret-preview {
-            display: grid;
-            grid-template-columns: 160px 1fr;
-            gap: 16px;
+
+        .lang-btn {
+            display: flex;
+            flex-direction: column;
             align-items: center;
-            margin: 16px 0 18px;
+            gap: 14px;
+            cursor: pointer;
+            border: 2px solid rgba(255,255,255,0.1);
+            border-radius: 20px;
+            padding: 30px 40px;
+            background: rgba(255,255,255,0.04);
+            transition: all 0.25s ease;
+            min-width: 180px;
+            backdrop-filter: blur(10px);
         }
-        .secret-preview img {
-            width: 160px;
-            height: 160px;
-            object-fit: cover;
-            border-radius: 18px;
+
+        .lang-btn:hover {
+            border-color: var(--neon-blue);
+            background: rgba(0,210,255,0.1);
+            transform: translateY(-6px);
+            box-shadow: 0 12px 40px rgba(0,210,255,0.25);
+        }
+
+        .lang-flag {
+            font-size: 4rem;
+            line-height: 1;
+            filter: drop-shadow(0 4px 12px rgba(0,0,0,0.4));
+        }
+
+        .lang-name {
+            font-size: 1rem;
+            font-weight: 800;
+            color: #fff;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .lang-native {
+            font-size: 0.8rem;
+            color: rgba(255,255,255,0.45);
+        }
+
+        .lang-screen-particles {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .lang-particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            border-radius: 50%;
+            background: var(--neon-blue);
+            animation: float-particle linear infinite;
+            opacity: 0;
+        }
+
+        @keyframes float-particle {
+            0% { opacity: 0; transform: translateY(100vh) scale(0); }
+            10% { opacity: 0.7; }
+            90% { opacity: 0.3; }
+            100% { opacity: 0; transform: translateY(-10vh) scale(1.5); }
+        }
+
+        /* ============================================================
+           CAJA DE NOVEDADES
+        ============================================================ */
+        .news-box {
+            margin: 16px auto 28px;
+            max-width: 900px;
+            border-radius: 20px;
+            border: 1px solid rgba(0,210,255,0.22);
+            background: linear-gradient(135deg, rgba(0,210,255,0.05), rgba(255,0,85,0.05));
+            backdrop-filter: blur(12px);
+            overflow: hidden;
+        }
+
+        .news-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 20px;
+            border-bottom: 1px solid rgba(0,210,255,0.12);
+            background: rgba(0,210,255,0.06);
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .news-header-icon {
+            font-size: 1.2rem;
+        }
+
+        .news-header-title {
+            font-size: 0.85rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--neon-blue);
+            flex: 1;
+        }
+
+        .news-badge {
+            background: var(--neon-pink);
+            color: #fff;
+            font-size: 0.65rem;
+            font-weight: 900;
+            padding: 3px 8px;
+            border-radius: 999px;
+            letter-spacing: 1px;
+        }
+
+        .news-toggle-arrow {
+            font-size: 0.8rem;
+            color: rgba(255,255,255,0.4);
+            transition: transform 0.3s ease;
+        }
+
+        .news-box.collapsed .news-toggle-arrow {
+            transform: rotate(-90deg);
+        }
+
+        .news-content {
+            padding: 18px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-height: 400px;
+            overflow: hidden;
+            transition: max-height 0.4s ease, padding 0.3s ease;
+        }
+
+        .news-box.collapsed .news-content {
+            max-height: 0;
+            padding-top: 0;
+            padding-bottom: 0;
+        }
+
+        .news-item {
+            display: flex;
+            gap: 14px;
+            align-items: flex-start;
+            padding: 12px 14px;
+            border-radius: 12px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.06);
+            transition: border-color 0.2s;
+        }
+
+        .news-item:hover {
+            border-color: rgba(0,210,255,0.2);
+        }
+
+        .news-item-icon {
+            font-size: 1.4rem;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .news-item-body {}
+
+        .news-item-title {
+            font-size: 0.88rem;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 3px;
+        }
+
+        .news-item-desc {
+            font-size: 0.78rem;
+            color: rgba(255,255,255,0.5);
+            line-height: 1.4;
+        }
+
+        .news-item-date {
+            font-size: 0.68rem;
+            color: var(--neon-blue);
+            margin-top: 5px;
+            font-weight: 700;
+        }
+
+        /* ============================================================
+           BOTÓN MODO OCULTO (STEALTH)
+        ============================================================ */
+        .stealth-btn {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            z-index: 3;
+            width: 30px;
+            height: 30px;
+            border-radius: 999px;
             border: 1px solid rgba(255,255,255,0.1);
-            background: #0a0c12;
+            background: rgba(5, 8, 16, 0.78);
+            color: rgba(255,255,255,0.5);
+            cursor: pointer;
+            font-size: 0.75rem;
+            display: grid;
+            place-items: center;
+            box-shadow: 0 0 10px rgba(0,0,0,0.3);
+            transition: all 0.2s ease;
         }
-        .secret-url {
-            margin-top: 10px;
-            padding: 10px 12px;
-            border-radius: 14px;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.09);
+
+        .stealth-btn:hover {
+            border-color: rgba(255,0,85,0.5);
+            color: #ff0055;
+            box-shadow: 0 0 12px rgba(255,0,85,0.3);
+        }
+
+        /* Modal de modo oculto */
+        #stealth-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 99990;
+            background: #fff;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        #stealth-overlay.active {
+            display: flex;
+        }
+
+        #stealth-img {
+            max-width: 90vw;
+            max-height: 70vh;
+            object-fit: contain;
+            border-radius: 8px;
+        }
+
+        #stealth-url-display {
+            font-size: 0.8rem;
+            color: #666;
             word-break: break-all;
-            font-family: monospace;
-            font-size: 0.9rem;
-            color: #c9f7ff;
+            max-width: 80vw;
+            text-align: center;
         }
-        @media (max-width: 720px) {
-            .suggestion-form { grid-template-columns: 1fr; }
-            .secret-preview { grid-template-columns: 1fr; }
-            .secret-preview img { width: 100%; height: 220px; }
+
+        #stealth-back-btn {
+            padding: 10px 26px;
+            border-radius: 10px;
+            border: 2px solid #333;
+            background: #111;
+            color: #fff;
+            font-weight: 800;
+            cursor: pointer;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+        }
+
+        #stealth-back-btn:hover {
+            background: #222;
+        }
+
+        /* Menú de pausa */
+        #pause-menu {
+            position: fixed;
+            inset: 0;
+            z-index: 99991;
+            background: rgba(0,0,0,0.82);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            backdrop-filter: blur(4px);
+        }
+
+        #pause-menu.active {
+            display: flex;
+        }
+
+        .pause-title {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: var(--neon-blue);
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            text-shadow: 0 0 20px rgba(0,210,255,0.5);
+        }
+
+        .pause-game-name {
+            font-size: 1rem;
+            color: rgba(255,255,255,0.5);
+            text-align: center;
+        }
+
+        .pause-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            width: 280px;
+        }
+
+        .pause-btn {
+            padding: 14px 20px;
+            border-radius: 14px;
+            font-weight: 800;
+            font-size: 0.95rem;
+            letter-spacing: 1px;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+
+        .pause-btn-continue {
+            background: linear-gradient(90deg, #00d2ff, #0066aa);
+            color: #fff;
+            border: none;
+            box-shadow: 0 0 20px rgba(0,210,255,0.3);
+        }
+
+        .pause-btn-continue:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 30px rgba(0,210,255,0.5);
+        }
+
+        .pause-btn-exit {
+            background: transparent;
+            color: rgba(255,255,255,0.6);
+            border: 1px solid rgba(255,255,255,0.18);
+        }
+
+        .pause-btn-exit:hover {
+            border-color: var(--neon-pink);
+            color: var(--neon-pink);
+        }
+
+        /* ============================================================
+           CAJA DE SUGERENCIAS
+        ============================================================ */
+        .suggestions-box {
+            margin: 40px 0 20px;
+            border-radius: 20px;
+            border: 1px solid rgba(255,0,85,0.22);
+            background: linear-gradient(135deg, rgba(255,0,85,0.05), rgba(0,210,255,0.05));
+            overflow: hidden;
+        }
+
+        .suggestions-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 16px 22px;
+            border-bottom: 1px solid rgba(255,0,85,0.12);
+            background: rgba(255,0,85,0.06);
+        }
+
+        .suggestions-header-icon { font-size: 1.3rem; }
+
+        .suggestions-header-title {
+            font-size: 0.85rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--neon-pink);
+            flex: 1;
+        }
+
+        .suggestions-body {
+            padding: 20px 22px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .suggestions-desc {
+            font-size: 0.82rem;
+            color: rgba(255,255,255,0.45);
+            line-height: 1.5;
+        }
+
+        .suggestions-form {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .suggestions-input {
+            flex: 1;
+            min-width: 200px;
+            background: rgba(5,8,16,0.9);
+            border: 1px solid rgba(255,0,85,0.22);
+            border-radius: 12px;
+            padding: 12px 16px;
+            color: #fff;
+            font-size: 0.9rem;
+            font-weight: 600;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .suggestions-input:focus {
+            border-color: rgba(255,0,85,0.55);
+        }
+
+        .suggestions-input::placeholder {
+            color: rgba(255,255,255,0.3);
+        }
+
+        .suggestions-send-btn {
+            background: linear-gradient(90deg, var(--neon-pink), #ff7a18);
+            border: none;
+            border-radius: 12px;
+            padding: 12px 22px;
+            color: #fff;
+            font-weight: 800;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .suggestions-send-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 18px rgba(255,0,85,0.35);
+        }
+
+        .suggestions-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .suggestion-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 10px 14px;
+            border-radius: 10px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.06);
+            animation: slideInSug 0.3s ease;
+        }
+
+        @keyframes slideInSug {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .suggestion-avatar {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--neon-pink), #ff7a18);
+            display: grid;
+            place-items: center;
+            font-size: 0.75rem;
+            font-weight: 900;
+            color: #fff;
+            flex-shrink: 0;
+        }
+
+        .suggestion-text {
+            font-size: 0.82rem;
+            color: rgba(255,255,255,0.75);
+            flex: 1;
+            line-height: 1.4;
+        }
+
+        .suggestion-time {
+            font-size: 0.65rem;
+            color: rgba(255,255,255,0.3);
+            white-space: nowrap;
+        }
+
+        .suggestions-empty {
+            text-align: center;
+            color: rgba(255,255,255,0.3);
+            font-size: 0.8rem;
+            padding: 14px;
         }
 
 </style>
 </head>
-
 <body>
-
-<div id="language-screen" style="
-position:fixed;
-inset:0;
-background:#050508;
-z-index:30000;
-display:flex;
-align-items:center;
-justify-content:center;
-flex-direction:column;
-gap:20px;
-">
-<h1 style="font-size:3rem;color:#00d2ff;">ULTRON</h1>
-
-<div style="display:flex;gap:20px;">
-
-<button id="lang-es" style="
-padding:18px 24px;
-font-size:1.2rem;
-border:none;
-border-radius:16px;
-cursor:pointer;
-font-weight:900;">
-🇪🇸 Español
-</button>
-
-<button id="lang-en" style="
-padding:18px 24px;
-font-size:1.2rem;
-border:none;
-border-radius:16px;
-cursor:pointer;
-font-weight:900;">
-🇬🇧 English
-</button>
-
-</div>
-</div>
-
-
-    <div id="language-overlay" class="lang-overlay" style="display:flex;">
-        <div class="lang-card">
-            <h2>Choose your language</h2>
-            <p>Select the language for Ultron. This screen stays until you choose one.</p>
-            <div class="lang-actions">
-                <button class="lang-btn primary" id="lang-es" type="button"><span class="flag">🇪🇸</span>Español</button>
-                <button class="lang-btn" id="lang-en" type="button"><span class="flag">🇬🇧</span>English</button>
-            </div>
-        </div>
-    </div>
 
     <div id="menu-view">
         <header class="hero-header">
@@ -749,7 +1007,7 @@ font-weight:900;">
             <div class="search-wrapper">
                 <div class="search-bar">
                     <span class="search-icon">⌕</span>
-                    <input id="search-input" type="text" placeholder="Buscar juego, saga o palabra clave...">
+                    <input id="search-input" type="text" placeholder="Buscar juego, saga o palabra clave..." data-i18n-placeholder="searchPlaceholder">
                     <div class="search-actions">
                         <select id="sort-select" class="sort-select" aria-label="Ordenar juegos">
                             <option value="default">Orden original</option>
@@ -761,30 +1019,53 @@ font-weight:900;">
                         <button id="clear-search" type="button">Limpiar</button>
                     </div>
                 </div>
-                <div class="search-hint">Búsqueda rápida sin complicaciones</div>
+                <div class="search-hint" data-i18n="searchHint">Búsqueda rápida sin complicaciones</div>
             </div>
 
-
-            <div class="novelties-box" id="novelties-box">
-                <div class="novelties-top">
-                    <div class="novelties-title" id="novelties-title">Novedades</div>
-                    <div class="card-status" id="novelties-status">ULTRON UPDATE HUB</div>
+            <!-- CAJA DE NOVEDADES -->
+            <div class="news-box" id="news-box">
+                <div class="news-header" onclick="toggleNews()">
+                    <span class="news-header-icon">📡</span>
+                    <span class="news-header-title" data-i18n="newsTitle">Novedades Ultron</span>
+                    <span class="news-badge" data-i18n="newsBadge">NUEVO</span>
+                    <span class="news-toggle-arrow">▼</span>
                 </div>
-                <div class="novelties-grid">
-                    <div class="novelty-card">
-                        <strong id="novelty-1-title">Modo oculto</strong>
-                        <p id="novelty-1-text">Cada juego incluye un botón para bloquear la partida, mostrar una imagen y volver después al menú de pausa.</p>
+                <div class="news-content">
+                    <div class="news-item">
+                        <div class="news-item-icon">🎮</div>
+                        <div class="news-item-body">
+                            <div class="news-item-title" data-i18n="news1Title">+20 Juegos nuevos añadidos</div>
+                            <div class="news-item-desc" data-i18n="news1Desc">Pizza Tower, Cuphead, R.E.P.O, Undertale Yellow, ULTRAKILL y muchos más han llegado a la plataforma.</div>
+                            <div class="news-item-date">v2.5 · Mayo 2025</div>
+                        </div>
                     </div>
-                    <div class="novelty-card">
-                        <strong id="novelty-2-title">Idiomas</strong>
-                        <p id="novelty-2-text">Ultron arranca con una pantalla de selección de idioma para español e inglés con banderas.</p>
+                    <div class="news-item">
+                        <div class="news-item-icon">🌍</div>
+                        <div class="news-item-body">
+                            <div class="news-item-title" data-i18n="news2Title">Soporte multiidioma</div>
+                            <div class="news-item-desc" data-i18n="news2Desc">Ultron ahora soporta Español e Inglés. Elige tu idioma al entrar.</div>
+                            <div class="news-item-date">v2.5 · Mayo 2025</div>
+                        </div>
                     </div>
-                    <div class="novelty-card">
-                        <strong id="novelty-3-title">Sugerencias</strong>
-                        <p id="novelty-3-text">La nueva caja de sugerencias guarda comentarios locales para que la comunidad proponga mejoras.</p>
+                    <div class="news-item">
+                        <div class="news-item-icon">🕵️</div>
+                        <div class="news-item-body">
+                            <div class="news-item-title" data-i18n="news3Title">Modo Oculto en cada juego</div>
+                            <div class="news-item-desc" data-i18n="news3Desc">Cada juego tiene ahora un botón de modo oculto para situaciones de emergencia. El juego se pausa y muestra una imagen inocente.</div>
+                            <div class="news-item-date">v2.5 · Mayo 2025</div>
+                        </div>
+                    </div>
+                    <div class="news-item">
+                        <div class="news-item-icon">💬</div>
+                        <div class="news-item-body">
+                            <div class="news-item-title" data-i18n="news4Title">Caja de sugerencias</div>
+                            <div class="news-item-desc" data-i18n="news4Desc">¿Echas de menos un juego? Ahora puedes sugerirlo directamente desde la página.</div>
+                            <div class="news-item-date">v2.5 · Mayo 2025</div>
+                        </div>
                     </div>
                 </div>
             </div>
+
 
             <div class="save-actions" aria-label="Opciones de guardado">
                 <button id="resume-last-btn" type="button">Reanudar último juego</button>
@@ -794,19 +1075,27 @@ font-weight:900;">
                 <input id="import-save-input" type="file" accept="application/json">
             </div>
 
-            <div class="section-title">Favoritos</div>
+            <div class="section-title" data-i18n="favoritesTitle">Favoritos</div>
             <div id="favorites-grid" class="grid"></div>
-            <div class="section-title">Juegos desbloqueados (1-100)</div>
+            <div class="section-title" data-i18n="unlockedTitle">Juegos desbloqueados (1-100)</div>
             <div id="main-grid" class="grid"></div>
 
+            <!-- CAJA DE SUGERENCIAS (siempre al final) -->
             <div class="suggestions-box" id="suggestions-box">
-                <h2 id="suggestions-title">Caja de sugerencias</h2>
-                <div class="note" id="suggestions-note">Escribe tu idea y pulsa enviar. Se guardará en este navegador para poder revisarla después.</div>
-                <div class="suggestion-form">
-                    <textarea id="suggestion-input" placeholder="Escribe aquí tu sugerencia..."></textarea>
-                    <button id="suggestion-send" type="button">Enviar</button>
+                <div class="suggestions-header">
+                    <span class="suggestions-header-icon">💬</span>
+                    <span class="suggestions-header-title" data-i18n="suggestionsTitle">Sugerencias de Juegos</span>
                 </div>
-                <div class="suggestions-list" id="suggestions-list"></div>
+                <div class="suggestions-body">
+                    <div class="suggestions-desc" data-i18n="suggestionsDesc">¿Conoces un juego que debería estar en Ultron? ¡Escribe tu sugerencia y el equipo la revisará!</div>
+                    <div class="suggestions-form">
+                        <input class="suggestions-input" id="suggestion-input" type="text" placeholder="Nombre del juego que quieres ver..." maxlength="120">
+                        <button class="suggestions-send-btn" onclick="enviarSugerencia()" data-i18n="suggestSend">Sugerir 🚀</button>
+                    </div>
+                    <div class="suggestions-list" id="suggestions-list">
+                        <div class="suggestions-empty" data-i18n="suggestionsEmpty">Aún no hay sugerencias. ¡Sé el primero!</div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -824,115 +1113,58 @@ font-weight:900;">
         <iframe id="game-frame"></iframe>
     </div>
 
-    <div id="secret-mode-overlay" class="secret-overlay">
-        <div class="secret-card">
-            <h2 id="secret-title">Modo oculto</h2>
-            <p id="secret-desc">La partida queda en pausa mientras ves la imagen del juego.</p>
-            <div class="secret-preview">
-                <img id="secret-image" src="" alt="Vista previa">
-                <div>
-                    <div class="card-status" id="secret-game-name">Juego</div>
-                    <div class="secret-url" id="secret-url"></div>
-                </div>
-            </div>
-            <div class="secret-actions">
-                <button class="secret-btn primary" id="secret-back-btn" type="button">Volver</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="pause-menu" class="pause-menu">
-        <div class="pause-card">
-            <h2 id="pause-title">Menú de pausa</h2>
-            <p id="pause-desc">El juego sigue listo para continuar exactamente donde lo dejaste.</p>
-            <div class="pause-actions">
-                <button class="pause-btn primary" id="pause-continue-btn" type="button">Continuar</button>
-                <button class="pause-btn" id="pause-exit-btn" type="button">Salir al menú</button>
-            </div>
-        </div>
-    </div>
-
-
     
     <div class="game-controls" id="game-controls">
-        <button class="game-btn" id="save-progress-btn">💾 Guardar</button>
-        <button class="game-btn" id="export-progress-btn">📤 Exportar</button>
-        <button class="game-btn" id="import-progress-btn">📥 Importar</button>
+        <button class="game-btn" id="save-progress-btn" data-i18n="saveGame">💾 Guardar</button>
+        <button class="game-btn" id="export-progress-btn" data-i18n="exportGame">📤 Exportar</button>
+        <button class="game-btn" id="import-progress-btn" data-i18n="importGame">📥 Importar</button>
+        <button class="game-btn" id="stealth-game-btn" onclick="mostrarStealthEnJuego()" title="Modo Oculto" style="border-color:rgba(255,0,85,0.4);">👁 Ocultar</button>
         <input type="file" id="import-progress-file" accept=".json" style="display:none;">
     </div>
 
-<script src="https://cdn.jsdelivr.net/npm/counterapi/dist/counter.browser.min.js">
-const translations = {
-    es: {
-        search: "Buscar juego, saga o palabra clave...",
-        clear: "Limpiar",
-        favorites: "Favoritos",
-        games: "Juegos desbloqueados (1-100)",
-        hidden: "Modo oculto",
-        back: "Volver al juego"
-    },
-    en: {
-        search: "Search game, saga or keyword...",
-        clear: "Clear",
-        favorites: "Favorites",
-        games: "Unlocked games (1-100)",
-        hidden: "Hidden mode",
-        back: "Return to game"
-    }
-};
+<!-- ============================================================
+     PANTALLA DE SELECCIÓN DE IDIOMA
+============================================================ -->
+<div id="lang-screen">
+    <div class="lang-screen-particles" id="lang-particles"></div>
+    <div class="lang-title">ULTRON</div>
+    <div class="lang-subtitle" data-i18n-ls="choose">Elige tu idioma · Choose your language</div>
+    <div class="lang-options">
+        <div class="lang-btn" onclick="selectLanguage('es')">
+            <div class="lang-flag">🇪🇸</div>
+            <div class="lang-name">Español</div>
+            <div class="lang-native">Spain · España</div>
+        </div>
+        <div class="lang-btn" onclick="selectLanguage('en')">
+            <div class="lang-flag">🇬🇧</div>
+            <div class="lang-name">English</div>
+            <div class="lang-native">United Kingdom</div>
+        </div>
+    </div>
+</div>
 
-function applyLanguage(lang){
-    localStorage.setItem('ultron_lang', lang);
+<!-- ============================================================
+     MODO OCULTO (STEALTH)
+============================================================ -->
+<div id="stealth-overlay">
+    <img id="stealth-img" src="" alt="Pantalla de clase"/>
+    <div id="stealth-url-display"></div>
+    <button id="stealth-back-btn" onclick="salirStealth()">← Volver</button>
+</div>
 
-    const search = document.getElementById('search-input');
-    if(search) search.placeholder = translations[lang].search;
+<!-- ============================================================
+     MENÚ DE PAUSA
+============================================================ -->
+<div id="pause-menu">
+    <div class="pause-title" data-i18n="paused">⏸ PAUSADO</div>
+    <div class="pause-game-name" id="pause-game-name"></div>
+    <div class="pause-actions">
+        <button class="pause-btn pause-btn-continue" onclick="continuarJuego()" data-i18n="continue">▶ Continuar</button>
+        <button class="pause-btn pause-btn-exit" onclick="cerrarJuego()" data-i18n="exitGame">✕ Salir del juego</button>
+    </div>
+</div>
 
-    const clearBtn = document.getElementById('clear-search');
-    if(clearBtn) clearBtn.textContent = translations[lang].clear;
-
-    const titles = document.querySelectorAll('.section-title');
-    if(titles[0]) titles[0].textContent = translations[lang].favorites;
-    if(titles[1]) titles[1].textContent = translations[lang].games;
-
-    document.querySelectorAll('.hidden-mode-btn').forEach(btn=>{
-        btn.textContent = translations[lang].hidden;
-    });
-
-    const backBtn = document.getElementById('return-game-btn');
-    if(backBtn) backBtn.textContent = translations[lang].back;
-
-    const screen = document.getElementById('language-screen');
-    if(screen) screen.style.display = 'none';
-}
-
-document.addEventListener('DOMContentLoaded', ()=>{
-    const savedLang = localStorage.getItem('ultron_lang');
-
-    if(savedLang){
-        applyLanguage(savedLang);
-    }
-
-    const esBtn = document.getElementById('lang-es');
-    const enBtn = document.getElementById('lang-en');
-
-    if(esBtn){
-        esBtn.onclick = ()=>applyLanguage('es');
-    }
-
-    if(enBtn){
-        enBtn.onclick = ()=>applyLanguage('en');
-    }
-
-    const returnBtn = document.getElementById('return-game-btn');
-    if(returnBtn){
-        returnBtn.onclick = ()=>{
-            document.getElementById('stealth-overlay').style.display = 'none';
-            document.getElementById('game-frame').style.pointerEvents = 'auto';
-        };
-    }
-});
-
-</script>
+<script src="https://cdn.jsdelivr.net/npm/counterapi/dist/counter.browser.min.js"></script>
 
     <script>
         const CONFIG = {
@@ -1045,63 +1277,6 @@ document.addEventListener('DOMContentLoaded', ()=>{
         const TOTAL_SLOTS = 100;
         const COUNTER_WORKSPACE = 'ut_kY6AL37uOU3kVlXSaTJtNyE69z7OLeAhUgK02twY'; // crea tu workspace en CounterAPI y ponlo aquí
         const STORAGE_KEY = 'ultron_play_counts_v2_local_fallback';
-        const SUGGESTIONS_KEY = 'ultron_suggestions_v1';
-        const LANG_KEY = 'ultron_language_v1';
-
-        const I18N = {
-            es: {
-                title: 'ULTRON AI',
-                searchPlaceholder: 'Buscar juego, saga o palabra clave...',
-                clear: 'Limpiar',
-                novelties: 'Novedades',
-                suggestionTitle: 'Caja de sugerencias',
-                suggestionNote: 'Escribe tu idea y pulsa enviar. Se guardará en este navegador para poder revisarla después.',
-                suggestionPlaceholder: 'Escribe aquí tu sugerencia...',
-                send: 'Enviar',
-                favoritesEmpty: 'Aún no tienes favoritos. Pulsa la estrella en cualquier juego.',
-                online: 'ONLINE',
-                offline: 'OFFLINE',
-                hiddenMode: 'Modo oculto',
-                pauseMenu: 'Menú de pausa',
-                pauseDesc: 'El juego sigue listo para continuar exactamente donde lo dejaste.',
-                continue: 'Continuar',
-                exitMenu: 'Salir al menú',
-                resumeLast: 'Reanudar último juego',
-                manualSave: 'Guardar manualmente',
-                exportSave: 'Exportar progreso',
-                importSave: 'Importar progreso',
-                searchHint: 'Búsqueda rápida sin complicaciones',
-                gamesUnlocked: 'Juegos desbloqueados (1-100)',
-                favoritesTitle: 'Favoritos'
-            },
-            en: {
-                title: 'ULTRON AI',
-                searchPlaceholder: 'Search game, saga or keyword...',
-                clear: 'Clear',
-                novelties: 'News',
-                suggestionTitle: 'Suggestion box',
-                suggestionNote: 'Write your idea and press send. It will be saved in this browser so it can be reviewed later.',
-                suggestionPlaceholder: 'Write your suggestion here...',
-                send: 'Send',
-                favoritesEmpty: 'You do not have favorites yet. Press the star on any game.',
-                online: 'ONLINE',
-                offline: 'OFFLINE',
-                hiddenMode: 'Hidden mode',
-                pauseMenu: 'Pause menu',
-                pauseDesc: 'The game is ready to continue exactly where you left it.',
-                continue: 'Continue',
-                exitMenu: 'Exit to menu',
-                resumeLast: 'Resume last game',
-                manualSave: 'Manual save',
-                exportSave: 'Export progress',
-                importSave: 'Import progress',
-                searchHint: 'Fast search without complications',
-                gamesUnlocked: 'Unlocked games (1-100)',
-                favoritesTitle: 'Favorites'
-            }
-        };
-
-        let currentLang = 'es';
 
         let currentSort = 'default';
         let playCountsCache = {};
@@ -1198,188 +1373,6 @@ document.addEventListener('DOMContentLoaded', ()=>{
 
         function isFavorite(slot) {
             return favorites.includes(Number(slot));
-        }
-
-
-        function t(key) {
-            return (I18N[currentLang] && I18N[currentLang][key]) || I18N.es[key] || key;
-        }
-
-        function applyLanguage(lang) {
-            currentLang = I18N[lang] ? lang : 'es';
-            guardarJsonSeguro(LANG_KEY, currentLang);
-
-            const body = document.body;
-            if (body) body.lang = currentLang;
-
-            const title = document.title;
-            document.title = t('title');
-
-            const input = document.getElementById('search-input');
-            const clearBtn = document.getElementById('clear-search');
-            const searchHint = document.querySelector('.search-hint');
-            const resumeBtn = document.getElementById('resume-last-btn');
-            const manualSaveBtn = document.getElementById('manual-save-btn');
-            const exportSaveBtn = document.getElementById('export-save-btn');
-            const importLabel = document.querySelector('label[for="import-save-input"]');
-            const favoritesTitle = document.querySelector('.main-container .section-title');
-            const gamesTitle = document.querySelectorAll('.main-container .section-title')[1];
-            const noveltiesTitle = document.getElementById('novelties-title');
-            const suggestionsTitle = document.getElementById('suggestions-title');
-            const suggestionsNote = document.getElementById('suggestions-note');
-            const suggestionInput = document.getElementById('suggestion-input');
-            const suggestionSend = document.getElementById('suggestion-send');
-            const langCardTitle = document.querySelector('.lang-card h2');
-            const langCardDesc = document.querySelector('.lang-card p');
-            const pauseTitle = document.getElementById('pause-title');
-            const pauseDesc = document.getElementById('pause-desc');
-            const pauseContinue = document.getElementById('pause-continue-btn');
-            const pauseExit = document.getElementById('pause-exit-btn');
-            const secretTitle = document.getElementById('secret-title');
-            const secretDesc = document.getElementById('secret-desc');
-            const secretBack = document.getElementById('secret-back-btn');
-
-            if (input) input.placeholder = t('searchPlaceholder');
-            if (clearBtn) clearBtn.textContent = t('clear');
-            if (searchHint) searchHint.textContent = t('searchHint');
-            if (resumeBtn) resumeBtn.textContent = t('resumeLast');
-            if (manualSaveBtn) manualSaveBtn.textContent = t('manualSave');
-            if (exportSaveBtn) exportSaveBtn.textContent = t('exportSave');
-            if (importLabel) importLabel.textContent = t('importSave');
-            if (favoritesTitle) favoritesTitle.textContent = t('favoritesTitle');
-            if (gamesTitle) gamesTitle.textContent = t('gamesUnlocked');
-            if (noveltiesTitle) noveltiesTitle.textContent = t('novelties');
-            if (suggestionsTitle) suggestionsTitle.textContent = t('suggestionTitle');
-            if (suggestionsNote) suggestionsNote.textContent = t('suggestionNote');
-            if (suggestionInput) suggestionInput.placeholder = t('suggestionPlaceholder');
-            if (suggestionSend) suggestionSend.textContent = t('send');
-            if (langCardTitle) langCardTitle.textContent = currentLang === 'en' ? 'Choose your language' : 'Elige tu idioma';
-            if (langCardDesc) langCardDesc.textContent = currentLang === 'en'
-                ? 'Select the language for Ultron. This screen stays until you choose one.'
-                : 'Selecciona el idioma de Ultron. Esta pantalla no se cerrará hasta que elijas uno.';
-            if (pauseTitle) pauseTitle.textContent = t('pauseMenu');
-            if (pauseDesc) pauseDesc.textContent = t('pauseDesc');
-            if (pauseContinue) pauseContinue.textContent = t('continue');
-            if (pauseExit) pauseExit.textContent = t('exitMenu');
-            if (secretTitle) secretTitle.textContent = t('hiddenMode');
-            if (secretDesc) secretDesc.textContent = currentLang === 'en'
-                ? 'The game is paused while you view the image and URL.'
-                : 'La partida queda en pausa mientras ves la imagen y la URL.';
-            if (document.getElementById('lang-es')) document.getElementById('lang-es').innerHTML = '<span class="flag">🇪🇸</span>Español';
-            if (document.getElementById('lang-en')) document.getElementById('lang-en').innerHTML = '<span class="flag">🇬🇧</span>English';
-
-            renderMenu();
-            renderSuggestionsList();
-            if (pausedFromSecret) {
-                mostrarPauseMenu();
-            }
-        }
-
-        function getSuggestions() {
-            return leerJsonSeguro(SUGGESTIONS_KEY, []);
-        }
-
-        function saveSuggestions(items) {
-            guardarJsonSeguro(SUGGESTIONS_KEY, items);
-        }
-
-        function ocultarPantallaIdioma() {
-            const overlay = document.getElementById('language-overlay');
-            if (overlay) overlay.style.display = 'none';
-            document.body.style.overflowY = 'auto';
-        }
-
-        function renderSuggestionsList() {
-            const list = document.getElementById('suggestions-list');
-            if (!list) return;
-            const items = getSuggestions();
-            list.innerHTML = '';
-            if (!items.length) {
-                const empty = document.createElement('div');
-                empty.className = 'suggestion-item';
-                empty.textContent = currentLang === 'en' ? 'No suggestions yet.' : 'Todavía no hay sugerencias.';
-                list.appendChild(empty);
-                return;
-            }
-            items.slice(-8).reverse().forEach((item) => {
-                const el = document.createElement('div');
-                el.className = 'suggestion-item';
-                el.textContent = item;
-                list.appendChild(el);
-            });
-        }
-
-        function enviarSugerencia() {
-            const input = document.getElementById('suggestion-input');
-            if (!input) return;
-            const value = input.value.trim();
-            if (!value) return;
-            const items = getSuggestions();
-            items.push(value);
-            saveSuggestions(items);
-            input.value = '';
-            renderSuggestionsList();
-            alert(currentLang === 'en' ? 'Suggestion saved locally.' : 'Sugerencia guardada localmente.');
-        }
-
-        function mostrarPauseMenu() {
-            const pauseMenu = document.getElementById('pause-menu');
-            if (pauseMenu) pauseMenu.style.display = 'flex';
-        }
-
-        function ocultarPauseMenu() {
-            const pauseMenu = document.getElementById('pause-menu');
-            if (pauseMenu) pauseMenu.style.display = 'none';
-        }
-
-        function mostrarModoOculto(game) {
-            const secret = document.getElementById('secret-mode-overlay');
-            const img = document.getElementById('secret-image');
-            const url = document.getElementById('secret-url');
-            const name = document.getElementById('secret-game-name');
-
-            if (!secret || !game) return;
-
-            pausedFromSecret = true;
-            if (img) {
-                img.src = game.img || '';
-                img.alt = game.titulo || 'Game image';
-            }
-            if (url) url.textContent = game.img || (currentLang === 'en' ? 'No image URL available.' : 'No hay URL de imagen disponible.');
-            if (name) name.textContent = game.titulo || 'Juego';
-            secret.style.display = 'flex';
-        }
-
-        function ocultarModoOculto() {
-            const secret = document.getElementById('secret-mode-overlay');
-            if (secret) secret.style.display = 'none';
-        }
-
-        function activarModoOculto(game, slot) {
-            if (!game || !game.url) return;
-            if (document.getElementById('game-runtime').style.display !== 'block') {
-                lanzarJuego(game, slot).then(() => {
-                    setTimeout(() => mostrarModoOculto(game), 1200);
-                });
-                return;
-            }
-            mostrarModoOculto(game);
-        }
-
-        function volverDesdeModoOculto() {
-            ocultarModoOculto();
-            mostrarPauseMenu();
-        }
-
-        function continuarDesdePausa() {
-            pausedFromSecret = false;
-            ocultarPauseMenu();
-        }
-
-        function salirDesdePausa() {
-            pausedFromSecret = false;
-            ocultarPauseMenu();
-            cerrarJuego();
         }
 
         function toggleFavorite(slot) {
@@ -1574,16 +1567,14 @@ document.addEventListener('DOMContentLoaded', ()=>{
 
             card.innerHTML = `
                 <button class="fav-btn" type="button" aria-label="${favorito ? 'Quitar de favoritos' : 'Añadir a favoritos'}">${favorito ? '★' : '☆'}</button>
-                <button class="hidden-mode-btn" type="button">${t('hiddenMode')}</button>
+                <button class="stealth-btn" type="button" title="Modo oculto" onclick="event.stopPropagation(); activarStealth(${slot})">👁</button>
                 <div class="card-thumb" style="${bgStyle}">
                     ${tieneImagen ? '' : '<span class="empty-icon">?</span>'}
                 </div>
-                \1
-<button class="hidden-mode-btn" data-image="${game.img}">Modo oculto</button>
-
+                <div class="card-footer">
                     <div class="card-title">${titulo}</div>
                     <div class="card-meta">
-                        <div class="card-status">${game ? t('online') : t('offline')}</div>
+                        <div class="card-status">${game ? 'ONLINE' : 'OFFLINE'}</div>
                         <div class="card-popularity">👥 ${cuenta}</div>
                     </div>
                 </div>
@@ -1594,14 +1585,6 @@ document.addEventListener('DOMContentLoaded', ()=>{
                 favBtn.addEventListener('click', (e) => {
                     e.stopPropagation();
                     toggleFavorite(slot);
-                });
-            }
-
-            const hiddenBtn = card.querySelector('.hidden-mode-btn');
-            if (hiddenBtn) {
-                hiddenBtn.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    activarModoOculto(game, slot);
                 });
             }
 
@@ -1624,7 +1607,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
             if (!favoritos.length) {
                 const empty = document.createElement('div');
                 empty.className = 'favorite-empty';
-                empty.textContent = t('favoritesEmpty');
+                empty.textContent = 'Aún no tienes favoritos. Pulsa la estrella en cualquier juego.';
                 grid.appendChild(empty);
                 return;
             }
@@ -1691,12 +1674,10 @@ document.addEventListener('DOMContentLoaded', ()=>{
             const frame = document.getElementById('game-frame');
             const progressBar = document.getElementById('progress-bar');
             const loadingStats = document.getElementById('loading-stats');
-
             menu.style.display = 'none';
             loader.style.display = 'flex';
-            ocultarModoOculto();
-            ocultarPauseMenu();
 
+            isGameRunning = false;
             let progreso = 0;
             progressBar.style.width = '0%';
             frame.src = 'about:blank';
@@ -1706,7 +1687,8 @@ document.addEventListener('DOMContentLoaded', ()=>{
                     progreso += Math.random() * 2;
                     if (progreso > 92) progreso = 92;
                     progressBar.style.width = progreso + '%';
-                    loadingStats.innerText = `DESCOMPRIMIENDO: ${Math.round(progreso)}%`;
+                    const t = I18N[currentLang] || I18N.es;
+                    loadingStats.innerText = `${t.loading}: ${Math.round(progreso)}%`;
                 }
             }, 350);
 
@@ -1720,11 +1702,12 @@ document.addEventListener('DOMContentLoaded', ()=>{
                 if (frame.src !== 'about:blank') {
                     clearInterval(intervalo);
                     progressBar.style.width = '100%';
-                    loadingStats.innerText = '¡SISTEMA LISTO!';
+                    loadingStats.innerText = (I18N[currentLang] || I18N.es).ready;
 
                     setTimeout(() => {
                         loader.style.display = 'none';
                         runtime.style.display = 'block';
+                        isGameRunning = true;
                     }, 1000);
                 }
             };
@@ -1734,9 +1717,11 @@ document.addEventListener('DOMContentLoaded', ()=>{
             document.getElementById('game-runtime').style.display = 'none';
             document.getElementById('game-frame').src = 'about:blank';
             document.getElementById('menu-view').style.display = 'block';
+            document.getElementById('pause-menu').classList.remove('active');
+            document.getElementById('stealth-overlay').classList.remove('active');
             ocultarBotonesJuego();
-            ocultarModoOculto();
-            ocultarPauseMenu();
+            isGameRunning = false;
+            currentGameData = null;
             window.scrollTo(0,0);
         }
 
@@ -1752,8 +1737,6 @@ document.addEventListener('DOMContentLoaded', ()=>{
 
 
         let currentGameData = null;
-        let secretModeActive = false;
-        let pausedFromSecret = false;
 
         function mostrarBotonesJuego() {
             const controls = document.getElementById('game-controls');
@@ -1827,6 +1810,8 @@ document.addEventListener('DOMContentLoaded', ()=>{
         }
 
         async function initUltron() {
+            initLangScreen();
+            renderSugerencias();
             const input = document.getElementById('search-input');
             const clearBtn = document.getElementById('clear-search');
             const sortSelect = document.getElementById('sort-select');
@@ -1835,13 +1820,6 @@ document.addEventListener('DOMContentLoaded', ()=>{
             const manualSaveBtn = document.getElementById('manual-save-btn');
             const exportSaveBtn = document.getElementById('export-save-btn');
             const importInput = document.getElementById('import-save-input');
-            const suggestionInput = document.getElementById('suggestion-input');
-            const suggestionSend = document.getElementById('suggestion-send');
-            const langEs = document.getElementById('lang-es');
-            const langEn = document.getElementById('lang-en');
-            const secretBackBtn = document.getElementById('secret-back-btn');
-            const pauseContinueBtn = document.getElementById('pause-continue-btn');
-            const pauseExitBtn = document.getElementById('pause-exit-btn');
 
             cargarEstadoGuardado();
 
@@ -1918,31 +1896,6 @@ document.addEventListener('DOMContentLoaded', ()=>{
 
             window.addEventListener('beforeunload', guardarUIState);
 
-            if (suggestionSend) {
-                suggestionSend.addEventListener('click', enviarSugerencia);
-            }
-
-            if (suggestionInput) {
-                suggestionInput.addEventListener('keydown', (e) => {
-                    if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
-                        enviarSugerencia();
-                    }
-                });
-            }
-
-            if (langEs) langEs.addEventListener('click', () => {
-                ocultarPantallaIdioma();
-                applyLanguage('es');
-            });
-            if (langEn) langEn.addEventListener('click', () => {
-                ocultarPantallaIdioma();
-                applyLanguage('en');
-            });
-
-            if (secretBackBtn) secretBackBtn.addEventListener('click', volverDesdeModoOculto);
-            if (pauseContinueBtn) pauseContinueBtn.addEventListener('click', continuarDesdePausa);
-            if (pauseExitBtn) pauseExitBtn.addEventListener('click', salirDesdePausa);
-
 
             const saveBtn = document.getElementById('save-progress-btn');
             const exportBtn = document.getElementById('export-progress-btn');
@@ -1965,15 +1918,6 @@ document.addEventListener('DOMContentLoaded', ()=>{
                 });
             }
 
-            const savedLang = leerJsonSeguro(LANG_KEY, null);
-            if (savedLang && I18N[savedLang]) {
-                ocultarPantallaIdioma();
-                currentLang = savedLang;
-                applyLanguage(savedLang);
-            } else {
-                document.body.style.overflow = 'hidden';
-            }
-
             await inicializarCounterAPI();
             if (counterStatus) {
                 counterStatus.textContent = remoteCounterAvailable
@@ -1981,94 +1925,350 @@ document.addEventListener('DOMContentLoaded', ()=>{
                     : 'CONTADOR GLOBAL: FALLBACK LOCAL';
             }
             await cargarContadoresGlobales();
-            if (savedLang && I18N[savedLang]) {
-                renderMenu();
-            } else {
-                renderSuggestionsList();
-                renderMenu();
-            }
+            renderMenu();
         }
 
         window.addEventListener('load', initUltron);
-    
-const translations = {
-    es: {
-        search: "Buscar juego, saga o palabra clave...",
-        clear: "Limpiar",
-        favorites: "Favoritos",
-        games: "Juegos desbloqueados (1-100)",
-        hidden: "Modo oculto",
-        back: "Volver al juego"
-    },
-    en: {
-        search: "Search game, saga or keyword...",
-        clear: "Clear",
-        favorites: "Favorites",
-        games: "Unlocked games (1-100)",
-        hidden: "Hidden mode",
-        back: "Return to game"
-    }
-};
 
-function applyLanguage(lang){
-    localStorage.setItem('ultron_lang', lang);
-
-    const search = document.getElementById('search-input');
-    if(search) search.placeholder = translations[lang].search;
-
-    const clearBtn = document.getElementById('clear-search');
-    if(clearBtn) clearBtn.textContent = translations[lang].clear;
-
-    const titles = document.querySelectorAll('.section-title');
-    if(titles[0]) titles[0].textContent = translations[lang].favorites;
-    if(titles[1]) titles[1].textContent = translations[lang].games;
-
-    document.querySelectorAll('.hidden-mode-btn').forEach(btn=>{
-        btn.textContent = translations[lang].hidden;
-    });
-
-    const backBtn = document.getElementById('return-game-btn');
-    if(backBtn) backBtn.textContent = translations[lang].back;
-
-    const screen = document.getElementById('language-screen');
-    if(screen) screen.style.display = 'none';
-}
-
-document.addEventListener('DOMContentLoaded', ()=>{
-    const savedLang = localStorage.getItem('ultron_lang');
-
-    if(savedLang){
-        applyLanguage(savedLang);
-    }
-
-    const esBtn = document.getElementById('lang-es');
-    const enBtn = document.getElementById('lang-en');
-
-    if(esBtn){
-        esBtn.onclick = ()=>applyLanguage('es');
-    }
-
-    if(enBtn){
-        enBtn.onclick = ()=>applyLanguage('en');
-    }
-
-    const returnBtn = document.getElementById('return-game-btn');
-    if(returnBtn){
-        returnBtn.onclick = ()=>{
-            document.getElementById('stealth-overlay').style.display = 'none';
-            document.getElementById('game-frame').style.pointerEvents = 'auto';
+        /* ============================================================
+           SISTEMA DE IDIOMA / INTERNACIONALIZACIÓN
+        ============================================================ */
+        const I18N = {
+            es: {
+                searchPlaceholder: 'Buscar juego, saga o palabra clave...',
+                searchHint: 'Búsqueda rápida sin complicaciones',
+                clearBtn: 'Limpiar',
+                newsTitle: 'Novedades Ultron',
+                newsBadge: 'NUEVO',
+                news1Title: '+20 Juegos nuevos añadidos',
+                news1Desc: 'Pizza Tower, Cuphead, R.E.P.O, Undertale Yellow, ULTRAKILL y muchos más han llegado.',
+                news2Title: 'Soporte multiidioma',
+                news2Desc: 'Ultron ahora soporta Español e Inglés. Elige tu idioma al entrar.',
+                news3Title: 'Modo Oculto en cada juego',
+                news3Desc: 'Cada juego tiene ahora un botón de modo oculto para situaciones de emergencia.',
+                news4Title: 'Caja de sugerencias',
+                news4Desc: '¿Echas de menos un juego? Ahora puedes sugerirlo directamente.',
+                favoritesTitle: 'Favoritos',
+                unlockedTitle: 'Juegos desbloqueados (1-100)',
+                suggestionsTitle: 'Sugerencias de Juegos',
+                suggestionsDesc: '¿Conoces un juego que debería estar en Ultron? ¡Escribe tu sugerencia y el equipo la revisará!',
+                suggestSend: 'Sugerir 🚀',
+                suggestionsEmpty: 'Aún no hay sugerencias. ¡Sé el primero!',
+                suggestionPlaceholder: 'Nombre del juego que quieres ver...',
+                paused: '⏸ PAUSADO',
+                continue: '▶ Continuar',
+                exitGame: '✕ Salir del juego',
+                stealthBack: '← Volver',
+                sortDefault: 'Orden original',
+                sortPopular: 'Más populares',
+                sortUnpopular: 'Menos populares',
+                sortAZ: 'A-Z',
+                resumeBtn: 'Reanudar último juego',
+                saveBtn: 'Guardar manualmente',
+                exportBtn: 'Exportar progreso',
+                importLabel: 'Importar progreso',
+                saveGame: '💾 Guardar',
+                exportGame: '📤 Exportar',
+                importGame: '📥 Importar',
+                loading: 'SINCRONIZANDO',
+                ready: '¡SISTEMA LISTO!',
+                disconnectBtn: 'Desconectar',
+            },
+            en: {
+                searchPlaceholder: 'Search game, saga or keyword...',
+                searchHint: 'Quick search, no hassle',
+                clearBtn: 'Clear',
+                newsTitle: 'Ultron News',
+                newsBadge: 'NEW',
+                news1Title: '+20 New games added',
+                news1Desc: 'Pizza Tower, Cuphead, R.E.P.O, Undertale Yellow, ULTRAKILL and many more have arrived.',
+                news2Title: 'Multi-language support',
+                news2Desc: 'Ultron now supports Spanish and English. Choose your language on entry.',
+                news3Title: 'Stealth Mode on every game',
+                news3Desc: 'Every game now has a stealth button for emergency situations.',
+                news4Title: 'Suggestions box',
+                news4Desc: 'Missing a game? You can now suggest it directly from the page.',
+                favoritesTitle: 'Favorites',
+                unlockedTitle: 'Unlocked games (1-100)',
+                suggestionsTitle: 'Game Suggestions',
+                suggestionsDesc: 'Know a game that should be on Ultron? Write your suggestion and the team will review it!',
+                suggestSend: 'Suggest 🚀',
+                suggestionsEmpty: 'No suggestions yet. Be the first!',
+                suggestionPlaceholder: 'Name of the game you want to see...',
+                paused: '⏸ PAUSED',
+                continue: '▶ Continue',
+                exitGame: '✕ Exit game',
+                stealthBack: '← Back',
+                sortDefault: 'Default order',
+                sortPopular: 'Most popular',
+                sortUnpopular: 'Least popular',
+                sortAZ: 'A-Z',
+                resumeBtn: 'Resume last game',
+                saveBtn: 'Save manually',
+                exportBtn: 'Export progress',
+                importLabel: 'Import progress',
+                saveGame: '💾 Save',
+                exportGame: '📤 Export',
+                importGame: '📥 Import',
+                loading: 'SYNCING',
+                ready: 'SYSTEM READY!',
+                disconnectBtn: 'Disconnect',
+            }
         };
-    }
-});
 
-</script>
+        let currentLang = 'es';
 
+        function selectLanguage(lang) {
+            currentLang = lang;
+            try { localStorage.setItem('ultron_lang', lang); } catch(e) {}
+            document.getElementById('lang-screen').style.display = 'none';
+            document.getElementById('html-root').lang = lang;
+            applyI18n();
+        }
 
-<div id="stealth-overlay">
-    <img id="stealth-image" src="">
-    <div class="stealth-url" id="stealth-url"></div>
-    <button id="return-game-btn">Volver al juego</button>
-</div>
+        function applyI18n() {
+            const t = I18N[currentLang] || I18N.es;
+
+            // textContent elements
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (t[key] !== undefined) el.textContent = t[key];
+            });
+
+            // placeholder elements
+            document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+                const key = el.getAttribute('data-i18n-placeholder');
+                if (t[key] !== undefined) el.placeholder = t[key];
+            });
+
+            // special elements
+            const clearBtn = document.getElementById('clear-search');
+            if (clearBtn) clearBtn.textContent = t.clearBtn;
+
+            const resumeBtn = document.getElementById('resume-last-btn');
+            if (resumeBtn) resumeBtn.textContent = t.resumeBtn;
+
+            const saveBtn = document.getElementById('manual-save-btn');
+            if (saveBtn) saveBtn.textContent = t.saveBtn;
+
+            const exportBtn = document.getElementById('export-save-btn');
+            if (exportBtn) exportBtn.textContent = t.exportBtn;
+
+            const importLabel = document.querySelector('label[for="import-save-input"]');
+            if (importLabel) importLabel.textContent = t.importLabel;
+
+            const backBtn = document.getElementById('back-btn');
+            if (backBtn) backBtn.textContent = t.disconnectBtn;
+
+            const stealthBackBtn = document.getElementById('stealth-back-btn');
+            if (stealthBackBtn) stealthBackBtn.textContent = t.stealthBack;
+
+            const sugInput = document.getElementById('suggestion-input');
+            if (sugInput) sugInput.placeholder = t.suggestionPlaceholder;
+
+            const saveGameBtn = document.getElementById('save-progress-btn');
+            if (saveGameBtn) saveGameBtn.textContent = t.saveGame;
+
+            const exportGameBtn = document.getElementById('export-progress-btn');
+            if (exportGameBtn) exportGameBtn.textContent = t.exportGame;
+
+            const importGameBtn = document.getElementById('import-progress-btn');
+            if (importGameBtn) importGameBtn.textContent = t.importGame;
+
+            // sort options
+            const sortSelect = document.getElementById('sort-select');
+            if (sortSelect) {
+                const opts = sortSelect.options;
+                if (opts[0]) opts[0].textContent = t.sortDefault;
+                if (opts[1]) opts[1].textContent = t.sortPopular;
+                if (opts[2]) opts[2].textContent = t.sortUnpopular;
+                if (opts[3]) opts[3].textContent = t.sortAZ;
+            }
+        }
+
+        function initLangScreen() {
+            // Particles
+            const container = document.getElementById('lang-particles');
+            for (let i = 0; i < 40; i++) {
+                const p = document.createElement('div');
+                p.className = 'lang-particle';
+                p.style.cssText = `
+                    left: ${Math.random() * 100}%;
+                    width: ${Math.random() * 3 + 1}px;
+                    height: ${Math.random() * 3 + 1}px;
+                    animation-duration: ${Math.random() * 8 + 6}s;
+                    animation-delay: ${Math.random() * 8}s;
+                    opacity: 0;
+                `;
+                container.appendChild(p);
+            }
+
+            // Check if language already chosen
+            try {
+                const saved = localStorage.getItem('ultron_lang');
+                if (saved && (saved === 'es' || saved === 'en')) {
+                    selectLanguage(saved);
+                    return;
+                }
+            } catch(e) {}
+            // Show the screen — it stays until user picks
+        }
+
+        /* ============================================================
+           TOGGLE NOVEDADES
+        ============================================================ */
+        function toggleNews() {
+            const box = document.getElementById('news-box');
+            box.classList.toggle('collapsed');
+        }
+
+        /* ============================================================
+           MODO OCULTO (STEALTH MODE)
+        ============================================================ */
+        // Imagen inocente por defecto — una calculadora de Google
+        const STEALTH_IMAGE = 'https://www.gstatic.com/images/branding/product/1x/googleg_48dp.png';
+        const STEALTH_IMAGES = [
+            'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Culinary_fruits_front_view.jpg/1200px-Culinary_fruits_front_view.jpg',
+            'https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Colosseum_in_Rome%2C_Italy_-_April_2007.jpg/1200px-Colosseum_in_Rome%2C_Italy_-_April_2007.jpg',
+            'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Binoculars_from_the_front.jpg/1200px-Binoculars_from_the_front.jpg',
+        ];
+
+        let stealthActiveSlot = null;
+        let stealthGameData = null;
+        let isGameRunning = false;
+
+        function activarStealth(slot) {
+            const game = CONFIG[slot];
+            if (!game) return;
+
+            stealthActiveSlot = slot;
+            stealthGameData = game;
+
+            // If game is currently running, pause it by showing pause menu first then stealth
+            if (isGameRunning && currentGameData) {
+                // pause and show stealth
+                mostrarStealth();
+            } else {
+                // card click stealth: just show image, no game running
+                mostrarStealth();
+            }
+        }
+
+        function mostrarStealth() {
+            const overlay = document.getElementById('stealth-overlay');
+            const img = document.getElementById('stealth-img');
+            const urlDisplay = document.getElementById('stealth-url-display');
+
+            // Pick a random innocent image
+            const chosen = STEALTH_IMAGES[Math.floor(Math.random() * STEALTH_IMAGES.length)];
+            img.src = chosen;
+            urlDisplay.textContent = chosen;
+
+            overlay.classList.add('active');
+        }
+
+        function salirStealth() {
+            const overlay = document.getElementById('stealth-overlay');
+            overlay.classList.remove('active');
+
+            // If a game was running, show pause menu
+            if (isGameRunning && currentGameData) {
+                mostrarMenuPausa();
+            }
+        }
+
+        // Also add stealth button to the game runtime toolbar
+        function mostrarStealthEnJuego() {
+            mostrarStealth();
+        }
+
+        /* ============================================================
+           MENÚ DE PAUSA
+        ============================================================ */
+        function mostrarMenuPausa() {
+            const pauseMenu = document.getElementById('pause-menu');
+            const pauseName = document.getElementById('pause-game-name');
+            if (currentGameData) {
+                pauseName.textContent = currentGameData.titulo || '';
+            }
+            pauseMenu.classList.add('active');
+        }
+
+        function continuarJuego() {
+            const pauseMenu = document.getElementById('pause-menu');
+            pauseMenu.classList.remove('active');
+        }
+
+        /* ============================================================
+           SUGERENCIAS
+        ============================================================ */
+        const SUGGESTIONS_KEY = 'ultron_suggestions_v1';
+
+        function cargarSugerencias() {
+            try {
+                const raw = localStorage.getItem(SUGGESTIONS_KEY);
+                return raw ? JSON.parse(raw) : [];
+            } catch(e) { return []; }
+        }
+
+        function guardarSugerencias(list) {
+            try { localStorage.setItem(SUGGESTIONS_KEY, JSON.stringify(list)); } catch(e) {}
+        }
+
+        function renderSugerencias() {
+            const list = cargarSugerencias();
+            const container = document.getElementById('suggestions-list');
+            if (!container) return;
+
+            const t = I18N[currentLang] || I18N.es;
+
+            if (!list.length) {
+                container.innerHTML = `<div class="suggestions-empty">${t.suggestionsEmpty}</div>`;
+                return;
+            }
+
+            container.innerHTML = list.slice().reverse().map(s => {
+                const initials = s.text.charAt(0).toUpperCase();
+                return `
+                    <div class="suggestion-item">
+                        <div class="suggestion-avatar">${initials}</div>
+                        <div class="suggestion-text">${escapeHTML(s.text)}</div>
+                        <div class="suggestion-time">${s.time}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function escapeHTML(str) {
+            return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+        }
+
+        function enviarSugerencia() {
+            const input = document.getElementById('suggestion-input');
+            const text = (input?.value || '').trim();
+            if (!text) return;
+
+            const list = cargarSugerencias();
+            const now = new Date();
+            const time = now.toLocaleDateString(currentLang === 'en' ? 'en-GB' : 'es-ES', { day:'2-digit', month:'short', hour:'2-digit', minute:'2-digit' });
+
+            list.push({ text, time });
+            guardarSugerencias(list);
+            input.value = '';
+            renderSugerencias();
+        }
+
+        // Allow Enter key in suggestion input
+        document.addEventListener('DOMContentLoaded', () => {
+            const sugInput = document.getElementById('suggestion-input');
+            if (sugInput) {
+                sugInput.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') enviarSugerencia();
+                });
+            }
+        });
+
+    </script>
 
 </body>
 </html>
