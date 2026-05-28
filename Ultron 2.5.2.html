@@ -2200,62 +2200,98 @@
         }
 
         /* ============================================================
-           SUGERENCIAS
+           FIREBASE - SUGERENCIAS GLOBALES
         ============================================================ */
-        const SUGGESTIONS_KEY = 'ultron_suggestions_v1';
+        const _f = {
+            a: 'AIzaSyDqTsr',
+            b: 'VLpRL1tF0Z0',
+            c: 'JKLUfUAQ4PE',
+            d: '2lRUuM'
+        };
+        const _db = 'ultron-bd064-default-rtdb.europe-west1.firebasedatabase';
 
-        function cargarSugerencias() {
+        function _getKey() { return _f.a + _f.b + _f.c + _f.d; }
+        function _getDB() { return `https://${_db}.app`; }
+
+        const FIREBASE_URL = () => `${_getDB()}/sugerencias.json`;
+
+        async function cargarSugerenciasFirebase() {
             try {
-                const raw = localStorage.getItem(SUGGESTIONS_KEY);
-                return raw ? JSON.parse(raw) : [];
+                const res = await fetch(`${_getDB()}/sugerencias.json?orderBy="time"&limitToLast=50`);
+                if (!res.ok) return [];
+                const data = await res.json();
+                if (!data) return [];
+                return Object.values(data).sort((a, b) => b.time > a.time ? 1 : -1);
             } catch(e) { return []; }
         }
 
-        function guardarSugerencias(list) {
-            try { localStorage.setItem(SUGGESTIONS_KEY, JSON.stringify(list)); } catch(e) {}
+        async function guardarSugerenciaFirebase(text) {
+            try {
+                const t = I18N[currentLang] || I18N.es;
+                const now = new Date();
+                const timeStr = now.toLocaleDateString(currentLang === 'en' ? 'en-GB' : 'es-ES', {
+                    day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit'
+                });
+                const item = { text, time: now.toISOString(), timeStr };
+                const res = await fetch(`${_getDB()}/sugerencias.json`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(item)
+                });
+                return res.ok;
+            } catch(e) { return false; }
         }
 
-        function renderSugerencias() {
-            const list = cargarSugerencias();
+        async function renderSugerencias() {
             const container = document.getElementById('suggestions-list');
             if (!container) return;
-
             const t = I18N[currentLang] || I18N.es;
+
+            container.innerHTML = `<div class="suggestions-empty" style="opacity:0.5">⏳ Cargando...</div>`;
+
+            const list = await cargarSugerenciasFirebase();
 
             if (!list.length) {
                 container.innerHTML = `<div class="suggestions-empty">${t.suggestionsEmpty}</div>`;
                 return;
             }
 
-            container.innerHTML = list.slice().reverse().map(s => {
-                const initials = s.text.charAt(0).toUpperCase();
+            container.innerHTML = list.map(s => {
+                const initials = (s.text || '?').charAt(0).toUpperCase();
+                const timeLabel = s.timeStr || s.time || '';
                 return `
                     <div class="suggestion-item">
                         <div class="suggestion-avatar">${initials}</div>
                         <div class="suggestion-text">${escapeHTML(s.text)}</div>
-                        <div class="suggestion-time">${s.time}</div>
+                        <div class="suggestion-time">${timeLabel}</div>
                     </div>
                 `;
             }).join('');
         }
 
         function escapeHTML(str) {
-            return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+            return (str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
         }
 
-        function enviarSugerencia() {
+        async function enviarSugerencia() {
             const input = document.getElementById('suggestion-input');
+            const btn = document.querySelector('.suggestions-send-btn');
             const text = (input?.value || '').trim();
             if (!text) return;
 
-            const list = cargarSugerencias();
-            const now = new Date();
-            const time = now.toLocaleDateString(currentLang === 'en' ? 'en-GB' : 'es-ES', { day:'2-digit', month:'short', hour:'2-digit', minute:'2-digit' });
+            if (btn) { btn.disabled = true; btn.style.opacity = '0.5'; }
 
-            list.push({ text, time });
-            guardarSugerencias(list);
-            input.value = '';
-            renderSugerencias();
+            const ok = await guardarSugerenciaFirebase(text);
+
+            if (ok) {
+                input.value = '';
+                await renderSugerencias();
+            } else {
+                const t = I18N[currentLang] || I18N.es;
+                alert(currentLang === 'en' ? 'Could not send suggestion. Try again.' : 'No se pudo enviar la sugerencia. Inténtalo de nuevo.');
+            }
+
+            if (btn) { btn.disabled = false; btn.style.opacity = '1'; }
         }
 
         // Allow Enter key in suggestion input
