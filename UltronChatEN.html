@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Ultron Chat EN</title>
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=Inter:wght@400;500;600&display=swap');
+
+    :root {
+        --bg: #050810;
+        --bg2: #080c18;
+        --bg3: #0d1226;
+        --panel: #0a0f1e;
+        --border: rgba(0,210,255,0.12);
+        --blue: #00d2ff;
+        --pink: #ff0055;
+        --green: #00e676;
+        --text: #e8eaf6;
+        --text2: rgba(232,234,246,0.55);
+        --text3: rgba(232,234,246,0.3);
+        --msg-out: #004d66;
+        --msg-in: #111827;
+        --online: #00e676;
+    }
+
+    * { margin:0; padding:0; box-sizing:border-box; }
+
+    body {
+        font-family: 'Inter', sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        height: 100dvh;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* ── PANTALLA DE APODO ── */
+    #nickname-screen {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        background: radial-gradient(ellipse at 50% 40%, #07091a, #000);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 28px;
+        padding: 24px;
+    }
+
+    .nick-logo {
+        font-family: 'Rajdhani', sans-serif;
+        font-size: 3rem;
+        font-weight: 700;
+        letter-spacing: 6px;
+        background: linear-gradient(90deg, var(--blue), #fff, var(--pink));
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+    }
+
+    .nick-sub {
+        font-size: 0.8rem;
+        color: var(--text3);
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        margin-top: -20px;
+    }
+
+    .nick-box {
+        background: rgba(255,255,255,0.04);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        padding: 28px 32px;
+        width: 100%;
+        max-width: 380px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .nick-label {
+        font-size: 0.75rem;
+        color: var(--text2);
+        letter-spacing: 2px;
+        text-transform: uppercase;
+    }
+
+    .nick-input {
+        background: rgba(5,8,16,0.9);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 14px 18px;
+        color: var(--text);
+        font-size: 1rem;
+        font-family: 'Inter', sans-serif;
+        font-weight: 600;
+        outline: none;
+        transition: border-color 0.2s;
+        width: 100%;
+    }
+
+    .nick-input:focus { border-color: var(--blue); }
+    .nick-input::placeholder { color: var(--text3); font-weight: 400; }
+
+    .nick-hint {
+        font-size: 0.73rem;
+        color: var(--text3);
+        line-height: 1.4;
+    }
+
+    .nick-btn {
+        background: linear-gradient(90deg, var(--blue), #0066aa);
+        border: none;
+        border-radius: 12px;
+        padding: 14px;
+        color: #fff;
+        font-weight: 700;
+        font-size: 0.95rem;
+        cursor: pointer;
+        letter-spacing: 1px;
+        transition: all 0.2s;
+        font-family: 'Rajdhani', sans-serif;
+    }
+
+    .nick-btn:hover { transform: translateY(-2px); box-shadow: 0 0 24px rgba(0,210,255,0.3); }
+
+    /* ── LAYOUT PRINCIPAL ── */
+    #app {
+        display: none;
+        height: 100dvh;
+        flex-direction: row;
+    }
+
+    /* ── SIDEBAR ── */
+    #sidebar {
+        width: 320px;
+        flex-shrink: 0;
+        background: var(--panel);
+        border-right: 1px solid var(--border);
+        display: flex;
+        flex-direction: column;
+        height: 100dvh;
+    }
+
+    .sidebar-header {
+        padding: 16px 18px;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        background: var(--bg3);
+    }
+
+    .my-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--blue), var(--pink));
+        display: grid;
+        place-items: center;
+        font-family: 'Rajdhani', sans-serif;
+        font-weight: 700;
+        font-size: 1.1rem;
+        color: #fff;
+        flex-shrink: 0;
+    }
+
+    .my-name {
+        font-weight: 700;
+        font-size: 0.95rem;
+        color: var(--text);
+        flex: 1;
+    }
+
+    .my-status {
+        font-size: 0.72rem;
+        color: var(--online);
+    }
+
+    .sidebar-title {
+        padding: 14px 18px 10px;
+        font-size: 0.7rem;
+        color: var(--text3);
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        font-weight: 600;
+    }
+
+    #users-list {
+        flex: 1;
+        overflow-y: auto;
+        scrollbar-width: thin;
+        scrollbar-color: rgba(255,255,255,0.08) transparent;
+    }
+
+    .user-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 18px;
+        cursor: pointer;
+        border-bottom: 1px solid rgba(255,255,255,0.04);
+        transition: background 0.15s;
+        position: relative;
+    }
+
+    .user-item:hover { background: rgba(255,255,255,0.04); }
+    .user-item.active { background: rgba(0,210,255,0.08); border-left: 3px solid var(--blue); }
+
+    .user-avatar {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        font-family: 'Rajdhani', sans-serif;
+        font-weight: 700;
+        font-size: 1.1rem;
+        color: #fff;
+        flex-shrink: 0;
+        position: relative;
+    }
+
+    .online-dot {
+        position: absolute;
+        bottom: 1px;
+        right: 1px;
+        width: 11px;
+        height: 11px;
+        border-radius: 50%;
+        background: var(--online);
+        border: 2px solid var(--panel);
+    }
+
+    .user-info { flex: 1; min-width: 0; }
+
+    .user-name {
+        font-weight: 600;
+        font-size: 0.9rem;
+        color: var(--text);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .user-last {
+        font-size: 0.75rem;
+        color: var(--text3);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin-top: 2px;
+    }
+
+    .user-meta {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 4px;
+    }
+
+    .user-time {
+        font-size: 0.65rem;
+        color: var(--text3);
+    }
+
+    .unread-badge {
+        background: var(--blue);
+        color: #000;
+        font-size: 0.65rem;
+        font-weight: 800;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+    }
+
+    .global-chat-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 14px 18px;
+        cursor: pointer;
+        border-bottom: 1px solid var(--border);
+        background: rgba(0,210,255,0.04);
+        transition: background 0.15s;
+    }
+
+    .global-chat-item:hover { background: rgba(0,210,255,0.09); }
+    .global-chat-item.active { background: rgba(0,210,255,0.12); border-left: 3px solid var(--blue); }
+
+    .global-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--blue), var(--pink));
+        display: grid;
+        place-items: center;
+        font-size: 1.2rem;
+        flex-shrink: 0;
+    }
+
+    .no-users {
+        padding: 24px 18px;
+        text-align: center;
+        color: var(--text3);
+        font-size: 0.82rem;
+        line-height: 1.6;
+    }
+
+    /* ── AREA CHAT ── */
+    #chat-area {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        height: 100dvh;
+        background: var(--bg2);
+        position: relative;
+    }
+
+    #chat-empty {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 16px;
+        color: var(--text3);
+    }
+
+    .chat-empty-icon { font-size: 3rem; opacity: 0.4; }
+
+    .chat-empty-text {
+        font-size: 0.9rem;
+        text-align: center;
+        max-width: 260px;
+        line-height: 1.5;
+    }
+
+    /* Chat header */
+    #chat-header {
+        display: none;
+        padding: 12px 18px;
+        border-bottom: 1px solid var(--border);
+        background: var(--bg3);
+        align-items: center;
+        gap: 12px;
+        flex-shrink: 0;
+    }
+
+    #chat-header.visible { display: flex; }
+
+    #chat-header-avatar {
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        font-family: 'Rajdhani', sans-serif;
+        font-weight: 700;
+        font-size: 1rem;
+        color: #fff;
+    }
+
+    #chat-header-info { flex: 1; }
+
+    #chat-header-name {
+        font-weight: 700;
+        font-size: 0.95rem;
+    }
+
+    #chat-header-status {
+        font-size: 0.72rem;
+        color: var(--online);
+    }
+
+    /* Messages */
+    #messages-container {
+        flex: 1;
+        overflow-y: auto;
+        padding: 18px 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        scrollbar-width: thin;
+        scrollbar-color: rgba(255,255,255,0.08) transparent;
+        background-image: 
+            radial-gradient(circle at 20% 80%, rgba(0,210,255,0.03) 0%, transparent 50%),
+            radial-gradient(circle at 80% 20%, rgba(255,0,85,0.03) 0%, transparent 50%);
+    }
+
+    .msg-wrapper {
+        display: flex;
+        flex-direction: column;
+        max-width: 72%;
+        animation: msgIn 0.2s ease;
+    }
+
+    @keyframes msgIn {
+        from { opacity:0; transform: translateY(6px); }
+        to { opacity:1; transform: translateY(0); }
+    }
+
+    .msg-wrapper.out { align-self: flex-end; align-items: flex-end; }
+    .msg-wrapper.in { align-self: flex-start; align-items: flex-start; }
+
+    .msg-sender {
+        font-size: 0.68rem;
+        font-weight: 700;
+        margin-bottom: 3px;
+        padding-left: 4px;
+    }
+
+    .msg-bubble {
+        padding: 9px 13px;
+        border-radius: 16px;
+        font-size: 0.88rem;
+        line-height: 1.45;
+        word-break: break-word;
+        position: relative;
+    }
+
+    .msg-wrapper.out .msg-bubble {
+        background: var(--msg-out);
+        border-bottom-right-radius: 4px;
+        color: #e0f7fa;
+    }
+
+    .msg-wrapper.in .msg-bubble {
+        background: var(--msg-in);
+        border-bottom-left-radius: 4px;
+        border: 1px solid rgba(255,255,255,0.07);
+        color: var(--text);
+    }
+
+    .msg-time {
+        font-size: 0.63rem;
+        color: var(--text3);
+        margin-top: 3px;
+        padding: 0 4px;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .msg-ticks { color: var(--blue); font-size: 0.7rem; }
+
+    .date-divider {
+        text-align: center;
+        margin: 12px 0 8px;
+        font-size: 0.7rem;
+        color: var(--text3);
+        position: relative;
+    }
+
+    .date-divider::before, .date-divider::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        width: 30%;
+        height: 1px;
+        background: rgba(255,255,255,0.07);
+    }
+
+    .date-divider::before { left: 0; }
+    .date-divider::after { right: 0; }
+
+    /* Input */
+    #chat-input-bar {
+        display: none;
+        padding: 12px 14px;
+        border-top: 1px solid var(--border);
+        background: var(--bg3);
+        gap: 10px;
+        align-items: flex-end;
+        flex-shrink: 0;
+    }
+
+    #chat-input-bar.visible { display: flex; }
+
+    #msg-input {
+        flex: 1;
+        background: rgba(5,8,16,0.9);
+        border: 1px solid var(--border);
+        border-radius: 22px;
+        padding: 11px 18px;
+        color: var(--text);
+        font-size: 0.9rem;
+        font-family: 'Inter', sans-serif;
+        outline: none;
+        resize: none;
+        max-height: 120px;
+        scrollbar-width: none;
+        transition: border-color 0.2s;
+        line-height: 1.4;
+    }
+
+    #msg-input:focus { border-color: rgba(0,210,255,0.35); }
+    #msg-input::placeholder { color: var(--text3); }
+
+    #send-btn {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        border: none;
+        background: linear-gradient(135deg, var(--blue), #0066aa);
+        color: #fff;
+        font-size: 1.1rem;
+        cursor: pointer;
+        display: grid;
+        place-items: center;
+        flex-shrink: 0;
+        transition: all 0.2s;
+        box-shadow: 0 0 14px rgba(0,210,255,0.25);
+    }
+
+    #send-btn:hover { transform: scale(1.08); box-shadow: 0 0 20px rgba(0,210,255,0.4); }
+
+    /* Typing indicator */
+    .typing-indicator {
+        display: flex;
+        gap: 4px;
+        align-items: center;
+        padding: 8px 12px;
+        background: var(--msg-in);
+        border-radius: 16px;
+        border-bottom-left-radius: 4px;
+        width: fit-content;
+        border: 1px solid rgba(255,255,255,0.07);
+    }
+
+    .typing-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--text3);
+        animation: typingBounce 1.2s infinite;
+    }
+
+    .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+    .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes typingBounce {
+        0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+        30% { transform: translateY(-5px); opacity: 1; }
+    }
+
+    /* Mobile responsive */
+    @media (max-width: 640px) {
+        #sidebar {
+            width: 100%;
+            position: absolute;
+            z-index: 10;
+            transition: transform 0.3s ease;
+        }
+
+        #sidebar.hidden { transform: translateX(-100%); }
+
+        #chat-area { width: 100%; }
+
+        #back-to-sidebar {
+            display: flex !important;
+        }
+    }
+
+    #back-to-sidebar {
+        display: none;
+        background: none;
+        border: none;
+        color: var(--blue);
+        font-size: 1.2rem;
+        cursor: pointer;
+        padding: 4px;
+    }
+
+    /* Scrollbar global */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
+</style>
+</head>
+<body>
+
+<!-- PANTALLA APODO -->
+<div id="nickname-screen">
+    <div class="nick-logo">ULTRON</div>
+    <div class="nick-sub">Global Chat</div>
+    <div class="nick-box">
+        <div class="nick-label">What's your name?</div>
+        <input class="nick-input" id="nick-input" type="text" placeholder="Your nickname..." maxlength="20" autocomplete="off"/>
+        <div class="nick-hint">This nickname will identify you in the chat. Any user will be able to see you and message you.</div>
+        <button class="nick-btn" onclick="entrarChat()">ENTER CHAT →</button>
+    </div>
+</div>
+
+<!-- APP PRINCIPAL -->
+<div id="app">
+
+    <!-- SIDEBAR -->
+    <div id="sidebar">
+        <div class="sidebar-header">
+            <div class="my-avatar" id="my-avatar-el">?</div>
+            <div>
+                <div class="my-name" id="my-name-el">—</div>
+                <div class="my-status">● Online</div>
+            </div>
+        </div>
+
+        <!-- Chat global -->
+        <div class="global-chat-item" id="global-chat-btn" onclick="abrirGlobal()">
+            <div class="global-icon">🌍</div>
+            <div class="user-info">
+                <div class="user-name">Global Chat</div>
+                <div class="user-last">All users</div>
+            </div>
+        </div>
+
+        <div class="sidebar-title">Online users</div>
+        <div id="users-list">
+            <div class="no-users">Loading users...</div>
+        </div>
+    </div>
+
+    <!-- AREA CHAT -->
+    <div id="chat-area">
+
+        <!-- Empty state -->
+        <div id="chat-empty">
+            <div class="chat-empty-icon">💬</div>
+            <div class="chat-empty-text">Select a user or the global chat to start chatting</div>
+        </div>
+
+        <!-- Chat header -->
+        <div id="chat-header">
+            <button id="back-to-sidebar" onclick="volverSidebar()">‹</button>
+            <div id="chat-header-avatar"></div>
+            <div id="chat-header-info">
+                <div id="chat-header-name"></div>
+                <div id="chat-header-status">Online</div>
+            </div>
+        </div>
+
+        <!-- Messages -->
+        <div id="messages-container" style="display:none;"></div>
+
+        <!-- Input -->
+        <div id="chat-input-bar">
+            <textarea id="msg-input" placeholder="Write a message..." rows="1"></textarea>
+            <button id="send-btn" onclick="enviarMensaje()">➤</button>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    /* ============================================================
+       FIREBASE CONFIG
+    ============================================================ */
+    const _f = {
+        a: 'AIzaSyDqTsr',
+        b: 'VLpRL1tF0Z0',
+        c: 'JKLUfUAQ4PE',
+        d: '2lRUuM'
+    };
+    const _db = 'ultron-bd064-default-rtdb.europe-west1.firebasedatabase';
+    const DB = () => `https://${_db}.app`;
+
+    /* ============================================================
+       ESTADO
+    ============================================================ */
+    let myNick = '';
+    let myColor = '';
+    let currentChat = null; // 'global' o nick del otro usuario
+    let isGlobal = false;
+    let messagesInterval = null;
+    let usersInterval = null;
+    let lastMsgCount = 0;
+
+    const COLORS = [
+        '#00d2ff','#ff0055','#00e676','#ff9100','#d500f9',
+        '#00bcd4','#ff4081','#76ff03','#ffab40','#b388ff'
+    ];
+
+    function getColor(nick) {
+        let h = 0;
+        for (let c of nick) h = (h * 31 + c.charCodeAt(0)) % COLORS.length;
+        return COLORS[h];
+    }
+
+    function getInitial(nick) {
+        return (nick || '?').charAt(0).toUpperCase();
+    }
+
+    function getChatKey(a, b) {
+        return [a, b].sort().join('__');
+    }
+
+    function timeStr(iso) {
+        const d = new Date(iso);
+        return d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+    }
+
+    /* ============================================================
+       NICKNAME SCREEN
+    ============================================================ */
+    window.addEventListener('load', () => {
+        const saved = localStorage.getItem('ultron_chat_nick_en');
+        if (saved) {
+            myNick = saved;
+            iniciarApp();
+        }
+
+        document.getElementById('nick-input').addEventListener('keydown', e => {
+            if (e.key === 'Enter') entrarChat();
+        });
+    });
+
+    function entrarChat() {
+        const val = document.getElementById('nick-input').value.trim();
+        if (!val || val.length < 2) {
+            document.getElementById('nick-input').style.borderColor = 'var(--pink)';
+            return;
+        }
+        myNick = val;
+        localStorage.setItem('ultron_chat_nick_en', myNick);
+        iniciarApp();
+    }
+
+    async function iniciarApp() {
+        myColor = getColor(myNick);
+
+        document.getElementById('nickname-screen').style.display = 'none';
+        document.getElementById('app').style.display = 'flex';
+
+        document.getElementById('my-avatar-el').textContent = getInitial(myNick);
+        document.getElementById('my-avatar-el').style.background = `linear-gradient(135deg, ${myColor}, ${myColor}88)`;
+        document.getElementById('my-name-el').textContent = myNick;
+
+        // Register presence
+        await registrarPresencia();
+
+        // Load users
+        cargarUsuarios();
+        usersInterval = setInterval(cargarUsuarios, 5000);
+
+        // Input auto-resize
+        const input = document.getElementById('msg-input');
+        input.addEventListener('input', () => {
+            input.style.height = 'auto';
+            input.style.height = Math.min(input.scrollHeight, 120) + 'px';
+        });
+        input.addEventListener('keydown', e => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                enviarMensaje();
+            }
+        });
+    }
+
+    /* ============================================================
+       PRESENCIA
+    ============================================================ */
+    async function registrarPresencia() {
+        try {
+            await fetch(`${DB()}/chat_en/presencia/${encodeURIComponent(myNick)}.json`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    nick: myNick,
+                    color: myColor,
+                    lastSeen: new Date().toISOString()
+                })
+            });
+        } catch(e) {}
+
+        // Keep alive every 30s
+        setInterval(async () => {
+            try {
+                await fetch(`${DB()}/chat_en/presencia/${encodeURIComponent(myNick)}.json`, {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ lastSeen: new Date().toISOString() })
+                });
+            } catch(e) {}
+        }, 30000);
+    }
+
+    /* ============================================================
+       USUARIOS
+    ============================================================ */
+    async function cargarUsuarios() {
+        try {
+            const res = await fetch(`${DB()}/chat_en/presencia.json`);
+            if (!res.ok) return;
+            const data = await res.json();
+            if (!data) return;
+
+            const now = Date.now();
+            const users = Object.values(data)
+                .filter(u => u.nick !== myNick && (now - new Date(u.lastSeen).getTime()) < 120000)
+                .sort((a, b) => a.nick.localeCompare(b.nick));
+
+            const list = document.getElementById('users-list');
+
+            if (!users.length) {
+                list.innerHTML = `<div class="no-users">No other users online.<br>Share the link with your friends 👋</div>`;
+                return;
+            }
+
+            list.innerHTML = users.map(u => {
+                const color = u.color || getColor(u.nick);
+                const isActive = currentChat === u.nick && !isGlobal;
+                return `
+                    <div class="user-item ${isActive ? 'active' : ''}" onclick="abrirChat('${escHTML(u.nick)}')">
+                        <div class="user-avatar" style="background: linear-gradient(135deg, ${color}, ${color}88)">
+                            ${getInitial(u.nick)}
+                            <div class="online-dot"></div>
+                        </div>
+                        <div class="user-info">
+                            <div class="user-name">${escHTML(u.nick)}</div>
+                            <div class="user-last">Online</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        } catch(e) {}
+    }
+
+    /* ============================================================
+       ABRIR CHAT PRIVADO
+    ============================================================ */
+    function abrirChat(nick) {
+        currentChat = nick;
+        isGlobal = false;
+        lastMsgCount = 0;
+
+        // Header
+        const color = getColor(nick);
+        const header = document.getElementById('chat-header');
+        header.classList.add('visible');
+        const av = document.getElementById('chat-header-avatar');
+        av.textContent = getInitial(nick);
+        av.style.background = `linear-gradient(135deg, ${color}, ${color}88)`;
+        document.getElementById('chat-header-name').textContent = nick;
+        document.getElementById('chat-header-status').textContent = 'Online';
+
+        document.getElementById('chat-empty').style.display = 'none';
+        document.getElementById('messages-container').style.display = 'flex';
+        document.getElementById('chat-input-bar').classList.add('visible');
+
+        // Active states
+        document.getElementById('global-chat-btn').classList.remove('active');
+        cargarUsuarios();
+
+        // On mobile hide sidebar
+        if (window.innerWidth <= 640) {
+            document.getElementById('sidebar').classList.add('hidden');
+        }
+
+        if (messagesInterval) clearInterval(messagesInterval);
+        cargarMensajes();
+        messagesInterval = setInterval(cargarMensajes, 2000);
+    }
+
+    /* ============================================================
+       ABRIR CHAT GLOBAL
+    ============================================================ */
+    function abrirGlobal() {
+        currentChat = 'global';
+        isGlobal = true;
+        lastMsgCount = 0;
+
+        const header = document.getElementById('chat-header');
+        header.classList.add('visible');
+        const av = document.getElementById('chat-header-avatar');
+        av.textContent = '🌍';
+        av.style.background = 'linear-gradient(135deg, var(--blue), var(--pink))';
+        document.getElementById('chat-header-name').textContent = 'Global Chat';
+        document.getElementById('chat-header-status').textContent = 'All users';
+
+        document.getElementById('chat-empty').style.display = 'none';
+        document.getElementById('messages-container').style.display = 'flex';
+        document.getElementById('chat-input-bar').classList.add('visible');
+
+        document.getElementById('global-chat-btn').classList.add('active');
+
+        if (window.innerWidth <= 640) {
+            document.getElementById('sidebar').classList.add('hidden');
+        }
+
+        if (messagesInterval) clearInterval(messagesInterval);
+        cargarMensajes();
+        messagesInterval = setInterval(cargarMensajes, 2000);
+    }
+
+    /* ============================================================
+       CARGAR MENSAJES
+    ============================================================ */
+    async function cargarMensajes() {
+        if (!currentChat) return;
+        try {
+            const key = isGlobal ? 'global' : getChatKey(myNick, currentChat);
+            const res = await fetch(`${DB()}/chat_en/mensajes/${key}.json`);
+            if (!res.ok) return;
+            const data = await res.json();
+
+            const msgs = data ? Object.values(data).sort((a,b) => a.ts > b.ts ? 1 : -1) : [];
+
+            if (msgs.length === lastMsgCount) return;
+            lastMsgCount = msgs.length;
+
+            renderMensajes(msgs);
+        } catch(e) {}
+    }
+
+    function renderMensajes(msgs) {
+        const container = document.getElementById('messages-container');
+        const wasAtBottom = container.scrollHeight - container.scrollTop - container.clientHeight < 60;
+
+        let html = '';
+        let lastDate = '';
+
+        msgs.forEach(m => {
+            const d = new Date(m.ts);
+            const dateLabel = d.toLocaleDateString('en-GB', { day: '2-digit', month: 'long' });
+            if (dateLabel !== lastDate) {
+                html += `<div class="date-divider">${dateLabel}</div>`;
+                lastDate = dateLabel;
+            }
+
+            const isOut = m.from === myNick;
+            const color = m.color || getColor(m.from);
+
+            html += `
+                <div class="msg-wrapper ${isOut ? 'out' : 'in'}">
+                    ${(!isOut && isGlobal) ? `<div class="msg-sender" style="color:${color}">${escHTML(m.from)}</div>` : ''}
+                    <div class="msg-bubble">${escHTML(m.text)}</div>
+                    <div class="msg-time">
+                        ${timeStr(m.ts)}
+                        ${isOut ? '<span class="msg-ticks">✓✓</span>' : ''}
+                    </div>
+                </div>
+            `;
+        });
+
+        container.innerHTML = html || `<div style="text-align:center;color:var(--text3);font-size:0.82rem;margin-top:40px">No messages yet. Say hi! 👋</div>`;
+
+        if (wasAtBottom || lastMsgCount <= 1) {
+            container.scrollTop = container.scrollHeight;
+        }
+    }
+
+    /* ============================================================
+       ENVIAR MENSAJE
+    ============================================================ */
+    async function enviarMensaje() {
+        const input = document.getElementById('msg-input');
+        const text = input.value.trim();
+        if (!text || !currentChat) return;
+
+        input.value = '';
+        input.style.height = 'auto';
+
+        const key = isGlobal ? 'global' : getChatKey(myNick, currentChat);
+        const msg = {
+            from: myNick,
+            text,
+            ts: new Date().toISOString(),
+            color: myColor
+        };
+
+        try {
+            await fetch(`${DB()}/chat_en/mensajes/${key}.json`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(msg)
+            });
+            await cargarMensajes();
+        } catch(e) {}
+    }
+
+    /* ============================================================
+       MOBILE - VOLVER AL SIDEBAR
+    ============================================================ */
+    function volverSidebar() {
+        document.getElementById('sidebar').classList.remove('hidden');
+        if (messagesInterval) clearInterval(messagesInterval);
+        currentChat = null;
+    }
+
+    /* ============================================================
+       UTILS
+    ============================================================ */
+    function escHTML(str) {
+        return (str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+</script>
+</body>
+</html>
