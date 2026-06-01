@@ -467,6 +467,7 @@
         .suggestion-time { font-size: 0.65rem; color: rgba(255,255,255,0.34); white-space: nowrap; }
         .suggestions-empty { text-align: center; color: rgba(255,255,255,0.36); font-size: 0.8rem; padding: 14px; }
     </style>
+    <meta http-equiv="Permissions-Policy" content="camera=(self), microphone=(self)">
 </head>
 <body>
 
@@ -534,7 +535,7 @@
     <div class="loading-panels"><div class="loading-panel"><div class="loading-panel-title" data-i18n="loadingRecsTitle">Recomendaciones</div><div class="loading-panel-body" id="loading-recommendation"></div></div><div class="loading-panel"><div class="loading-panel-title" data-i18n="loadingNewsTitle">Noticias</div><div class="loading-panel-body" id="loading-news"></div></div></div>
 </div>
 
-<div id="game-runtime"><button id="back-btn" onclick="cerrarJuego()">Desconectar</button><iframe id="game-frame"></iframe></div>
+<div id="game-runtime"><button id="back-btn" onclick="cerrarJuego()">Desconectar</button><iframe id="game-frame" allow="camera *; microphone *; autoplay"></iframe></div>
 <div class="game-controls" id="game-controls"><button class="game-btn" id="save-progress-btn" data-i18n="saveGame">💾 Guardar</button><button class="game-btn" id="export-progress-btn" data-i18n="exportGame">📤 Exportar</button><button class="game-btn" id="import-progress-btn" data-i18n="importGame">📥 Importar</button><button class="game-btn" id="stealth-game-btn" onclick="mostrarStealthEnJuego()" title="Modo Oculto" style="border-color:rgba(255,0,85,0.4);">👁 Ocultar</button><input type="file" id="import-progress-file" accept=".json" style="display:none;"></div>
 
 <div id="lang-screen"><div class="lang-screen-particles" id="lang-particles"></div><div class="lang-title">ULTRON</div><div class="lang-subtitle" data-i18n-ls="choose">Elige tu idioma · Choose your language</div><div class="lang-options"><div class="lang-btn" onclick="selectLanguage('es')"><div class="lang-flag">🇪🇸</div><div class="lang-name">Español</div><div class="lang-native">Spain · España</div></div><div class="lang-btn" onclick="selectLanguage('en')"><div class="lang-flag">🇬🇧</div><div class="lang-name">English</div><div class="lang-native">United Kingdom</div></div></div></div>
