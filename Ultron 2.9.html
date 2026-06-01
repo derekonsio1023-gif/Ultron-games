@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ULTRON AI</title>
+
+<link rel="icon"
+href="https://raw.githack.com/derekonsio1023-gif/Ultron-games/main/assets/logo.png?v=1">
+
+<meta name="theme-color" content="#00ffff">
+    
     <style>
         :root { 
             --bg-color: #050508; 
@@ -46,6 +52,153 @@
         }
         .counter-banner strong { color: #fff; }
         
+        
+        .promo-banner {
+            position: relative;
+            margin: 18px auto 28px;
+            max-width: 1600px;
+            border-radius: 28px;
+            padding: 4px;
+            background: linear-gradient(120deg, rgba(0,210,255,0.75), rgba(255,0,85,0.65), rgba(0,210,255,0.78));
+            background-size: 220% 220%;
+            animation: promo-border-flow 8s ease-in-out infinite;
+            box-shadow:
+                0 0 24px rgba(0,210,255,0.18),
+                0 0 44px rgba(255,0,85,0.12),
+                inset 0 0 24px rgba(255,255,255,0.06);
+            overflow: hidden;
+        }
+
+        .promo-banner::before {
+            content: "";
+            position: absolute;
+            inset: 1px;
+            border-radius: 26px;
+            background:
+                radial-gradient(circle at 18% 20%, rgba(0,210,255,0.18), transparent 30%),
+                radial-gradient(circle at 78% 30%, rgba(255,0,85,0.20), transparent 26%),
+                linear-gradient(135deg, rgba(10,12,22,0.98), rgba(6,8,14,0.98));
+            z-index: 0;
+        }
+
+        .promo-banner::after {
+            content: "";
+            position: absolute;
+            inset: -60% -10%;
+            background: linear-gradient(120deg, transparent 35%, rgba(255,255,255,0.12) 50%, transparent 65%);
+            transform: translateX(-40%);
+            animation: promo-sweep 5.8s linear infinite;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .promo-banner-inner {
+            position: relative;
+            z-index: 2;
+            min-height: 92px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            padding: 20px 26px;
+            border-radius: 26px;
+        }
+
+        .promo-copy {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            align-items: center;
+            text-align: center;
+        }
+
+        .promo-kicker {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 6px 14px;
+            border-radius: 999px;
+            border: 1px solid rgba(0,210,255,0.34);
+            background: rgba(0,210,255,0.10);
+            color: #dffcff;
+            font-size: 0.72rem;
+            letter-spacing: 2.2px;
+            text-transform: uppercase;
+            font-weight: 900;
+            box-shadow: 0 0 18px rgba(0,210,255,0.14);
+        }
+
+        .promo-text {
+            font-size: clamp(1rem, 1.9vw, 1.5rem);
+            font-weight: 900;
+            letter-spacing: 0.4px;
+            line-height: 1.2;
+            color: rgba(255,255,255,0.92);
+            text-shadow:
+                0 0 8px rgba(0,210,255,0.55),
+                0 0 18px rgba(0,210,255,0.28),
+                0 0 24px rgba(255,0,85,0.18);
+            animation: promo-text-pulse 2.6s ease-in-out infinite;
+        }
+
+        .promo-text span {
+            color: #ffffff;
+            text-shadow:
+                0 0 10px rgba(0,210,255,0.90),
+                0 0 24px rgba(0,210,255,0.50),
+                0 0 34px rgba(255,0,85,0.32);
+            position: relative;
+        }
+
+        .promo-text span::after {
+            content: "";
+            position: absolute;
+            inset: -6px -10px;
+            border-radius: 999px;
+            border: 1px solid rgba(0,210,255,0.22);
+            filter: blur(2px);
+            opacity: 0.65;
+            animation: promo-ring 2.8s ease-in-out infinite;
+        }
+
+        @keyframes promo-border-flow {
+            0%, 100% { background-position: 0% 50%; transform: translateY(0); }
+            50% { background-position: 100% 50%; transform: translateY(-3px); }
+        }
+
+        @keyframes promo-sweep {
+            0% { transform: translateX(-55%) rotate(0deg); opacity: 0; }
+            15% { opacity: 0.42; }
+            50% { opacity: 0.2; }
+            100% { transform: translateX(55%) rotate(0deg); opacity: 0; }
+        }
+
+        @keyframes promo-text-pulse {
+            0%, 100% {
+                transform: translateY(0);
+                filter: brightness(1);
+            }
+            50% {
+                transform: translateY(-1px);
+                filter: brightness(1.12);
+            }
+        }
+
+        @keyframes promo-ring {
+            0%, 100% { transform: scale(0.98); opacity: 0.45; }
+            50% { transform: scale(1.08); opacity: 0.9; }
+        }
+
+        @media (max-width: 640px) {
+            .promo-banner-inner {
+                padding: 16px 18px;
+                min-height: 110px;
+            }
+            .promo-text {
+                font-size: 1.02rem;
+            }
+        }
+
         .grid { 
             display: grid; 
             grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); 
@@ -429,6 +582,171 @@
             100% { background-position: 200% 50%; }
         }
 
+        .loading-brand {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .loading-logo-wrap {
+            width: 110px;
+            height: 110px;
+            border-radius: 28px;
+            padding: 6px;
+            background: linear-gradient(120deg, rgba(0,210,255,0.78), rgba(255,0,85,0.68), rgba(0,210,255,0.82));
+            background-size: 220% 220%;
+            animation: panel-border-flow 7s ease-in-out infinite;
+            box-shadow: 0 0 26px rgba(0,210,255,0.18), 0 0 24px rgba(255,0,85,0.12);
+        }
+
+        .loading-logo-wrap::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+        }
+
+        .loading-logo {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 22px;
+            background: rgba(5,8,16,0.95);
+            padding: 8px;
+            animation: logo-spin 8s linear infinite;
+            filter: drop-shadow(0 0 14px rgba(0,210,255,0.35));
+        }
+
+        .loading-panels {
+            width: min(980px, 92vw);
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 14px;
+            margin-top: 10px;
+        }
+
+        .loading-panel {
+            position: relative;
+            border-radius: 24px;
+            padding: 4px;
+            background: linear-gradient(120deg, rgba(0,210,255,0.75), rgba(255,0,85,0.62), rgba(0,210,255,0.78));
+            background-size: 220% 220%;
+            animation: panel-border-flow 8s ease-in-out infinite;
+            box-shadow: 0 0 20px rgba(0,210,255,0.10), inset 0 0 18px rgba(255,255,255,0.04);
+            overflow: hidden;
+        }
+
+        .loading-panel::before {
+            content: "";
+            position: absolute;
+            inset: 1px;
+            border-radius: 22px;
+            background: linear-gradient(135deg, rgba(10,12,22,0.98), rgba(6,8,14,0.98));
+            z-index: 0;
+        }
+
+        .loading-panel::after {
+            content: "";
+            position: absolute;
+            inset: -40% -10%;
+            background: linear-gradient(120deg, transparent 35%, rgba(255,255,255,0.10) 50%, transparent 65%);
+            animation: panel-sweep 5.8s linear infinite;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .loading-panel-title,
+        .loading-panel-body {
+            position: relative;
+            z-index: 2;
+        }
+
+        .loading-panel-title {
+            padding: 14px 16px 10px;
+            font-size: 0.78rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #e4fbff;
+            text-shadow: 0 0 10px rgba(0,210,255,0.35);
+        }
+
+        .loading-panel-body {
+            padding: 0 14px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .loading-panel-body .item {
+            border-radius: 16px;
+            padding: 12px 14px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.06);
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .loading-panel-body .item strong {
+            font-size: 0.88rem;
+            color: #fff;
+            text-shadow: 0 0 8px rgba(0,210,255,0.20);
+        }
+
+        .loading-panel-body .item em {
+            font-size: 0.77rem;
+            font-style: normal;
+            color: rgba(255,255,255,0.60);
+            line-height: 1.45;
+        }
+
+        .loading-panel-body .mini-tag {
+            align-self: flex-start;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4px 8px;
+            border-radius: 999px;
+            font-size: 0.62rem;
+            font-weight: 900;
+            letter-spacing: 1px;
+            color: #7df9ff;
+            border: 1px solid rgba(0,210,255,0.22);
+            background: rgba(0,210,255,0.10);
+            box-shadow: 0 0 10px rgba(0,210,255,0.12);
+        }
+
+        .loading-panels .loading-panel:nth-child(2) .mini-tag {
+            color: #ffb1c7;
+            border-color: rgba(255,0,85,0.22);
+            background: rgba(255,0,85,0.10);
+            box-shadow: 0 0 10px rgba(255,0,85,0.12);
+        }
+
+        @keyframes panel-border-flow {
+            0%, 100% { background-position: 0% 50%; transform: translateY(0); }
+            50% { background-position: 100% 50%; transform: translateY(-2px); }
+        }
+
+        @keyframes panel-sweep {
+            0% { transform: translateX(-55%); opacity: 0; }
+            12% { opacity: 0.45; }
+            50% { opacity: 0.18; }
+            100% { transform: translateX(55%); opacity: 0; }
+        }
+
+        @keyframes logo-spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 700px) {
+            .loading-panels {
+                grid-template-columns: 1fr;
+            }
+        }
+
         /* RUNTIME JUEGO */
         #game-runtime { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 9998; display: none; }
         #game-frame { width: 100%; height: 100%; border: none; }
@@ -584,53 +902,110 @@
         /* ============================================================
            CAJA DE NOVEDADES
         ============================================================ */
-        .news-box {
-            margin: 16px auto 28px;
+        .news-box,
+        .suggestions-box {
+            position: relative;
+            margin: 18px auto 28px;
             max-width: 900px;
-            border-radius: 20px;
-            border: 1px solid rgba(0,210,255,0.22);
-            background: linear-gradient(135deg, rgba(0,210,255,0.05), rgba(255,0,85,0.05));
-            backdrop-filter: blur(12px);
+            border-radius: 28px;
+            padding: 4px;
+            background: linear-gradient(120deg, rgba(0,210,255,0.78), rgba(255,0,85,0.68), rgba(0,210,255,0.82));
+            background-size: 220% 220%;
+            animation: panel-border-flow 9s ease-in-out infinite;
+            box-shadow:
+                0 0 24px rgba(0,210,255,0.16),
+                0 0 42px rgba(255,0,85,0.11),
+                inset 0 0 24px rgba(255,255,255,0.04);
             overflow: hidden;
         }
 
-        .news-header {
+        .news-box::before,
+        .suggestions-box::before {
+            content: "";
+            position: absolute;
+            inset: 1px;
+            border-radius: 26px;
+            background:
+                radial-gradient(circle at 16% 18%, rgba(0,210,255,0.18), transparent 30%),
+                radial-gradient(circle at 82% 28%, rgba(255,0,85,0.18), transparent 26%),
+                linear-gradient(135deg, rgba(10,12,22,0.98), rgba(6,8,14,0.98));
+            z-index: 0;
+        }
+
+        .news-box::after,
+        .suggestions-box::after {
+            content: "";
+            position: absolute;
+            inset: -60% -10%;
+            background: linear-gradient(120deg, transparent 35%, rgba(255,255,255,0.12) 50%, transparent 65%);
+            transform: translateX(-42%);
+            animation: panel-sweep 6.4s linear infinite;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .news-header,
+        .suggestions-header {
+            position: relative;
+            z-index: 2;
             display: flex;
             align-items: center;
             gap: 10px;
-            padding: 14px 20px;
+            padding: 15px 20px;
             border-bottom: 1px solid rgba(0,210,255,0.12);
             background: rgba(0,210,255,0.06);
             cursor: pointer;
             user-select: none;
         }
 
-        .news-header-icon {
+        .suggestions-header {
+            border-bottom: 1px solid rgba(255,0,85,0.12);
+            background: rgba(255,0,85,0.06);
+        }
+
+        .news-header-icon,
+        .suggestions-header-icon {
             font-size: 1.2rem;
+            filter: drop-shadow(0 0 10px rgba(0,210,255,0.35));
+        }
+
+        .suggestions-header-icon {
+            filter: drop-shadow(0 0 10px rgba(255,0,85,0.35));
+        }
+
+        .news-header-title,
+        .suggestions-header-title {
+            font-size: 0.86rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            flex: 1;
+            text-shadow: 0 0 10px rgba(0,210,255,0.5);
         }
 
         .news-header-title {
-            font-size: 0.85rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: var(--neon-blue);
-            flex: 1;
+            color: #78efff;
+        }
+
+        .suggestions-header-title {
+            color: #ff8fb2;
+            text-shadow: 0 0 10px rgba(255,0,85,0.5);
         }
 
         .news-badge {
-            background: var(--neon-pink);
+            background: rgba(255,0,85,0.9);
             color: #fff;
             font-size: 0.65rem;
             font-weight: 900;
-            padding: 3px 8px;
+            padding: 4px 10px;
             border-radius: 999px;
             letter-spacing: 1px;
+            box-shadow: 0 0 14px rgba(255,0,85,0.32);
         }
 
         .news-toggle-arrow {
             font-size: 0.8rem;
-            color: rgba(255,255,255,0.4);
+            color: rgba(255,255,255,0.45);
             transition: transform 0.3s ease;
         }
 
@@ -638,8 +1013,11 @@
             transform: rotate(-90deg);
         }
 
-        .news-content {
-            padding: 18px 20px;
+        .news-content,
+        .suggestions-body {
+            position: relative;
+            z-index: 2;
+            padding: 18px 20px 20px;
             display: flex;
             flex-direction: column;
             gap: 12px;
@@ -654,19 +1032,24 @@
             padding-bottom: 0;
         }
 
-        .news-item {
+        .news-item,
+        .suggestion-item {
             display: flex;
             gap: 14px;
             align-items: flex-start;
             padding: 12px 14px;
-            border-radius: 12px;
+            border-radius: 18px;
             background: rgba(255,255,255,0.03);
             border: 1px solid rgba(255,255,255,0.06);
-            transition: border-color 0.2s;
+            transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+            backdrop-filter: blur(8px);
         }
 
-        .news-item:hover {
-            border-color: rgba(0,210,255,0.2);
+        .news-item:hover,
+        .suggestion-item:hover {
+            transform: translateY(-2px);
+            border-color: rgba(0,210,255,0.22);
+            box-shadow: 0 0 20px rgba(0,210,255,0.08);
         }
 
         .news-item-icon {
@@ -678,23 +1061,25 @@
         .news-item-body {}
 
         .news-item-title {
-            font-size: 0.88rem;
-            font-weight: 800;
+            font-size: 0.92rem;
+            font-weight: 900;
             color: #fff;
             margin-bottom: 3px;
+            text-shadow: 0 0 8px rgba(0,210,255,0.24);
         }
 
         .news-item-desc {
             font-size: 0.78rem;
-            color: rgba(255,255,255,0.5);
-            line-height: 1.4;
+            color: rgba(255,255,255,0.62);
+            line-height: 1.5;
         }
 
         .news-item-date {
             font-size: 0.68rem;
             color: var(--neon-blue);
             margin-top: 5px;
-            font-weight: 700;
+            font-weight: 800;
+            letter-spacing: 0.5px;
         }
 
         /* ============================================================
@@ -853,42 +1238,11 @@
         ============================================================ */
         .suggestions-box {
             margin: 40px 0 20px;
-            border-radius: 20px;
-            border: 1px solid rgba(255,0,85,0.22);
-            background: linear-gradient(135deg, rgba(255,0,85,0.05), rgba(0,210,255,0.05));
-            overflow: hidden;
-        }
-
-        .suggestions-header {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 16px 22px;
-            border-bottom: 1px solid rgba(255,0,85,0.12);
-            background: rgba(255,0,85,0.06);
-        }
-
-        .suggestions-header-icon { font-size: 1.3rem; }
-
-        .suggestions-header-title {
-            font-size: 0.85rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: var(--neon-pink);
-            flex: 1;
-        }
-
-        .suggestions-body {
-            padding: 20px 22px;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
         }
 
         .suggestions-desc {
-            font-size: 0.82rem;
-            color: rgba(255,255,255,0.45);
+            font-size: 0.84rem;
+            color: rgba(255,255,255,0.58);
             line-height: 1.5;
         }
 
@@ -901,32 +1255,33 @@
         .suggestions-input {
             flex: 1;
             min-width: 200px;
-            background: rgba(5,8,16,0.9);
-            border: 1px solid rgba(255,0,85,0.22);
-            border-radius: 12px;
+            background: rgba(5,8,16,0.92);
+            border: 1px solid rgba(255,0,85,0.26);
+            border-radius: 14px;
             padding: 12px 16px;
             color: #fff;
             font-size: 0.9rem;
             font-weight: 600;
             outline: none;
-            transition: border-color 0.2s;
+            transition: border-color 0.2s, box-shadow 0.2s;
         }
 
         .suggestions-input:focus {
-            border-color: rgba(255,0,85,0.55);
+            border-color: rgba(255,0,85,0.62);
+            box-shadow: 0 0 0 3px rgba(255,0,85,0.12);
         }
 
         .suggestions-input::placeholder {
-            color: rgba(255,255,255,0.3);
+            color: rgba(255,255,255,0.35);
         }
 
         .suggestions-send-btn {
             background: linear-gradient(90deg, var(--neon-pink), #ff7a18);
             border: none;
-            border-radius: 12px;
+            border-radius: 14px;
             padding: 12px 22px;
             color: #fff;
-            font-weight: 800;
+            font-weight: 900;
             font-size: 0.9rem;
             cursor: pointer;
             transition: all 0.2s ease;
@@ -946,17 +1301,6 @@
             overflow-y: auto;
         }
 
-        .suggestion-item {
-            display: flex;
-            align-items: flex-start;
-            gap: 10px;
-            padding: 10px 14px;
-            border-radius: 10px;
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.06);
-            animation: slideInSug 0.3s ease;
-        }
-
         @keyframes slideInSug {
             from { opacity: 0; transform: translateY(8px); }
             to { opacity: 1; transform: translateY(0); }
@@ -973,24 +1317,25 @@
             font-weight: 900;
             color: #fff;
             flex-shrink: 0;
+            box-shadow: 0 0 12px rgba(255,0,85,0.22);
         }
 
         .suggestion-text {
             font-size: 0.82rem;
-            color: rgba(255,255,255,0.75);
+            color: rgba(255,255,255,0.78);
             flex: 1;
             line-height: 1.4;
         }
 
         .suggestion-time {
             font-size: 0.65rem;
-            color: rgba(255,255,255,0.3);
+            color: rgba(255,255,255,0.34);
             white-space: nowrap;
         }
 
         .suggestions-empty {
             text-align: center;
-            color: rgba(255,255,255,0.3);
+            color: rgba(255,255,255,0.36);
             font-size: 0.8rem;
             padding: 14px;
         }
@@ -1034,9 +1379,9 @@
                     <div class="news-item">
                         <div class="news-item-icon">🎮</div>
                         <div class="news-item-body">
-                            <div class="news-item-title" data-i18n="news1Title">+20 Juegos nuevos añadidos</div>
-                            <div class="news-item-desc" data-i18n="news1Desc">Pizza Tower, Cuphead, R.E.P.O, Undertale Yellow, ULTRAKILL y muchos más han llegado a la plataforma.</div>
-                            <div class="news-item-date">v2.5 · Mayo 2025</div>
+                            <div class="news-item-title" data-i18n="news1Title">Nuevo logo de Ultron</div>
+                            <div class="news-item-desc" data-i18n="news1Desc">Ultron llega con su nuevo logo junto con su versión 3.0</div>
+                            <div class="news-item-date">v3.0 1 Junio 2026</div>
                         </div>
                     </div>
                     <div class="news-item">
@@ -1065,15 +1410,15 @@
                     </div>
                 </div>
             </div>
-
-
-            <div class="save-actions" aria-label="Opciones de guardado">
-                <button id="resume-last-btn" type="button">Reanudar último juego</button>
-                <button id="manual-save-btn" type="button">Guardar manualmente</button>
-                <button id="export-save-btn" type="button">Exportar progreso</button>
-                <label for="import-save-input">Importar progreso</label>
-                <input id="import-save-input" type="file" accept="application/json">
+            <div class="promo-banner" aria-label="Anuncio destacado">
+                <div class="promo-banner-inner">
+                    <div class="promo-copy">
+                        <span class="promo-kicker">Anuncio neón</span>
+                        <div class="promo-text">Prueba ahora <span>Google desbloqueado</span> con su total seguridad y privacidad</div>
+                    </div>
+                </div>
             </div>
+
 
             <div class="section-title" data-i18n="favoritesTitle">Favoritos</div>
             <div id="favorites-grid" class="grid"></div>
@@ -1099,14 +1444,29 @@
             </div>
         </div>
     </div>
-
     <div id="loading-screen">
+        <div class="loading-brand">
+            <div class="loading-logo-wrap">
+                <img id="loading-logo" src="https://raw.githack.com/derekonsio1023-gif/Ultron-games/main/assets/logo.png" alt="Logo de Ultron">
+            </div>
+        </div>
         <div class="spinner"></div>
         <div class="progress-container">
             <div id="progress-bar"></div>
         </div>
         <div class="loading-info" id="loading-stats">SINCRONIZANDO: 0%</div>
+        <div class="loading-panels">
+            <div class="loading-panel">
+                <div class="loading-panel-title" data-i18n="loadingRecsTitle">Recomendaciones</div>
+                <div class="loading-panel-body" id="loading-recommendation"></div>
+            </div>
+            <div class="loading-panel">
+                <div class="loading-panel-title" data-i18n="loadingNewsTitle">Noticias</div>
+                <div class="loading-panel-body" id="loading-news"></div>
+            </div>
+        </div>
     </div>
+
 
     <div id="game-runtime">
         <button id="back-btn" onclick="cerrarJuego()">Desconectar</button>
@@ -1273,12 +1633,26 @@
             102: { titulo: "Draw Joust", img: "https://play-lh.googleusercontent.com/haXBNfhsLjGOwvX0SfsDA77cAgUennRTufP5J6fXOAUta6qOKHQ-prQJw5-Ns53Byb4", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Draw Joust.html" },
             103: { titulo: "Space Flight Simulator", img: "https://images.g2a.com/360x600/1x1x1/spaceflight-simulator-p10000302934/488c71e94ac842858362b537", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Space Flight Simulator.html" },
             104: { titulo: "Flip Master", img: "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co90ss.jpg", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Flip Master.html" },
-            105: { titulo: "Ultron Chat ES", img: "https://play-lh.googleusercontent.com/riJFhdp9Rc8SUrnYOac-im_VzBGb4P5BGSl124LvzLjtWaxYzSdl5u79ma-aKvE55AKF", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/UltronChat2.html" },
-            106: { titulo: "Ultron Chat EN", img: "https://play-lh.googleusercontent.com/riJFhdp9Rc8SUrnYOac-im_VzBGb4P5BGSl124LvzLjtWaxYzSdl5u79ma-aKvE55AKF", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/UltronChatEN.html" },
+            105: { titulo: "Omega Chat ES", img: "https://play-lh.googleusercontent.com/riJFhdp9Rc8SUrnYOac-im_VzBGb4P5BGSl124LvzLjtWaxYzSdl5u79ma-aKvE55AKF", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/UltronChat2.html" },
+            106: { titulo: "Omega Chat EN", img: "https://play-lh.googleusercontent.com/riJFhdp9Rc8SUrnYOac-im_VzBGb4P5BGSl124LvzLjtWaxYzSdl5u79ma-aKvE55AKF", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/UltronChatEN.html" },
         };
         const TOTAL_SLOTS = 106;
         const COUNTER_WORKSPACE = 'ut_kY6AL37uOU3kVlXSaTJtNyE69z7OLeAhUgK02twY'; // crea tu workspace en CounterAPI y ponlo aquí
         const STORAGE_KEY = 'ultron_play_counts_v2_local_fallback';
+
+        const LOADING_LOGO_URL = window.ULTRON_LOGO_URL || 'https://raw.githack.com/derekonsio1023-gif/Ultron-games/main/assets/logo.png';
+        const LOADING_CONTENT = window.ULTRON_LOADING_CONTENT || {
+            recomendaciones: [
+                { titulo: 'Prueba Google desbloqueado', detalle: 'Acceso rápido con protección visual y una interfaz más limpia.' },
+                { titulo: 'Reanudar último juego', detalle: 'Vuelve donde lo dejaste sin perder el progreso.' },
+                { titulo: 'Favoritos en Firebase', detalle: 'No dependen del about:blank ni del almacenamiento local.' }
+            ],
+            noticias: [
+                { titulo: 'Anuncio neón', detalle: 'Un bloque destacado para llamar la atención en la portada.' },
+                { titulo: 'Carga adaptativa', detalle: 'La barra se ajusta al juego que abras.' },
+                { titulo: 'Recomendaciones dinámicas', detalle: 'Puedes cambiar textos desde el propio código.' }
+            ]
+        };
 
         let currentSort = 'default';
         let playCountsCache = {};
@@ -1522,6 +1896,73 @@
             }
         }
 
+
+        function escaparHTML(valor) {
+            return String(valor ?? '').replace(/[&<>\"']/g, (m) => ({
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#39;'
+            })[m]);
+        }
+
+        
+function renderLoadingItems(items, containerId) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+
+            const item = Array.isArray(items) && items.length ? items[0] : null;
+            if (!item) {
+                container.innerHTML = '<div class="item"><strong>Sin contenido</strong><em>Edita LOADING_CONTENT para personalizarlo.</em></div>';
+                return;
+            }
+
+            const label = containerId === 'loading-news' ? 'NOVEDAD' : 'RECOMENDADO';
+            container.innerHTML = `
+                <div class="item item-single">
+                    <div class="mini-tag">${label}</div>
+                    <strong>${escaparHTML(item.titulo || '')}</strong>
+                    <em>${escaparHTML(item.detalle || '')}</em>
+                </div>
+            `;
+        }
+
+        function prepararPanelDeCarga(game) {
+            const recsBase = (game && Array.isArray(game.loadingRecomendaciones) && game.loadingRecomendaciones.length)
+                ? game.loadingRecomendaciones
+                : LOADING_CONTENT.recomendaciones;
+            const newsBase = (game && Array.isArray(game.loadingNoticias) && game.loadingNoticias.length)
+                ? game.loadingNoticias
+                : LOADING_CONTENT.noticias;
+
+            const rec = recsBase && recsBase.length ? [recsBase[0]] : [];
+            const news = newsBase && newsBase.length ? [newsBase[0]] : [];
+
+            renderLoadingItems(rec, 'loading-recommendation');
+            renderLoadingItems(news, 'loading-news');
+        }
+
+        function estimateLoadMs(game) {
+
+            let ms = 2400;
+            const title = (game?.titulo || '').toLowerCase();
+            const url = (game?.url || '').toLowerCase();
+
+            if (/raw\.githack\.com|raw\.githubusercontent\.com|github\.io/.test(url)) ms += 700;
+            if (/google|sites|drive/.test(url)) ms += 500;
+            if (/minecraft|terraria|cuphead|ultrakill|fnaf|stardew|half life|doom|geometry|gta|subway|among us/.test(title)) ms += 1200;
+            if (/html$/.test(url)) ms -= 180;
+            if (/\b(about:blank)\b/.test(url)) ms += 400;
+
+            return Math.max(1800, Math.min(ms, 7000));
+        }
+
+        function setLoadingLogo() {
+            const img = document.getElementById('loading-logo');
+            if (img && LOADING_LOGO_URL) img.src = LOADING_LOGO_URL;
+        }
+
         function getEntries() {
 
             const entries = [];
@@ -1662,6 +2103,7 @@
             });
         }
 
+        
         async function lanzarJuego(game, slot) {
             await incrementarContador(game, slot);
             actualizarContadoresUI();
@@ -1676,43 +2118,91 @@
             const frame = document.getElementById('game-frame');
             const progressBar = document.getElementById('progress-bar');
             const loadingStats = document.getElementById('loading-stats');
+            const loadingLogo = document.getElementById('loading-logo');
+            const loadRecommendation = document.getElementById('loading-recommendation');
+            const loadNews = document.getElementById('loading-news');
+
             menu.style.display = 'none';
             loader.style.display = 'flex';
+            runtime.style.display = 'none';
 
             isGameRunning = false;
-            let progreso = 0;
-            progressBar.style.width = '0%';
-            frame.src = 'about:blank';
-
-            const intervalo = setInterval(() => {
-                if (progreso < 92) {
-                    progreso += Math.random() * 2;
-                    if (progreso > 92) progreso = 92;
-                    progressBar.style.width = progreso + '%';
-                    const t = I18N[currentLang] || I18N.es;
-                    loadingStats.innerText = `${t.loading}: ${Math.round(progreso)}%`;
-                }
-            }, 350);
-
             currentGameData = game;
             localStorage.setItem('ultron_last_game', JSON.stringify(game));
             mostrarBotonesJuego();
 
-            frame.src = game.url;
+            setLoadingLogo();
+            prepararPanelDeCarga(game);
+
+            frame.onload = null;
+            frame.src = 'about:blank';
+
+            let loaded = false;
+            let progress = 0;
+            const estimatedLoadMs = estimateLoadMs(game);
+            const start = performance.now();
+            const hardTimeoutMs = Math.max(estimatedLoadMs + 4000, 9000);
+
+            progressBar.style.width = '0%';
+            loadingStats.innerText = `${(I18N[currentLang] || I18N.es).loading}: 0%`;
+
+            const interval = setInterval(() => {
+                const elapsed = performance.now() - start;
+                const target = Math.min(94, (elapsed / estimatedLoadMs) * 94);
+                progress = Math.max(progress, target);
+                progressBar.style.width = progress.toFixed(1) + '%';
+                loadingStats.innerText = `${(I18N[currentLang] || I18N.es).loading}: ${Math.round(progress)}%`;
+
+                if (!loaded && elapsed > hardTimeoutMs) {
+                    finishLoading(true);
+                }
+            }, 80);
+
+            const finishLoading = (force = false) => {
+                if (loaded && !force) return;
+                loaded = true;
+                clearInterval(interval);
+                progressBar.style.width = '100%';
+                loadingStats.innerText = (I18N[currentLang] || I18N.es).ready;
+                setTimeout(() => {
+                    loader.style.display = 'none';
+                    runtime.style.display = 'block';
+                    isGameRunning = true;
+                }, 650);
+            };
 
             frame.onload = () => {
-                if (frame.src !== 'about:blank') {
-                    clearInterval(intervalo);
-                    progressBar.style.width = '100%';
-                    loadingStats.innerText = (I18N[currentLang] || I18N.es).ready;
-
-                    setTimeout(() => {
-                        loader.style.display = 'none';
-                        runtime.style.display = 'block';
-                        isGameRunning = true;
-                    }, 1000);
-                }
+                if (frame.src === 'about:blank') return;
+                progress = Math.max(progress, 96);
+                progressBar.style.width = '96%';
+                loadingStats.innerText = `${(I18N[currentLang] || I18N.es).loading}: 96%`;
+                setTimeout(() => finishLoading(), 500);
             };
+
+            frame.src = game.url;
+
+            if (loadingLogo && LOADING_LOGO_URL) {
+                loadingLogo.src = LOADING_LOGO_URL;
+            }
+
+            // Pequeña rotación de recomendaciones mientras carga
+            let rotateIndex = 0;
+            const rotateTimer = setInterval(() => {
+                if (loaded) {
+                    clearInterval(rotateTimer);
+                    return;
+                }
+                rotateIndex++;
+                const recs = (game && Array.isArray(game.loadingRecomendaciones) && game.loadingRecomendaciones.length)
+                    ? game.loadingRecomendaciones
+                    : LOADING_CONTENT.recomendaciones;
+                const news = (game && Array.isArray(game.loadingNoticias) && game.loadingNoticias.length)
+                    ? game.loadingNoticias
+                    : LOADING_CONTENT.noticias;
+
+                renderLoadingItems([recs[rotateIndex % recs.length]], 'loading-recommendation');
+                renderLoadingItems([news[rotateIndex % news.length]], 'loading-news');
+            }, 2200);
         }
 
         function cerrarJuego() {
@@ -1975,6 +2465,8 @@
                 loading: 'SINCRONIZANDO',
                 ready: '¡SISTEMA LISTO!',
                 disconnectBtn: 'Desconectar',
+                loadingRecsTitle: 'Recomendaciones',
+                loadingNewsTitle: 'Noticias',
             },
             en: {
                 searchPlaceholder: 'Search game, saga or keyword...',
@@ -2015,6 +2507,8 @@
                 loading: 'SYNCING',
                 ready: 'SYSTEM READY!',
                 disconnectBtn: 'Disconnect',
+                loadingRecsTitle: 'Recommendations',
+                loadingNewsTitle: 'News',
             }
         };
 
@@ -2074,10 +2568,6 @@
             const exportGameBtn = document.getElementById('export-progress-btn');
             if (exportGameBtn) exportGameBtn.textContent = t.exportGame;
 
-            const importGameBtn = document.getElementById('import-progress-btn');
-            if (importGameBtn) importGameBtn.textContent = t.importGame;
-
-            // sort options
             const sortSelect = document.getElementById('sort-select');
             if (sortSelect) {
                 const opts = sortSelect.options;
