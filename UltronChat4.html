@@ -202,6 +202,34 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);heigh
 .gvc-pulse{width:56px;height:56px;border-radius:50%;background:rgba(0,210,255,0.1);border:2px solid var(--blue);animation:pulse 1.5s ease-in-out infinite;display:grid;place-items:center;font-size:1.4rem;}
 @keyframes pulse{0%,100%{transform:scale(1);opacity:0.7}50%{transform:scale(1.1);opacity:1}}
 
+/* ADMIN GOLD MESSAGES */
+.msg-wrapper.admin-msg .msg-bubble {
+    background: linear-gradient(135deg, #2a1f00, #3d2d00) !important;
+    border: 1px solid rgba(255,200,0,0.4) !important;
+    color: #ffe066 !important;
+    box-shadow: 0 0 12px rgba(255,180,0,0.15), inset 0 0 20px rgba(255,180,0,0.05);
+}
+.msg-wrapper.admin-msg .msg-bubble::before {
+    content: '⭐';
+    position: absolute;
+    top: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.7rem;
+    filter: drop-shadow(0 0 4px gold);
+}
+.msg-wrapper.admin-msg .msg-sender {
+    background: linear-gradient(90deg, #ffd700, #ffaa00, #ffd700);
+    background-size: 200% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: goldShine 2s linear infinite;
+    font-weight: 900;
+}
+.msg-wrapper.admin-msg .msg-time { color: rgba(255,200,0,0.5); }
+@keyframes goldShine { 0%{background-position:0%}100%{background-position:200%} }
+
 ::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:4px}
 @media(max-width:640px){#sidebar{width:100%;position:absolute;z-index:10;transition:transform 0.3s ease;}#sidebar.hidden{transform:translateX(-100%);}#back-btn{display:flex !important;}}
 #back-btn{display:none;background:none;border:none;color:var(--blue);font-size:1.3rem;cursor:pointer;padding:4px;}
@@ -368,7 +396,8 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);heigh
                 <div id="chat-header-status">En línea</div>
             </div>
             <button class="header-btn header-btn-green" id="vc-btn-header" onclick="iniciarLlamadaDesdeHeader()" style="display:none">📹</button>
-            <button class="header-btn header-btn-danger" onclick="abrirBorrarChat()">🗑️</button>
+            <button class="header-btn" id="add-member-btn" onclick="abrirAddMember()" style="display:none" title="Añadir miembro">➕</button>
+            <button class="header-btn header-btn-danger" id="delete-btn" onclick="abrirBorrarChat()">🗑️</button>
         </div>
         <div id="reply-preview">
             <div style="font-size:0.68rem;color:var(--blue);font-weight:700;margin-bottom:2px">↩ Respondiendo a <span id="reply-to-name"></span></div>
@@ -574,6 +603,8 @@ async function abrirGrupo(groupId){
     document.getElementById('chat-header-status').textContent=`${Object.keys(g.members||{}).length} miembros`;
     document.getElementById('vc-btn-header').style.display='flex';
     document.getElementById('vc-btn-header').textContent='📹';
+    document.getElementById('add-member-btn').style.display='flex';
+    document.getElementById('delete-btn').style.display='flex';
     document.getElementById('chat-empty').style.display='none';
     document.getElementById('messages-container').style.display='flex';
     document.getElementById('chat-input-bar').classList.add('visible');
@@ -619,6 +650,8 @@ function abrirChat(nick){
     document.getElementById('chat-header-status').textContent='En línea';
     document.getElementById('vc-btn-header').style.display='flex';
     document.getElementById('vc-btn-header').textContent='📹';
+    document.getElementById('add-member-btn').style.display='none';
+    document.getElementById('delete-btn').style.display='flex';
     document.getElementById('chat-empty').style.display='none';
     document.getElementById('messages-container').style.display='flex';
     document.getElementById('chat-input-bar').classList.add('visible');
@@ -638,6 +671,8 @@ function abrirGlobal(){
     document.getElementById('chat-header-name').textContent='Chat Global';
     document.getElementById('chat-header-status').textContent='Todos los usuarios';
     document.getElementById('vc-btn-header').style.display='none';
+    document.getElementById('add-member-btn').style.display='none';
+    document.getElementById('delete-btn').style.display='none'; // sin borrar global
     document.getElementById('chat-empty').style.display='none';
     document.getElementById('messages-container').style.display='flex';
     document.getElementById('chat-input-bar').classList.add('visible');
@@ -645,6 +680,8 @@ function abrirGlobal(){
     if(window.innerWidth<=640)document.getElementById('sidebar').classList.add('hidden');
     if(messagesInterval)clearInterval(messagesInterval);
     cargarMensajes();messagesInterval=setInterval(cargarMensajes,2000);
+    // Auto-borrar global al cambiar de día
+    checkBorrarGlobalPorDia();
     renderSidebar();
 }
 
@@ -675,12 +712,13 @@ function renderMensajes(msgs){
         const dl=d.toLocaleDateString('es-ES',{day:'2-digit',month:'long'});
         if(dl!==lastDate){html+=`<div class="date-divider">${dl}</div>`;lastDate=dl;}
         const isOut=m.from===myNick;const col=m.color||getColor(m.from);
+        const isAdmin=m.senderId==='1ah74m';
         const replyHTML=m.replyTo?`<div class="msg-reply-ref" onclick="scrollToMsg('${m.replyTo._key||''}')">
             <div class="msg-reply-ref-name">${escHTML(m.replyTo.from)}</div>
             ${escHTML(m.replyTo.text?.substring(0,60))}${(m.replyTo.text?.length||0)>60?'...':''}
         </div>`:'';
         const showSender=(!isOut&&(isGlobal||isGroup));
-        html+=`<div class="msg-wrapper ${isOut?'out':'in'}" data-key="${m._key||''}">
+        html+=`<div class="msg-wrapper ${isOut?'out':'in'}${isAdmin?' admin-msg':''}" data-key="${m._key||''}">
             ${showSender?`<div class="msg-sender" style="color:${col}">${escHTML(m.from)}</div>`:''}
             ${replyHTML}
             <div class="msg-bubble" onclick="seleccionarMensaje(this,'${escHTML(m._key||'')}','${escHTML(m.from)}','${escHTML((m.text||'').replace(/'/g,"\\'"))}')">
@@ -689,7 +727,7 @@ function renderMensajes(msgs){
             <div class="msg-time">${timeStr(m.ts)}${isOut?'<span class="msg-ticks">✓✓</span>':''}</div>
         </div>`;
     });
-    c.innerHTML=html||'<div style="text-align:center;color:var(--text3);font-size:0.82rem;margin-top:40px">Sin mensajes. ¡Di hola! 👋</div>';
+    c.innerHTML=html||`<div style="text-align:center;color:var(--text3);font-size:0.82rem;margin-top:40px">${isGlobal?'Sin mensajes en el chat global':'Aún no hay mensajes. ¡Di hola! 👋'}</div>`;
     if(atBottom||lastMsgCount<=1)c.scrollTop=c.scrollHeight;
 }
 
@@ -718,7 +756,7 @@ async function enviarMensaje(){
     const inp=document.getElementById('msg-input');
     const text=inp.value.trim();if(!text||((!currentChat)&&!isGroup))return;
     inp.value='';inp.style.height='auto';
-    const msg={from:myNick,text,ts:new Date().toISOString(),color:myColor};
+    const msg={from:myNick,text,ts:new Date().toISOString(),color:myColor,senderId:myId};
     if(replyData)msg.replyTo=replyData;
     cancelarReply();
     try{await fetch(`${DB()}/chat_${NODE}/mensajes/${getMsgKey()}.json`,{
@@ -734,6 +772,18 @@ async function confirmarBorrarChat(){
     lastMsgCount=0;
     cerrarModal('delete-chat-modal');
     cargarMensajes();
+}
+
+/* ── AUTO-BORRAR GLOBAL AL CAMBIAR DE DÍA ── */
+async function checkBorrarGlobalPorDia(){
+    const hoy=new Date().toISOString().slice(0,10); // YYYY-MM-DD
+    const ultimoDia=localStorage.getItem('ultron_global_day');
+    if(ultimoDia&&ultimoDia!==hoy){
+        // Nuevo día — borrar el chat global
+        try{await fetch(`${DB()}/chat_${NODE}/mensajes/global.json`,{method:'DELETE'});}catch(e){}
+        lastMsgCount=0;
+    }
+    localStorage.setItem('ultron_global_day',hoy);
 }
 
 function volverSidebar(){
