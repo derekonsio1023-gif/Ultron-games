@@ -51,8 +51,8 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);heigh
 .my-name{font-weight:700;font-size:0.88rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .my-id-badge{font-size:0.6rem;color:var(--text3);font-family:monospace;margin-top:1px;}
 .my-status{font-size:0.65rem;color:var(--online);}
-.sidebar-disconnect{background:none;border:1px solid rgba(255,0,85,0.25);border-radius:8px;color:rgba(255,0,85,0.6);font-size:0.65rem;padding:4px 8px;cursor:pointer;transition:all 0.2s;font-weight:700;white-space:nowrap;}
-.sidebar-disconnect:hover{border-color:var(--pink);color:var(--pink);background:rgba(255,0,85,0.08);}
+.sidebar-disconnect{background:linear-gradient(90deg,var(--blue),#0066aa);border:none;border-radius:8px;color:#fff;font-size:0.65rem;padding:6px 12px;cursor:pointer;transition:all 0.2s;font-weight:700;white-space:nowrap;box-shadow:0 0 12px rgba(0,210,255,0.3);}
+.sidebar-disconnect:hover{transform:scale(1.05);box-shadow:0 0 18px rgba(0,210,255,0.5);}
 .sidebar-section{padding:10px 14px 6px;font-size:0.65rem;color:var(--text3);letter-spacing:2px;text-transform:uppercase;font-weight:600;display:flex;align-items:center;justify-content:space-between;}
 .sidebar-add-btn{background:rgba(0,210,255,0.1);border:1px solid rgba(0,210,255,0.2);border-radius:6px;color:var(--blue);font-size:0.7rem;padding:3px 8px;cursor:pointer;font-weight:700;}
 .sidebar-add-btn:hover{background:rgba(0,210,255,0.18);}
@@ -245,6 +245,60 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);heigh
 .msg-wrapper.admin-msg .msg-time { color: rgba(255,200,0,0.5); }
 @keyframes goldShine { 0%{background-position:0%}100%{background-position:200%} }
 
+/* CUSTOM MESSAGE STYLES */
+.msg-wrapper.style-neon .msg-bubble {
+    background: linear-gradient(135deg, #00d2ff, #0066aa) !important;
+    border: 1px solid rgba(0,210,255,0.5) !important;
+    color: #fff !important;
+    box-shadow: 0 0 15px rgba(0,210,255,0.4);
+}
+.msg-wrapper.style-fire .msg-bubble {
+    background: linear-gradient(135deg, #ff4500, #ff8c00) !important;
+    border: 1px solid rgba(255,69,0,0.5) !important;
+    color: #fff !important;
+    box-shadow: 0 0 15px rgba(255,69,0,0.4);
+}
+.msg-wrapper.style-forest .msg-bubble {
+    background: linear-gradient(135deg, #228b22, #32cd32) !important;
+    border: 1px solid rgba(34,139,34,0.5) !important;
+    color: #fff !important;
+    box-shadow: 0 0 15px rgba(34,139,34,0.4);
+}
+.msg-wrapper.style-royal .msg-bubble {
+    background: linear-gradient(135deg, #4b0082, #8a2be2) !important;
+    border: 1px solid rgba(75,0,130,0.5) !important;
+    color: #fff !important;
+    box-shadow: 0 0 15px rgba(75,0,130,0.4);
+}
+.msg-wrapper.style-rose .msg-bubble {
+    background: linear-gradient(135deg, #ff1493, #ff69b4) !important;
+    border: 1px solid rgba(255,20,147,0.5) !important;
+    color: #fff !important;
+    box-shadow: 0 0 15px rgba(255,20,147,0.4);
+}
+
+/* CUSTOMIZE MODAL */
+.customize-overlay{position:fixed;inset:0;z-index:99998;background:rgba(0,0,0,0.85);backdrop-filter:blur(12px);display:none;align-items:center;justify-content:center;}
+.customize-overlay.active{display:flex;}
+.customize-card{background:var(--bg3);border:1px solid var(--border);border-radius:24px;padding:24px;width:100%;max-width:680px;max-height:85vh;overflow-y:auto;box-shadow:0 20px 50px rgba(0,0,0,0.6);}
+.customize-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;padding-bottom:12px;border-bottom:1px solid var(--border);}
+.customize-title{font-family:'Rajdhani',sans-serif;font-size:1.4rem;font-weight:900;color:var(--blue);letter-spacing:2px;}
+.customize-close{background:none;border:none;color:var(--text3);font-size:1.5rem;cursor:pointer;padding:4px;}
+.customize-close:hover{color:var(--pink);}
+.customize-section{margin-bottom:24px;}
+.customize-section-title{font-size:0.75rem;color:var(--text2);letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;font-weight:700;}
+.style-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;}
+.style-item{position:relative;border-radius:16px;padding:16px;cursor:pointer;transition:all 0.2s;border:2px solid transparent;}
+.style-item:hover{transform:translateY(-3px);}
+.style-item.selected{border-color:var(--blue);box-shadow:0 0 15px rgba(0,210,255,0.3);}
+.style-item.locked{opacity:0.4;cursor:not-allowed;filter:grayscale(0.8);}
+.style-item.locked:hover{transform:none;}
+.style-preview{padding:12px;border-radius:10px;margin-bottom:8px;font-size:0.8rem;text-align:center;}
+.style-name{font-size:0.75rem;text-align:center;font-weight:700;color:var(--text2);}
+.style-requirement{font-size:0.65rem;text-align:center;color:var(--text3);margin-top:4px;}
+.style-lock{position:absolute;top:8px;right:8px;font-size:1rem;color:var(--text3);}
+.style-item.locked .style-lock{color:var(--pink);}
+
 ::-webkit-scrollbar{width:4px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:4px}
 @media(max-width:640px){#sidebar{width:100%;position:absolute;z-index:10;transition:transform 0.3s ease;}#sidebar.hidden{transform:translateX(-100%);}#back-btn{display:flex !important;}}
 #back-btn{display:none;background:none;border:none;color:var(--blue);font-size:1.3rem;cursor:pointer;padding:4px;}
@@ -295,6 +349,22 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);heigh
         <div class="modal-actions">
             <button class="modal-btn modal-btn-cancel" onclick="cerrarModal('rename-modal')">Cancelar</button>
             <button class="modal-btn modal-btn-confirm" onclick="confirmarRename()">Guardar</button>
+        </div>
+    </div>
+</div>
+
+<!-- CUSTOMIZE MESSAGE MODAL -->
+<div class="customize-overlay" id="customize-modal">
+    <div class="customize-card">
+        <div class="customize-header">
+            <div class="customize-title">🎨 CUSTOMIZAR MENSAJES</div>
+            <button class="customize-close" onclick="cerrarCustomize()">✕</button>
+        </div>
+        <div class="customize-section">
+            <div class="customize-section-title">ESTILOS DE MENSAJE</div>
+            <div class="style-grid" id="style-grid">
+                <!-- Se llena dinámicamente con JS -->
+            </div>
         </div>
     </div>
 </div>
@@ -405,13 +475,13 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);heigh
 <!-- APP -->
 <div id="app">
     <div id="sidebar">
-        <div class="sidebar-header">
+        <div class="sidebar-header" style="justify-content:center;gap:16px;">
             <div class="my-avatar" id="my-avatar-el" onclick="abrirModal('rename-modal')" title="Cambiar nombre">?</div>
             <div class="my-info">
                 <div class="my-name" id="my-name-el">—</div>
                 <div class="my-id-badge" id="my-id-badge">ID: —</div>
             </div>
-            <button class="sidebar-disconnect" onclick="desconectarse()">✕</button>
+            <button class="sidebar-disconnect" onclick="desconectarse()">DESCONECTARSE</button>
         </div>
         <div id="sidebar-tabs">
             <div class="sidebar-tab active" onclick="cambiarTab('chats')" id="tab-chats">Chats</div>
@@ -432,6 +502,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);heigh
                 <div id="chat-header-name"></div>
                 <div id="chat-header-status">En línea</div>
             </div>
+            <button class="header-btn" id="customize-btn" onclick="abrirCustomize()" title="Customizar mensajes">🎨</button>
             <button class="header-btn header-btn-green" id="vc-btn-header" onclick="iniciarLlamadaDesdeHeader()" style="display:none">📹</button>
             <button class="header-btn" id="add-member-btn" onclick="abrirAddMember()" style="display:none" title="Añadir miembro">➕</button>
             <button class="header-btn header-btn-danger" id="delete-btn" onclick="abrirBorrarChat()">🗑️</button>
@@ -451,10 +522,62 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);heigh
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 const _db='ultron-bd064-default-rtdb.europe-west1.firebasedatabase';
 const DB=()=>`https://${_db}.app`;
 const NODE='es';
+
+// Supabase Configuration (usa la ANON KEY, no la service role key)
+const SUPABASE_URL = 'https://fjxdhcxokvggsvisrqww.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_udgOtU_wLmU2wQx0iTusaQ_C2zvLbnj'; // Reemplaza con tu ANON KEY real
+const supabaseClient = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
+
+/* ── TEMA PERSONALIZADO (recibido desde Ultron al desbloquear logros) ── */
+function aplicarTemaExterno(color){
+    if(!color) return;
+    try{
+        document.documentElement.style.setProperty('--blue', color);
+        localStorage.setItem('ultron_chat_theme_color', color);
+    }catch(e){}
+}
+(function aplicarTemaGuardado(){
+    try{
+        const saved=localStorage.getItem('ultron_chat_theme_color');
+        if(saved) document.documentElement.style.setProperty('--blue', saved);
+    }catch(e){}
+})();
+window.addEventListener('message', function(e){
+    if(e && e.data && e.data.type==='ULTRON_THEME' && e.data.color){
+        aplicarTemaExterno(e.data.color);
+    }
+});
+
+// Ocultar botones de Ultron que se inyectan al iniciar juego
+function ocultarBotonesUltron(){
+    // Buscar y ocultar contenedor de botones de juego de Ultron
+    const gameControls = document.getElementById('game-controls');
+    if(gameControls) gameControls.style.display = 'none';
+    
+    // Buscar botones específicos por texto
+    const buttons = document.querySelectorAll('button, label');
+    buttons.forEach(btn => {
+        const text = btn.textContent.toLowerCase();
+        if(text.includes('guardar') || text.includes('exportar') || text.includes('importar') || text.includes('ocultar')){
+            // Verificar si son botones de Ultron (estilo específico)
+            if(btn.classList.contains('game-btn') || btn.parentElement?.classList.contains('save-actions')){
+                btn.style.display = 'none';
+            }
+        }
+    });
+}
+
+// Ejecutar periódicamente para asegurar que los botones no aparezcan
+setInterval(ocultarBotonesUltron, 500);
+
+// También ejecutar al cargar
+window.addEventListener('load', ocultarBotonesUltron);
+window.addEventListener('DOMContentLoaded', ocultarBotonesUltron);
 
 let myNick='',myColor='',myId='';
 let currentChat=null,isGlobal=false,isGroup=false,currentGroupId=null;
@@ -464,6 +587,7 @@ let micOn=true,camOn=true,sigInterval=null,gotAnswer=false,gotOffer=false;
 let gvcStream=null,gvcPeers={},gvcInterval=null,gvcMicOn=true,gvcCamOn=true;
 let replyingTo=null;
 let currentTab='chats';
+let selectedMessageStyle = null; // Estilo de mensaje seleccionado
 
 const COLORS=['#00d2ff','#ff0055','#00e676','#ff9100','#d500f9','#00bcd4','#ff4081','#76ff03','#ffab40','#b388ff'];
 const STUN={iceServers:[{urls:'stun:stun.l.google.com:19302'},{urls:'stun:stun1.l.google.com:19302'},{urls:'stun:stun2.l.google.com:19302'}]};
@@ -477,6 +601,209 @@ function getChatKey(a,b){return[a,b].sort().join('__');}
 function timeStr(iso){return new Date(iso).toLocaleTimeString('es-ES',{hour:'2-digit',minute:'2-digit'});}
 function escHTML(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 function generateId(){return Math.random().toString(36).substr(2,6);}
+
+/* ── PERFIL ULTRON (compartir ID con Ultron) ── */
+function leerJsonSeguro(key,def){
+    try{return JSON.parse(localStorage.getItem(key));}catch(e){return def;}
+}
+function guardarJsonSeguro(key,val){
+    try{localStorage.setItem(key,JSON.stringify(val));}catch(e){}
+}
+function cargarPerfilUltron(){
+    return leerJsonSeguro('ultron_profile',null);
+}
+
+/* ── COLORES DE ULTRON ── */
+function cargarColorUltron(){
+    const filtro = leerJsonSeguro('ultron_chat_filter', 'none');
+    const color = leerJsonSeguro('ultron_chat_color', '#00d2ff');
+    return { filtro, color };
+}
+
+function aplicarColorUltron(){
+    const { filtro, color } = cargarColorUltron();
+    if(filtro !== 'none'){
+        // Aplicar filtro CSS si existe
+        document.body.style.filter = filtro;
+    }
+    // Usar el color de Ultron para el avatar
+    return color;
+}
+
+/* ── VALIDACIÓN DE NOMBRES ÚNICOS CON SUPABASE ── */
+async function comprobarUsernameDisponibleChat(username){
+    if(!supabaseClient) return true;
+    try{
+        const { data, error } = await supabaseClient.from('ultron_users').select('username').eq('username',username).maybeSingle();
+        if(error){ console.warn('[Chat] Error comprobando username:',error.message); return true; }
+        return !data;
+    }catch(e){ return true; }
+}
+
+async function registrarUsuarioChat(username,userId){
+    if(!supabaseClient) return true;
+    try{
+        const { error } = await supabaseClient.from('ultron_users').insert({ username, user_id:userId });
+        if(error) console.warn('[Chat] Error guardando usuario:',error.message);
+        return !error;
+    }catch(e){ return false; }
+}
+
+/* ── SISTEMA DE RANGOS Y ESTILOS DE MENSAJE ── */
+const MESSAGE_STYLES = [
+    {
+        id: 'default',
+        name: 'Normal',
+        class: '',
+        preview: 'Mensaje normal',
+        requirement: null,
+        bg: 'var(--msg-out)'
+    },
+    {
+        id: 'neon',
+        name: 'Neón',
+        class: 'style-neon',
+        preview: '✨ Mensaje neón',
+        requirement: { type: 'total', seconds: 3600 }, // 1 hora total en cualquier juego
+        bg: 'linear-gradient(135deg, #00d2ff, #0066aa)'
+    },
+    {
+        id: 'fire',
+        name: 'Fuego',
+        class: 'style-fire',
+        preview: '🔥 Mensaje fuego',
+        requirement: { type: 'game', gameId: 'snake', seconds: 1800 }, // 30 min en Snake
+        bg: 'linear-gradient(135deg, #ff4500, #ff8c00)'
+    },
+    {
+        id: 'forest',
+        name: 'Bosque',
+        class: 'style-forest',
+        preview: '🌲 Mensaje bosque',
+        requirement: { type: 'game', gameId: 'tetris', seconds: 2400 }, // 40 min en Tetris
+        bg: 'linear-gradient(135deg, #228b22, #32cd32)'
+    },
+    {
+        id: 'royal',
+        name: 'Real',
+        class: 'style-royal',
+        preview: '👑 Mensaje real',
+        requirement: { type: 'total', seconds: 14400 }, // 4 horas total
+        bg: 'linear-gradient(135deg, #4b0082, #8a2be2)'
+    },
+    {
+        id: 'rose',
+        name: 'Rosa',
+        class: 'style-rose',
+        preview: '🌹 Mensaje rosa',
+        requirement: { type: 'game', gameId: 'pong', seconds: 3600 }, // 1 hora en Pong
+        bg: 'linear-gradient(135deg, #ff1493, #ff69b4)'
+    }
+];
+
+function getGamePlaytime(gameId){
+    // Lee el tiempo jugado de un juego específico desde localStorage
+    try{
+        const allPlaytime = leerJsonSeguro('ultron_game_playtimes', {});
+        return allPlaytime[gameId] || 0;
+    }catch(e){
+        return 0;
+    }
+}
+
+function setGamePlaytime(gameId, seconds){
+    // Guarda el tiempo jugado de un juego específico
+    try{
+        const allPlaytime = leerJsonSeguro('ultron_game_playtimes', {});
+        allPlaytime[gameId] = seconds;
+        guardarJsonSeguro('ultron_game_playtimes', allPlaytime);
+    }catch(e){}
+}
+
+function getTotalPlaytime(){
+    // Suma todo el tiempo jugado en todos los juegos
+    try{
+        const allPlaytime = leerJsonSeguro('ultron_game_playtimes', {});
+        return Object.values(allPlaytime).reduce((sum, time) => sum + (time || 0), 0);
+    }catch(e){
+        return 0;
+    }
+}
+
+function isStyleUnlocked(style){
+    if(!style.requirement) return true;
+    
+    if(style.requirement.type === 'total'){
+        const totalSeconds = getTotalPlaytime();
+        return totalSeconds >= style.requirement.seconds;
+    } else if(style.requirement.type === 'game'){
+        const gameSeconds = getGamePlaytime(style.requirement.gameId);
+        return gameSeconds >= style.requirement.seconds;
+    }
+    return true;
+}
+
+function getRequirementText(style){
+    if(!style.requirement) return 'Disponible';
+    
+    if(style.requirement.type === 'total'){
+        const totalSeconds = getTotalPlaytime();
+        const hours = Math.floor(totalSeconds / 3600);
+        const requiredHours = style.requirement.seconds / 3600;
+        return `${requiredHours}h totales (${hours}/${requiredHours}h)`;
+    } else if(style.requirement.type === 'game'){
+        const gameSeconds = getGamePlaytime(style.requirement.gameId);
+        const minutes = Math.floor(gameSeconds / 60);
+        const requiredMinutes = style.requirement.seconds / 60;
+        return `${requiredMinutes}min en ${style.requirement.gameId} (${minutes}/${requiredMinutes}min)`;
+    }
+    return 'Disponible';
+}
+
+function abrirCustomize(){
+    document.getElementById('customize-modal').classList.add('active');
+    renderStyleGrid();
+}
+
+function cerrarCustomize(){
+    document.getElementById('customize-modal').classList.remove('active');
+}
+
+function renderStyleGrid(){
+    const grid = document.getElementById('style-grid');
+    if(!grid) return;
+    
+    grid.innerHTML = MESSAGE_STYLES.map(style => {
+        const unlocked = isStyleUnlocked(style);
+        const selected = selectedMessageStyle === style.id;
+        const requirementText = getRequirementText(style);
+        
+        return `
+            <div class="style-item ${selected ? 'selected' : ''} ${!unlocked ? 'locked' : ''}"
+                 onclick="${unlocked ? `selectStyle('${style.id}')` : ''}">
+                ${!unlocked ? '<div class="style-lock">🔒</div>' : ''}
+                <div class="style-preview" style="background:${style.bg};color:${style.id === 'default' ? '#e0f7fa' : '#fff'}">
+                    ${style.preview}
+                </div>
+                <div class="style-name">${style.name}</div>
+                ${!unlocked ? `<div class="style-requirement">${requirementText}</div>` : ''}
+            </div>
+        `;
+    }).join('');
+}
+
+function selectStyle(styleId){
+    selectedMessageStyle = styleId === 'default' ? null : styleId;
+    localStorage.setItem('ultron_chat_message_style', selectedMessageStyle || 'default');
+    renderStyleGrid();
+}
+
+function loadSelectedStyle(){
+    const saved = localStorage.getItem('ultron_chat_message_style');
+    if(saved && saved !== 'default'){
+        selectedMessageStyle = saved;
+    }
+}
 
 /* ── MODALS ── */
 function abrirModal(id){document.getElementById(id).classList.add('active');}
@@ -526,11 +853,25 @@ function cerrarVerificacion(){
     iniciarApp();
 }
 
-/* ── INIT modificado para mostrar verificación ── */
+/* ── INIT modificado para usar perfil Ultron ── */
 window.addEventListener('load',()=>{
+    // Primero intentar cargar perfil de Ultron
+    const perfilUltron = cargarPerfilUltron();
     let saved=localStorage.getItem('ultron_chat_nick');
     let savedId=localStorage.getItem('ultron_chat_id');
-    if(!savedId){savedId=generateId();localStorage.setItem('ultron_chat_id',savedId);}
+
+    if(perfilUltron && perfilUltron.username && perfilUltron.userId){
+        // Usar perfil de Ultron
+        myNick = perfilUltron.username;
+        myId = perfilUltron.userId;
+        localStorage.setItem('ultron_chat_nick', myNick);
+        localStorage.setItem('ultron_chat_id', myId);
+        saved = myNick;
+        savedId = myId;
+    } else if(!savedId){
+        savedId=generateId();
+        localStorage.setItem('ultron_chat_id',savedId);
+    }
     myId=savedId;
     document.getElementById('nick-id-preview').textContent=`Tu ID: ${myId}`;
     document.getElementById('nick-input').addEventListener('keydown',e=>{if(e.key==='Enter')entrarChat();});
@@ -538,20 +879,47 @@ window.addEventListener('load',()=>{
     document.getElementById('msg-input').addEventListener('input',function(){this.style.height='auto';this.style.height=Math.min(this.scrollHeight,120)+'px';});
     document.getElementById('rename-input').addEventListener('keydown',e=>{if(e.key==='Enter')confirmarRename();});
     document.getElementById('member-id-input').addEventListener('keydown',e=>{if(e.key==='Enter')confirmarAddMember();});
-    if(saved){myNick=saved; iniciarApp();} // si ya había nick, entramos directamente (sin verificación extra? lo dejamos igual, pero si se recarga, se salta verificación. Para mantener la demo, mostramos siempre después de entrar. Pero como pides "al entrar salga un cartel", se mostrará siempre al poner nick.
+    if(saved){myNick=saved; iniciarApp();}
 });
 
-function entrarChat(){
+async function entrarChat(){
     const v=document.getElementById('nick-input').value.trim();
     if(!v||v.length<2){document.getElementById('nick-input').style.borderColor='var(--pink)';return;}
-    const newId=localStorage.getItem('ultron_chat_id')||generateId();
-    if(!localStorage.getItem('ultron_chat_id')) localStorage.setItem('ultron_chat_id',newId);
+    
+    const savedId=localStorage.getItem('ultron_chat_id');
+    const savedNick=localStorage.getItem('ultron_chat_nick');
+    
+    // Si es el mismo nombre y ID que antes, permitir reutilizar
+    if(v===savedNick && savedId){
+        // No validar disponibilidad, es el mismo usuario
+        document.getElementById('nickname-screen').style.display='none';
+        mostrarVerificacion(v, savedId);
+        return;
+    }
+    
+    // Validar que el nombre sea único
+    const disponible = await comprobarUsernameDisponibleChat(v);
+    if(!disponible){
+        alert('Este nombre de usuario ya está en uso. Por favor elige otro.');
+        document.getElementById('nick-input').style.borderColor='var(--pink)';
+        return;
+    }
+    
+    const newId=savedId||generateId();
+    if(!savedId) localStorage.setItem('ultron_chat_id',newId);
+    
+    // Registrar en Supabase
+    await registrarUsuarioChat(v, newId);
+    
     document.getElementById('nickname-screen').style.display='none';
     mostrarVerificacion(v, newId);
 }
 
 async function iniciarApp(){
-    myColor=getColor(myNick);
+    // Intentar usar color de Ultron primero
+    const ultronColor = aplicarColorUltron();
+    myColor = ultronColor || getColor(myNick);
+    loadSelectedStyle(); // Cargar estilo de mensaje guardado
     document.getElementById('app').style.display='flex';
     const av=document.getElementById('my-avatar-el');
     av.textContent=getInitial(myNick);av.style.background=`linear-gradient(135deg,${myColor},${myColor}88)`;
@@ -581,7 +949,8 @@ function confirmarRename(){
 async function desconectarse(){
     try{await fetch(`${DB()}/chat_${NODE}/presencia/${encodeURIComponent(myNick)}.json`,{method:'DELETE'});}catch(e){}
     clearInterval(usersInterval);clearInterval(messagesInterval);
-    localStorage.removeItem('ultron_chat_nick');
+    // NO borramos el nombre del localStorage para permitir reutilizarlo
+    // localStorage.removeItem('ultron_chat_nick');
     document.getElementById('app').style.display='none';
     document.getElementById('nickname-screen').style.display='flex';
 }
@@ -791,12 +1160,20 @@ function renderMensajes(msgs){
         if(dl!==lastDate){html+=`<div class="date-divider">${dl}</div>`;lastDate=dl;}
         const isOut=m.from===myNick;const col=m.color||getColor(m.from);
         const isAdmin=m.senderId==='1ah74m';
+        
+        // Aplicar estilo personalizado si es mensaje propio y tiene estilo
+        let styleClass = '';
+        if(isOut && m.styleId && m.styleId !== 'default'){
+            const style = MESSAGE_STYLES.find(s => s.id === m.styleId);
+            if(style) styleClass = style.class;
+        }
+        
         const replyHTML=m.replyTo?`<div class="msg-reply-ref" onclick="scrollToMsg('${m.replyTo._key||''}')">
             <div class="msg-reply-ref-name">${escHTML(m.replyTo.from)}</div>
             ${escHTML(m.replyTo.text?.substring(0,60))}${(m.replyTo.text?.length||0)>60?'...':''}
         </div>`:'';
         const showSender=(!isOut&&(isGlobal||isGroup));
-        html+=`<div class="msg-wrapper ${isOut?'out':'in'}${isAdmin?' admin-msg':''}" data-key="${m._key||''}">
+        html+=`<div class="msg-wrapper ${isOut?'out':'in'}${isAdmin?' admin-msg':''} ${styleClass}" data-key="${m._key||''}">
             ${showSender?`<div class="msg-sender" style="color:${col}">${escHTML(m.from)}</div>`:''}
             ${replyHTML}
             <div class="msg-bubble" onclick="seleccionarMensaje(this,'${escHTML(m._key||'')}','${escHTML(m.from)}','${escHTML((m.text||'').replace(/'/g,"\\'"))}')">
@@ -834,7 +1211,7 @@ async function enviarMensaje(){
     const inp=document.getElementById('msg-input');
     const text=inp.value.trim();if(!text||((!currentChat)&&!isGroup))return;
     inp.value='';inp.style.height='auto';
-    const msg={from:myNick,text,ts:new Date().toISOString(),color:myColor,senderId:myId};
+    const msg={from:myNick,text,ts:new Date().toISOString(),color:myColor,senderId:myId,styleId:selectedMessageStyle||'default'};
     if(replyData)msg.replyTo=replyData;
     cancelarReply();
     try{await fetch(`${DB()}/chat_${NODE}/mensajes/${getMsgKey()}.json`,{
