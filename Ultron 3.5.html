@@ -1,0 +1,1261 @@
+<!DOCTYPE html>
+<html lang="es" id="html-root">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ULTRON AI</title>
+    <link rel="icon" href="https://raw.githack.com/derekonsio1023-gif/Ultron-games/main/assets/logo.png?v=1">
+    <meta name="theme-color" content="#00ffff">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        :root { 
+            --bg-color: #050508; 
+            --card-bg: #0d0f16; 
+            --border-color: #16192b; 
+            --neon-blue: #00d2ff; 
+            --neon-pink: #ff0055; 
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body, html { 
+            margin: 0; padding: 0; width: 100%; height: 100%; 
+            background-color: var(--bg-color); 
+            font-family: 'Segoe UI', sans-serif; color: white; 
+            overflow-x: hidden; 
+        }
+        
+        header { text-align: center; padding: 40px 20px; }
+        h1 { 
+            margin: 0; font-size: 5rem; font-weight: 900; letter-spacing: 5px; 
+            color: var(--neon-blue); text-shadow: 0 0 20px rgba(0, 210, 255, 0.5); 
+            text-transform: uppercase; 
+        }
+        
+        .main-container { max-width: 1600px; margin: 0 auto; padding: 20px; }
+        .section-title { 
+            font-size: 1.4rem; color: #fff; border-left: 5px solid var(--neon-pink); 
+            padding-left: 15px; margin: 40px 0 20px 0; text-transform: uppercase; 
+        }
+
+        .counter-banner {
+            margin: 18px auto 0;
+            max-width: 1600px;
+            padding: 12px 16px;
+            border: 1px solid rgba(0,210,255,0.35);
+            background: rgba(0, 210, 255, 0.08);
+            border-radius: 12px;
+            color: #c8f8ff;
+            font-size: 0.92rem;
+            line-height: 1.35;
+        }
+        .counter-banner strong { color: #fff; }
+        
+        .promo-banner {
+            position: relative;
+            margin: 18px auto 28px;
+            max-width: 1600px;
+            border-radius: 28px;
+            padding: 4px;
+            background: linear-gradient(120deg, rgba(0,210,255,0.75), rgba(255,0,85,0.65), rgba(0,210,255,0.78));
+            background-size: 220% 220%;
+            animation: promo-border-flow 8s ease-in-out infinite;
+            box-shadow: 0 0 24px rgba(0,210,255,0.18), 0 0 44px rgba(255,0,85,0.12), inset 0 0 24px rgba(255,255,255,0.06);
+            overflow: hidden;
+        }
+
+        .promo-banner::before {
+            content: "";
+            position: absolute;
+            inset: 1px;
+            border-radius: 26px;
+            background: radial-gradient(circle at 18% 20%, rgba(0,210,255,0.18), transparent 30%), radial-gradient(circle at 78% 30%, rgba(255,0,85,0.20), transparent 26%), linear-gradient(135deg, rgba(10,12,22,0.98), rgba(6,8,14,0.98));
+            z-index: 0;
+        }
+
+        .promo-banner::after {
+            content: "";
+            position: absolute;
+            inset: -60% -10%;
+            background: linear-gradient(120deg, transparent 35%, rgba(255,255,255,0.12) 50%, transparent 65%);
+            transform: translateX(-40%);
+            animation: promo-sweep 5.8s linear infinite;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .promo-banner-inner {
+            position: relative;
+            z-index: 2;
+            min-height: 92px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            padding: 20px 26px;
+            border-radius: 26px;
+        }
+
+        .promo-copy {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            align-items: center;
+            text-align: center;
+        }
+
+        .promo-kicker {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 6px 14px;
+            border-radius: 999px;
+            border: 1px solid rgba(0,210,255,0.34);
+            background: rgba(0,210,255,0.10);
+            color: #dffcff;
+            font-size: 0.72rem;
+            letter-spacing: 2.2px;
+            text-transform: uppercase;
+            font-weight: 900;
+            box-shadow: 0 0 18px rgba(0,210,255,0.14);
+        }
+
+        .promo-text {
+            font-size: clamp(1rem, 1.9vw, 1.5rem);
+            font-weight: 900;
+            letter-spacing: 0.4px;
+            line-height: 1.2;
+            color: rgba(255,255,255,0.92);
+            text-shadow: 0 0 8px rgba(0,210,255,0.55), 0 0 18px rgba(0,210,255,0.28), 0 0 24px rgba(255,0,85,0.18);
+            animation: promo-text-pulse 2.6s ease-in-out infinite;
+        }
+
+        .promo-text span {
+            color: #ffffff;
+            text-shadow: 0 0 10px rgba(0,210,255,0.90), 0 0 24px rgba(0,210,255,0.50), 0 0 34px rgba(255,0,85,0.32);
+            position: relative;
+        }
+
+        .promo-text span::after {
+            content: "";
+            position: absolute;
+            inset: -6px -10px;
+            border-radius: 999px;
+            border: 1px solid rgba(0,210,255,0.22);
+            filter: blur(2px);
+            opacity: 0.65;
+            animation: promo-ring 2.8s ease-in-out infinite;
+        }
+
+        @keyframes promo-border-flow {
+            0%, 100% { background-position: 0% 50%; transform: translateY(0); }
+            50% { background-position: 100% 50%; transform: translateY(-3px); }
+        }
+
+        @keyframes promo-sweep {
+            0% { transform: translateX(-55%) rotate(0deg); opacity: 0; }
+            15% { opacity: 0.42; }
+            50% { opacity: 0.2; }
+            100% { transform: translateX(55%) rotate(0deg); opacity: 0; }
+        }
+
+        @keyframes promo-text-pulse {
+            0%, 100% { transform: translateY(0); filter: brightness(1); }
+            50% { transform: translateY(-1px); filter: brightness(1.12); }
+        }
+
+        @keyframes promo-ring {
+            0%, 100% { transform: scale(0.98); opacity: 0.45; }
+            50% { transform: scale(1.08); opacity: 0.9; }
+        }
+
+        @media (max-width: 640px) {
+            .promo-banner-inner { padding: 16px 18px; min-height: 110px; }
+            .promo-text { font-size: 1.02rem; }
+        }
+
+        .grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); 
+            gap: 25px; 
+        }
+
+        .card { 
+            background: var(--card-bg); border-radius: 12px; overflow: hidden; 
+            border: 2px solid var(--border-color); display: flex; 
+            flex-direction: column; cursor: pointer; 
+            transition: all 0.3s ease; aspect-ratio: 2/3; 
+        }
+        .card:hover { 
+            transform: translateY(-10px); border-color: var(--neon-blue); 
+            box-shadow: 0 10px 30px rgba(0, 210, 255, 0.3); 
+        }
+        
+        .card-thumb { 
+            width: 100%; height: 75%; 
+            background-size: cover; background-position: center; 
+            background-color: #0a0c12; display: flex; 
+            align-items: center; justify-content: center; 
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .empty-icon { font-size: 5rem; font-weight: 900; color: #1f243a; user-select: none; }
+
+        .card-footer { 
+            height: 25%; display: flex; flex-direction: column; 
+            justify-content: center; align-items: center; padding: 5px 10px;
+            background: linear-gradient(to bottom, #0d0f16, #050508);
+        }
+        .card-title { 
+            font-size: 0.9rem; font-weight: 800; text-align: center; 
+            text-transform: uppercase; color: #fff; width: 100%; 
+            overflow: hidden; text-overflow: ellipsis; white-space: nowrap; 
+        }
+        .card-status { font-size: 0.65rem; color: var(--neon-blue); margin-top: 4px; font-weight: bold; }
+        .card-meta {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 4px;
+            flex-wrap: wrap;
+        }
+
+        .card-popularity {
+            font-size: 0.64rem;
+            color: #7df9ff;
+            font-weight: 800;
+            padding: 3px 8px;
+            border-radius: 999px;
+            background: rgba(0, 210, 255, 0.12);
+            border: 1px solid rgba(0, 210, 255, 0.22);
+            white-space: nowrap;
+        }
+
+        .card.hidden { display: none !important; }
+
+        .sort-select {
+            border: 1px solid rgba(0, 210, 255, 0.28);
+            background: rgba(10, 12, 22, 0.95);
+            color: white;
+            border-radius: 12px;
+            padding: 10px 12px;
+            font-weight: 700;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .search-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        @media (max-width: 760px) {
+            .search-bar { flex-direction: column; align-items: stretch; }
+            .search-actions { justify-content: space-between; }
+            #search-input { min-width: 0; }
+        }
+
+        .search-wrapper {
+            position: sticky;
+            top: 14px;
+            z-index: 50;
+            margin: 0 auto 28px auto;
+            max-width: 900px;
+            padding: 12px;
+            border-radius: 24px;
+            background: linear-gradient(135deg, rgba(0,210,255,0.08), rgba(255,0,85,0.08));
+            border: 1px solid rgba(0, 210, 255, 0.22);
+            box-shadow: 0 12px 35px rgba(0,0,0,0.35), inset 0 0 25px rgba(0,210,255,0.06);
+            backdrop-filter: blur(12px);
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(5, 8, 16, 0.88);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 18px;
+            padding: 14px 16px;
+        }
+
+        .search-icon { font-size: 1.2rem; color: var(--neon-blue); text-shadow: 0 0 12px rgba(0,210,255,0.55); flex: 0 0 auto; user-select: none; }
+        #search-input { width: 100%; border: none; outline: none; background: transparent; color: white; font-size: 1rem; font-weight: 700; letter-spacing: 0.3px; }
+        .hero-header { text-align: center; padding: 40px 20px 20px; display: flex; flex-direction: column; align-items: center; gap: 18px; }
+        .logo-ultron { width: 350px; max-width: 85vw; height: auto; display: block; filter: drop-shadow(0 0 25px rgba(0, 210, 255, 0.5)); }
+
+        h1 {
+            background: linear-gradient(90deg, var(--neon-blue), #ffffff, var(--neon-pink), var(--neon-blue));
+            background-size: 300% 100%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: title-shine 6s linear infinite, title-float 2.8s ease-in-out infinite;
+        }
+
+        @keyframes title-shine { 0% { background-position: 0% 50%; } 100% { background-position: 300% 50%; } }
+        @keyframes title-float { 0%, 100% { transform: translateY(0px) scale(1); text-shadow: 0 0 20px rgba(0, 210, 255, 0.55); } 50% { transform: translateY(-4px) scale(1.01); text-shadow: 0 0 30px rgba(255, 0, 85, 0.7); } }
+
+        .save-actions { display: flex; gap: 10px; flex-wrap: wrap; margin: 16px 0 6px; justify-content: center; }
+        .save-actions button, .save-actions label { border: 1px solid rgba(0, 210, 255, 0.28); background: rgba(10, 12, 22, 0.95); color: white; border-radius: 12px; padding: 10px 14px; font-weight: 800; cursor: pointer; transition: transform 0.2s ease, border-color 0.2s ease, filter 0.2s ease; }
+        .save-actions button:hover, .save-actions label:hover { transform: translateY(-1px); border-color: rgba(0, 210, 255, 0.6); filter: brightness(1.08); }
+        .save-actions input[type="file"] { display: none; }
+
+        .card { position: relative; }
+        .fav-btn { position: absolute; top: 10px; right: 10px; z-index: 2; width: 34px; height: 34px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.16); background: rgba(5, 8, 16, 0.78); color: #ffd54a; cursor: pointer; font-size: 1rem; display: grid; place-items: center; box-shadow: 0 0 12px rgba(0,0,0,0.35); }
+        .card.favorite { border-color: rgba(255, 213, 74, 0.75); box-shadow: 0 0 22px rgba(255, 213, 74, 0.16); }
+        .card.favorite .card-title { color: #fff3b0; }
+        .favorite-empty { grid-column: 1 / -1; text-align: center; color: rgba(255,255,255,0.65); padding: 14px 10px; border: 1px dashed rgba(255,255,255,0.18); border-radius: 16px; background: rgba(255,255,255,0.03); }
+        #resume-last-btn { border: 1px solid rgba(255, 0, 85, 0.35); background: linear-gradient(90deg, rgba(255,0,85,0.92), rgba(255,122,24,0.92)); color: white; border-radius: 12px; padding: 10px 14px; font-weight: 900; cursor: pointer; transition: transform 0.2s ease, filter 0.2s ease; }
+        #resume-last-btn:hover { transform: translateY(-1px); filter: brightness(1.08); }
+        #search-input::placeholder { color: rgba(255,255,255,0.45); font-weight: 600; }
+        #clear-search { border: none; background: linear-gradient(90deg, var(--neon-pink), #ff7a18); color: white; font-weight: 800; border-radius: 12px; padding: 10px 14px; cursor: pointer; box-shadow: 0 0 14px rgba(255,0,85,0.35); transition: transform 0.2s ease, filter 0.2s ease; }
+        #clear-search:hover { transform: translateY(-1px); filter: brightness(1.08); }
+        .search-hint { font-size: 0.75rem; color: rgba(255,255,255,0.6); text-align: center; margin-top: 8px; letter-spacing: 0.6px; }
+        .results-count { font-size: 0.8rem; color: var(--neon-blue); font-weight: 700; margin-left: auto; white-space: nowrap; }
+        .card.hidden { display: none; }
+        @media (max-width: 640px) {
+            .search-wrapper { top: 8px; padding: 10px; border-radius: 18px; }
+            .search-bar { padding: 12px 13px; gap: 10px; flex-wrap: wrap; }
+            .results-count { width: 100%; margin-left: 0; order: 3; text-align: right; }
+            #clear-search { padding: 9px 12px; }
+        }
+
+        #loading-screen { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: #000; z-index: 10000; display: none; 
+            flex-direction: column; align-items: center; justify-content: center; 
+        }
+
+        .progress-container { width: 80%; max-width: 400px; height: 12px; background: #11131c; border-radius: 20px; margin-top: 30px; border: 1px solid #16192b; overflow: hidden; }
+        #progress-bar { width: 0%; height: 100%; background: linear-gradient(90deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8b00ff); background-size: 200% 100%; animation: rainbow-scroll 2s linear infinite; transition: width 0.3s ease; }
+        .loading-info { margin-top: 15px; font-family: monospace; color: var(--neon-blue); font-size: 0.8rem; letter-spacing: 2px; }
+
+        @keyframes rainbow-scroll { 0% { background-position: 0% 50%; } 100% { background-position: 200% 50%; } }
+
+        .loading-brand { display: flex; justify-content: center; align-items: center; margin-bottom: 10px; }
+        .loading-logo-wrap {
+            width: 110px;
+            height: 110px;
+            border-radius: 28px;
+            padding: 8px;
+            background: linear-gradient(120deg, rgba(0,210,255,0.78), rgba(255,0,85,0.68), rgba(0,210,255,0.82));
+            background-size: 220% 220%;
+            animation: panel-border-flow 7s ease-in-out infinite;
+            box-shadow: 0 0 26px rgba(0,210,255,0.18), 0 0 24px rgba(255,0,85,0.12);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* CORRECCIÓN: LOGO CUADRADO CON GIRO SIN DESBORDAR */
+        .loading-logo {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+            display: block;
+            animation: spin 1.2s linear infinite;
+            border-radius: 12px;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-panels { width: min(980px, 92vw); display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-top: 10px; }
+        .loading-panel { position: relative; border-radius: 24px; padding: 4px; background: linear-gradient(120deg, rgba(0,210,255,0.75), rgba(255,0,85,0.62), rgba(0,210,255,0.78)); background-size: 220% 220%; animation: panel-border-flow 8s ease-in-out infinite; box-shadow: 0 0 20px rgba(0,210,255,0.10), inset 0 0 18px rgba(255,255,255,0.04); overflow: hidden; }
+        .loading-panel::before { content: ""; position: absolute; inset: 1px; border-radius: 22px; background: linear-gradient(135deg, rgba(10,12,22,0.98), rgba(6,8,14,0.98)); z-index: 0; }
+        .loading-panel::after { content: ""; position: absolute; inset: -40% -10%; background: linear-gradient(120deg, transparent 35%, rgba(255,255,255,0.10) 50%, transparent 65%); animation: panel-sweep 5.8s linear infinite; pointer-events: none; z-index: 1; }
+        .loading-panel-title, .loading-panel-body { position: relative; z-index: 2; }
+        .loading-panel-title { padding: 14px 16px 10px; font-size: 0.78rem; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; color: #e4fbff; text-shadow: 0 0 10px rgba(0,210,255,0.35); }
+        .loading-panel-body { padding: 0 14px 14px; display: flex; flex-direction: column; gap: 10px; }
+        .loading-panel-body .item { border-radius: 16px; padding: 12px 14px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); display: flex; flex-direction: column; gap: 5px; }
+        .loading-panel-body .item strong { font-size: 0.88rem; color: #fff; text-shadow: 0 0 8px rgba(0,210,255,0.20); }
+        .loading-panel-body .item em { font-size: 0.77rem; font-style: normal; color: rgba(255,255,255,0.60); line-height: 1.45; }
+        .loading-panel-body .mini-tag { align-self: flex-start; display: inline-flex; align-items: center; justify-content: center; padding: 4px 8px; border-radius: 999px; font-size: 0.62rem; font-weight: 900; letter-spacing: 1px; color: #7df9ff; border: 1px solid rgba(0,210,255,0.22); background: rgba(0,210,255,0.10); box-shadow: 0 0 10px rgba(0,210,255,0.12); }
+        .loading-panels .loading-panel:nth-child(2) .mini-tag { color: #ffb1c7; border-color: rgba(255,0,85,0.22); background: rgba(255,0,85,0.10); box-shadow: 0 0 10px rgba(255,0,85,0.12); }
+
+        @keyframes panel-border-flow { 0%, 100% { background-position: 0% 50%; transform: translateY(0); } 50% { background-position: 100% 50%; transform: translateY(-2px); } }
+        @keyframes panel-sweep { 0% { transform: translateX(-55%); opacity: 0; } 12% { opacity: 0.45; } 50% { opacity: 0.18; } 100% { transform: translateX(55%); opacity: 0; } }
+
+        @media (max-width: 700px) { .loading-panels { grid-template-columns: 1fr; } }
+
+        #game-runtime { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 9998; display: none; }
+        #game-frame { width: 100%; height: 100%; border: none; }
+        #back-btn { position: fixed; bottom: 25px; right: 25px; z-index: 9999; padding: 12px 25px; background: var(--neon-pink); color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; text-transform: uppercase; box-shadow: 0 0 15px var(--neon-pink); }
+
+        .spinner { width: 50px; height: 50px; border: 5px solid #111; border-top-color: var(--neon-blue); border-radius: 50%; animation: spin 1s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+    
+        .game-controls { position: fixed; top: 20px; left: 20px; z-index: 10000; display: none; gap: 10px; flex-wrap: wrap; }
+        .game-btn { border: none; border-radius: 14px; padding: 12px 16px; font-weight: 800; color: white; cursor: pointer; background: rgba(0,0,0,0.72); border: 1px solid rgba(0,210,255,0.35); backdrop-filter: blur(10px); box-shadow: 0 0 18px rgba(0,210,255,0.2); }
+        .game-btn:hover { transform: translateY(-2px); }
+
+        #lang-screen { position: fixed; inset: 0; z-index: 99999; background: radial-gradient(ellipse at 50% 40%, #07091a 0%, #000 100%); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 48px; }
+        .lang-title { font-size: 4rem; font-weight: 900; letter-spacing: 6px; background: linear-gradient(90deg, #00d2ff, #fff, #ff0055, #00d2ff); background-size: 300% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; animation: title-shine 5s linear infinite; text-transform: uppercase; }
+        .lang-subtitle { font-size: 1.1rem; color: rgba(255,255,255,0.55); letter-spacing: 3px; text-transform: uppercase; margin-top: -36px; }
+        .lang-options { display: flex; gap: 36px; flex-wrap: wrap; justify-content: center; }
+        .lang-btn { display: flex; flex-direction: column; align-items: center; gap: 14px; cursor: pointer; border: 2px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 30px 40px; background: rgba(255,255,255,0.04); transition: all 0.25s ease; min-width: 180px; backdrop-filter: blur(10px); }
+        .lang-btn:hover { border-color: var(--neon-blue); background: rgba(0,210,255,0.1); transform: translateY(-6px); box-shadow: 0 12px 40px rgba(0,210,255,0.25); }
+        .lang-flag { font-size: 4rem; line-height: 1; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.4)); }
+        .lang-name { font-size: 1rem; font-weight: 800; color: #fff; letter-spacing: 2px; text-transform: uppercase; }
+        .lang-native { font-size: 0.8rem; color: rgba(255,255,255,0.45); }
+        .lang-screen-particles { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+        .lang-particle { position: absolute; width: 2px; height: 2px; border-radius: 50%; background: var(--neon-blue); animation: float-particle linear infinite; opacity: 0; }
+        @keyframes float-particle { 0% { opacity: 0; transform: translateY(100vh) scale(0); } 10% { opacity: 0.7; } 90% { opacity: 0.3; } 100% { opacity: 0; transform: translateY(-10vh) scale(1.5); } }
+
+        .news-box, .suggestions-box { position: relative; margin: 18px auto 28px; max-width: 900px; border-radius: 28px; padding: 4px; background: linear-gradient(120deg, rgba(0,210,255,0.78), rgba(255,0,85,0.68), rgba(0,210,255,0.82)); background-size: 220% 220%; animation: panel-border-flow 9s ease-in-out infinite; box-shadow: 0 0 24px rgba(0,210,255,0.16), 0 0 42px rgba(255,0,85,0.11), inset 0 0 24px rgba(255,255,255,0.04); overflow: hidden; }
+        .news-box::before, .suggestions-box::before { content: ""; position: absolute; inset: 1px; border-radius: 26px; background: radial-gradient(circle at 16% 18%, rgba(0,210,255,0.18), transparent 30%), radial-gradient(circle at 82% 28%, rgba(255,0,85,0.18), transparent 26%), linear-gradient(135deg, rgba(10,12,22,0.98), rgba(6,8,14,0.98)); z-index: 0; }
+        .news-box::after, .suggestions-box::after { content: ""; position: absolute; inset: -60% -10%; background: linear-gradient(120deg, transparent 35%, rgba(255,255,255,0.12) 50%, transparent 65%); transform: translateX(-42%); animation: panel-sweep 6.4s linear infinite; pointer-events: none; z-index: 1; }
+        .news-header, .suggestions-header { position: relative; z-index: 2; display: flex; align-items: center; gap: 10px; padding: 15px 20px; border-bottom: 1px solid rgba(0,210,255,0.12); background: rgba(0,210,255,0.06); cursor: pointer; user-select: none; }
+        .suggestions-header { border-bottom: 1px solid rgba(255,0,85,0.12); background: rgba(255,0,85,0.06); }
+        .news-header-icon, .suggestions-header-icon { font-size: 1.2rem; filter: drop-shadow(0 0 10px rgba(0,210,255,0.35)); }
+        .suggestions-header-icon { filter: drop-shadow(0 0 10px rgba(255,0,85,0.35)); }
+        .news-header-title, .suggestions-header-title { font-size: 0.86rem; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; flex: 1; text-shadow: 0 0 10px rgba(0,210,255,0.5); }
+        .news-header-title { color: #78efff; }
+        .suggestions-header-title { color: #ff8fb2; text-shadow: 0 0 10px rgba(255,0,85,0.5); }
+        .news-badge { background: rgba(255,0,85,0.9); color: #fff; font-size: 0.65rem; font-weight: 900; padding: 4px 10px; border-radius: 999px; letter-spacing: 1px; box-shadow: 0 0 14px rgba(255,0,85,0.32); }
+        .news-toggle-arrow { font-size: 0.8rem; color: rgba(255,255,255,0.45); transition: transform 0.3s ease; }
+        .news-box.collapsed .news-toggle-arrow { transform: rotate(-90deg); }
+        .news-content, .suggestions-body { position: relative; z-index: 2; padding: 18px 20px 20px; display: flex; flex-direction: column; gap: 12px; max-height: 400px; overflow: hidden; transition: max-height 0.4s ease, padding 0.3s ease; }
+        .news-box.collapsed .news-content { max-height: 0; padding-top: 0; padding-bottom: 0; }
+        .news-item, .suggestion-item { display: flex; gap: 14px; align-items: flex-start; padding: 12px 14px; border-radius: 18px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease; backdrop-filter: blur(8px); }
+        .news-item:hover, .suggestion-item:hover { transform: translateY(-2px); border-color: rgba(0,210,255,0.22); box-shadow: 0 0 20px rgba(0,210,255,0.08); }
+        .news-item-icon { font-size: 1.4rem; flex-shrink: 0; margin-top: 2px; }
+        .news-item-title { font-size: 0.92rem; font-weight: 900; color: #fff; margin-bottom: 3px; text-shadow: 0 0 8px rgba(0,210,255,0.24); }
+        .news-item-desc { font-size: 0.78rem; color: rgba(255,255,255,0.62); line-height: 1.5; }
+        .news-item-date { font-size: 0.68rem; color: var(--neon-blue); margin-top: 5px; font-weight: 800; letter-spacing: 0.5px; }
+
+        .stealth-btn { position: absolute; bottom: 10px; left: 10px; z-index: 3; width: 30px; height: 30px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.1); background: rgba(5, 8, 16, 0.78); color: rgba(255,255,255,0.5); cursor: pointer; font-size: 0.75rem; display: grid; place-items: center; box-shadow: 0 0 10px rgba(0,0,0,0.3); transition: all 0.2s ease; }
+        .stealth-btn:hover { border-color: rgba(255,0,85,0.5); color: #ff0055; box-shadow: 0 0 12px rgba(255,0,85,0.3); }
+
+        #stealth-overlay { position: fixed; inset: 0; z-index: 99990; background: #fff; display: none; flex-direction: column; align-items: center; justify-content: center; gap: 20px; }
+        #stealth-overlay.active { display: flex; }
+        #stealth-img { max-width: 90vw; max-height: 70vh; object-fit: contain; border-radius: 8px; }
+        #stealth-url-display { font-size: 0.8rem; color: #666; word-break: break-all; max-width: 80vw; text-align: center; }
+        #stealth-back-btn { padding: 10px 26px; border-radius: 10px; border: 2px solid #333; background: #111; color: #fff; font-weight: 800; cursor: pointer; font-size: 0.9rem; letter-spacing: 1px; }
+        #stealth-back-btn:hover { background: #222; }
+
+        #pause-menu { position: fixed; inset: 0; z-index: 99991; background: rgba(0,0,0,0.82); display: none; flex-direction: column; align-items: center; justify-content: center; gap: 20px; backdrop-filter: blur(4px); }
+        #pause-menu.active { display: flex; }
+        .pause-title { font-size: 2.5rem; font-weight: 900; color: var(--neon-blue); text-transform: uppercase; letter-spacing: 5px; text-shadow: 0 0 20px rgba(0,210,255,0.5); }
+        .pause-game-name { font-size: 1rem; color: rgba(255,255,255,0.5); text-align: center; }
+        .pause-actions { display: flex; flex-direction: column; gap: 14px; width: 280px; }
+        .pause-btn { padding: 14px 20px; border-radius: 14px; font-weight: 800; font-size: 0.95rem; letter-spacing: 1px; cursor: pointer; text-transform: uppercase; transition: all 0.2s ease; text-align: center; }
+        .pause-btn-continue { background: linear-gradient(90deg, #00d2ff, #0066aa); color: #fff; border: none; box-shadow: 0 0 20px rgba(0,210,255,0.3); }
+        .pause-btn-continue:hover { transform: translateY(-2px); box-shadow: 0 0 30px rgba(0,210,255,0.5); }
+        .pause-btn-exit { background: transparent; color: rgba(255,255,255,0.6); border: 1px solid rgba(255,255,255,0.18); }
+        .pause-btn-exit:hover { border-color: var(--neon-pink); color: var(--neon-pink); }
+
+        .suggestions-box { margin: 40px 0 20px; }
+        .suggestions-desc { font-size: 0.84rem; color: rgba(255,255,255,0.58); line-height: 1.5; }
+        .suggestions-form { display: flex; gap: 12px; flex-wrap: wrap; }
+        .suggestions-input { flex: 1; min-width: 200px; background: rgba(5,8,16,0.92); border: 1px solid rgba(255,0,85,0.26); border-radius: 14px; padding: 12px 16px; color: #fff; font-size: 0.9rem; font-weight: 600; outline: none; transition: border-color 0.2s, box-shadow 0.2s; }
+        .suggestions-input:focus { border-color: rgba(255,0,85,0.62); box-shadow: 0 0 0 3px rgba(255,0,85,0.12); }
+        .suggestions-input::placeholder { color: rgba(255,255,255,0.35); }
+        .suggestions-send-btn { background: linear-gradient(90deg, var(--neon-pink), #ff7a18); border: none; border-radius: 14px; padding: 12px 22px; color: #fff; font-weight: 900; font-size: 0.9rem; cursor: pointer; transition: all 0.2s ease; white-space: nowrap; }
+        .suggestions-send-btn:hover { transform: translateY(-2px); box-shadow: 0 0 18px rgba(255,0,85,0.35); }
+        .suggestions-list { display: flex; flex-direction: column; gap: 10px; max-height: 300px; overflow-y: auto; }
+        .suggestion-avatar { width: 28px; height: 28px; border-radius: 50%; background: linear-gradient(135deg, var(--neon-pink), #ff7a18); display: grid; place-items: center; font-size: 0.75rem; font-weight: 900; color: #fff; flex-shrink: 0; box-shadow: 0 0 12px rgba(255,0,85,0.22); }
+        .suggestion-text { font-size: 0.82rem; color: rgba(255,255,255,0.78); flex: 1; line-height: 1.4; }
+        .suggestion-time { font-size: 0.65rem; color: rgba(255,255,255,0.34); white-space: nowrap; }
+        .suggestions-empty { text-align: center; color: rgba(255,255,255,0.36); font-size: 0.8rem; padding: 14px; }
+
+        /* ===== Perfil, ID de usuario y logros ===== */
+        .hero-header { position: relative; }
+        .profile-pill {
+            display: none; align-items: center; gap: 10px;
+            position: absolute; top: 40px; right: 30px;
+            background: rgba(13,15,22,0.9); border: 1px solid rgba(0,210,255,0.35);
+            border-radius: 999px; padding: 8px 16px; cursor: pointer;
+            transition: all 0.25s ease;
+        }
+        .profile-pill:hover { border-color: var(--neon-blue); box-shadow: 0 0 16px rgba(0,210,255,0.25); }
+        .profile-badge-icon { display: none; font-size: 1.2rem; }
+        .profile-pill-text { display: flex; flex-direction: column; line-height: 1.2; text-align: left; }
+        .profile-username { font-weight: 800; font-size: 0.85rem; color: #fff; }
+        .profile-id { font-size: 0.65rem; color: #7df9ff; letter-spacing: 0.5px; }
+
+        #user-setup-screen {
+            position: fixed; inset: 0; z-index: 99997;
+            background: radial-gradient(ellipse at 50% 40%, #07091a 0%, #000 100%);
+            display: none; flex-direction: column; align-items: center; justify-content: center;
+            gap: 22px; padding: 20px; text-align: center;
+        }
+        .user-setup-title { font-size: 2.2rem; font-weight: 900; color: var(--neon-blue); text-shadow: 0 0 20px rgba(0,210,255,0.5); letter-spacing: 2px; }
+        .user-setup-subtitle { color: #c8f8ff; font-size: 0.95rem; max-width: 420px; }
+        #user-setup-input {
+            padding: 14px 18px; border-radius: 12px; border: 1px solid rgba(0,210,255,0.35);
+            background: rgba(10,12,22,0.9); color: #fff; font-size: 1rem; width: 280px; max-width: 80vw;
+            text-align: center; outline: none;
+        }
+        #user-setup-input:focus { border-color: var(--neon-blue); box-shadow: 0 0 16px rgba(0,210,255,0.3); }
+        .user-setup-id-box { font-size: 0.8rem; color: #7df9ff; }
+        .user-setup-id-box strong { color: #fff; letter-spacing: 1px; }
+        #user-setup-btn {
+            padding: 12px 28px; border-radius: 999px; border: none;
+            background: linear-gradient(120deg, var(--neon-blue), var(--neon-pink));
+            color: #fff; font-weight: 900; cursor: pointer; font-size: 0.95rem;
+            text-transform: uppercase; letter-spacing: 1px;
+        }
+        #user-setup-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+        .user-setup-error { color: #ff5577; font-size: 0.85rem; min-height: 1.2em; }
+
+        #profile-panel {
+            position: fixed; inset: 0; z-index: 99993; background: rgba(0,0,0,0.82);
+            backdrop-filter: blur(4px); display: none; align-items: center; justify-content: center; padding: 20px;
+        }
+        .profile-panel-inner {
+            background: var(--card-bg); border: 1px solid rgba(0,210,255,0.3); border-radius: 20px;
+            padding: 30px; max-width: 560px; width: 100%; max-height: 85vh; overflow-y: auto;
+        }
+        .profile-panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .profile-panel-header h2 { margin: 0; color: var(--neon-blue); font-size: 1.3rem; }
+        .profile-panel-close { background: none; border: none; color: #fff; font-size: 1.4rem; cursor: pointer; }
+        .profile-panel-meta { color: #c8f8ff; font-size: 0.85rem; margin-bottom: 6px; }
+        .profile-panel-time { color: #7df9ff; font-weight: 800; margin-bottom: 20px; }
+        .achievement-item {
+            display: flex; align-items: center; gap: 14px; padding: 14px; border-radius: 14px;
+            border: 1px solid var(--border-color); margin-bottom: 12px; background: rgba(255,255,255,0.02);
+        }
+        .achievement-item.locked { opacity: 0.45; }
+        .achievement-icon { font-size: 1.8rem; width: 44px; text-align: center; }
+        .achievement-info { flex: 1; }
+        .achievement-name { font-weight: 800; font-size: 0.9rem; color: #fff; }
+        .achievement-desc { font-size: 0.72rem; color: #9aa3b5; }
+        .achievement-actions { display: flex; flex-direction: column; gap: 6px; }
+        .ach-btn {
+            font-size: 0.68rem; padding: 6px 10px; border-radius: 8px; border: 1px solid rgba(0,210,255,0.3);
+            background: rgba(10,12,22,0.9); color: #fff; cursor: pointer; white-space: nowrap;
+        }
+        .ach-btn.active { background: var(--neon-blue); color: #000; font-weight: 900; }
+
+        .achievement-toast {
+            position: fixed; top: 24px; right: -360px; z-index: 99995;
+            display: flex; align-items: center; gap: 14px;
+            background: linear-gradient(120deg, rgba(13,15,22,0.97), rgba(20,10,25,0.97));
+            border: 1px solid rgba(0,210,255,0.4); box-shadow: 0 0 30px rgba(0,210,255,0.25);
+            border-radius: 16px; padding: 14px 20px; max-width: 320px; transition: right 0.5s ease;
+        }
+        .achievement-toast.show { right: 24px; }
+        .achievement-toast-icon { font-size: 2rem; }
+        .achievement-toast-title { font-size: 0.7rem; color: #7df9ff; text-transform: uppercase; letter-spacing: 1px; font-weight: 800; }
+        .achievement-toast-name { font-size: 1rem; font-weight: 900; color: #fff; }
+
+        @media (max-width: 640px) {
+            .profile-pill { position: static; margin: 14px auto 0; }
+        }
+    </style>
+    <meta http-equiv="Permissions-Policy" content="camera=(self), microphone=(self)">
+</head>
+<body>
+
+<div id="menu-view">
+    <header class="hero-header"><h1 id="ultron-logo-container"><img id="ultron-logo" class="logo-ultron" src="" alt="Ultron"></h1><div id="profile-pill" class="profile-pill" onclick="abrirPerfil()" title="Ver perfil y logros"><span id="profile-badge-icon" class="profile-badge-icon"></span><div class="profile-pill-text"><span id="profile-username-display" class="profile-username"></span><span id="profile-id-display" class="profile-id"></span></div></div></header>
+    <div class="main-container">
+        <div class="search-wrapper">
+            <div class="search-bar">
+                <span class="search-icon">⌕</span>
+                <input id="search-input" type="text" placeholder="Buscar juego, saga o palabra clave..." data-i18n-placeholder="searchPlaceholder">
+                <div class="search-actions">
+                    <select id="sort-select" class="sort-select" aria-label="Ordenar juegos">
+                        <option value="default">Orden original</option>
+                        <option value="popular">Más populares</option>
+                        <option value="unpopular">Menos populares</option>
+                        <option value="az">A-Z</option>
+                    </select>
+                    <span class="results-count" id="results-count">106 juegos</span>
+                    <button id="clear-search" type="button">Limpiar</button>
+                </div>
+            </div>
+            <div class="search-hint" data-i18n="searchHint">Búsqueda rápida sin complicaciones</div>
+        </div>
+
+        <div class="news-box" id="news-box">
+            <div class="news-header" onclick="toggleNews()">
+                <span class="news-header-icon">📡</span>
+                <span class="news-header-title" data-i18n="newsTitle">Novedades Ultron</span>
+                <span class="news-badge" data-i18n="newsBadge">NUEVO</span>
+                <span class="news-toggle-arrow">▼</span>
+            </div>
+            <div class="news-content">
+                <div class="news-item"><div class="news-item-icon">🎮</div><div class="news-item-body"><div class="news-item-title" data-i18n="news1Title">Nuevo logo de Ultron</div><div class="news-item-desc" data-i18n="news1Desc">Ultron llega con su nuevo logo junto con su versión 3.0</div><div class="news-item-date">v3.0 1 Junio 2026</div></div></div>
+                <div class="news-item"><div class="news-item-icon">🌍</div><div class="news-item-body"><div class="news-item-title" data-i18n="news2Title">Soporte multiidioma</div><div class="news-item-desc" data-i18n="news2Desc">Ultron ahora soporta Español e Inglés. Elige tu idioma al entrar.</div><div class="news-item-date">v2.5 · Mayo 2025</div></div></div>
+                <div class="news-item"><div class="news-item-icon">🕵️</div><div class="news-item-body"><div class="news-item-title" data-i18n="news3Title">Modo Oculto en cada juego</div><div class="news-item-desc" data-i18n="news3Desc">Cada juego tiene ahora un botón de modo oculto para situaciones de emergencia. El juego se pausa y muestra una imagen inocente.</div><div class="news-item-date">v2.5 · Mayo 2025</div></div></div>
+                <div class="news-item"><div class="news-item-icon">💬</div><div class="news-item-body"><div class="news-item-title" data-i18n="news4Title">Caja de sugerencias</div><div class="news-item-desc" data-i18n="news4Desc">¿Echas de menos un juego? Ahora puedes sugerirlo directamente desde la página.</div><div class="news-item-date">v2.5 · Mayo 2025</div></div></div>
+            </div>
+        </div>
+
+        <div class="promo-banner" aria-label="Anuncio destacado">
+            <div class="promo-banner-inner"><div class="promo-copy"><span class="promo-kicker">Anuncio neón</span><div class="promo-text">Prueba ahora <span>Google desbloqueado</span> con su total seguridad y privacidad</div></div></div>
+        </div>
+
+        <div class="section-title" data-i18n="favoritesTitle">Favoritos</div>
+        <div id="favorites-grid" class="grid"></div>
+        <div class="section-title" data-i18n="unlockedTitle">Juegos desbloqueados (1-100)</div>
+        <div id="main-grid" class="grid"></div>
+
+        <div class="suggestions-box" id="suggestions-box">
+            <div class="suggestions-header"><span class="suggestions-header-icon">💬</span><span class="suggestions-header-title" data-i18n="suggestionsTitle">Sugerencias de Juegos</span></div>
+            <div class="suggestions-body">
+                <div class="suggestions-desc" data-i18n="suggestionsDesc">¿Conoces un juego que debería estar en Ultron? ¡Escribe tu sugerencia y el equipo la revisará!</div>
+                <div class="suggestions-form"><input class="suggestions-input" id="suggestion-input" type="text" placeholder="Nombre del juego que quieres ver..." maxlength="120"><button class="suggestions-send-btn" onclick="enviarSugerencia()" data-i18n="suggestSend">Sugerir 🚀</button></div>
+                <div class="suggestions-list" id="suggestions-list"><div class="suggestions-empty" data-i18n="suggestionsEmpty">Aún no hay sugerencias. ¡Sé el primero!</div></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="loading-screen">
+    <div class="loading-brand"><div class="loading-logo-wrap"><img id="loading-logo" class="loading-logo" src="https://raw.githack.com/derekonsio1023-gif/Ultron-games/main/assets/logo.png" alt="Logo de Ultron"></div></div>
+    <div class="spinner"></div>
+    <div class="progress-container"><div id="progress-bar"></div></div>
+    <div class="loading-info" id="loading-stats">SINCRONIZANDO: 0%</div>
+    <div class="loading-panels"><div class="loading-panel"><div class="loading-panel-title" data-i18n="loadingRecsTitle">Recomendaciones</div><div class="loading-panel-body" id="loading-recommendation"></div></div><div class="loading-panel"><div class="loading-panel-title" data-i18n="loadingNewsTitle">Noticias</div><div class="loading-panel-body" id="loading-news"></div></div></div>
+</div>
+
+<div id="game-runtime"><button id="back-btn" onclick="cerrarJuego()">Desconectar</button><iframe id="game-frame" allow="camera *; microphone *; autoplay"></iframe></div>
+<div class="game-controls" id="game-controls"></div>
+
+<div id="lang-screen"><div class="lang-screen-particles" id="lang-particles"></div><div class="lang-title">ULTRON</div><div class="lang-subtitle" data-i18n-ls="choose">Elige tu idioma · Choose your language</div><div class="lang-options"><div class="lang-btn" onclick="selectLanguage('es')"><div class="lang-flag">🇪🇸</div><div class="lang-name">Español</div><div class="lang-native">Spain · España</div></div><div class="lang-btn" onclick="selectLanguage('en')"><div class="lang-flag">🇬🇧</div><div class="lang-name">English</div><div class="lang-native">United Kingdom</div></div></div></div>
+<div id="stealth-overlay"><img id="stealth-img" src="" alt="Pantalla de clase"/><div id="stealth-url-display"></div><button id="stealth-back-btn" onclick="salirStealth()">← Volver</button></div>
+<div id="pause-menu"><div class="pause-title" data-i18n="paused">⏸ PAUSADO</div><div class="pause-game-name" id="pause-game-name"></div><div class="pause-actions"><button class="pause-btn pause-btn-continue" onclick="continuarJuego()" data-i18n="continue">▶ Continuar</button><button class="pause-btn pause-btn-exit" onclick="cerrarJuego()" data-i18n="exitGame">✕ Salir del juego</button></div></div>
+
+<div id="user-setup-screen">
+    <div class="user-setup-title">CREA TU PERFIL</div>
+    <div class="user-setup-subtitle">Elige un nombre de usuario único para identificarte en Ultron. Se guardará junto a un ID aleatorio de 9 caracteres.</div>
+    <input id="user-setup-input" type="text" maxlength="20" placeholder="Tu nombre de usuario" autocomplete="off">
+    <div class="user-setup-id-box">Tu ID será: <strong id="user-setup-id-preview">─────────</strong></div>
+    <div class="user-setup-error" id="user-setup-error"></div>
+    <button id="user-setup-btn" onclick="confirmarUsuario()">Confirmar</button>
+</div>
+
+<div id="profile-panel">
+    <div class="profile-panel-inner">
+        <div class="profile-panel-header"><h2>Tu perfil</h2><button class="profile-panel-close" onclick="cerrarPerfilPanel()">✕</button></div>
+        <div class="profile-panel-meta" id="profile-panel-username"></div>
+        <div class="profile-panel-meta" id="profile-panel-id"></div>
+        <div class="profile-panel-time" id="profile-panel-time"></div>
+        <div class="section-title" style="margin:20px 0 12px;font-size:1rem;">Logros y personalización</div>
+        <div id="profile-achievements-list"></div>
+    </div>
+</div>
+
+
+<script>
+    // ══════════════════════════════════════════════════════════════
+    // CONFIGURACIÓN DE SUPABASE — RELLENA ESTOS DOS VALORES
+    // Ve a tu proyecto de Supabase → Settings → API y copia:
+    //   - Project URL          → SUPABASE_URL
+    //   - anon / public key    → SUPABASE_ANON_KEY
+    // Además necesitas crear estas tablas en el SQL Editor de Supabase:
+    //
+    //   create table ultron_users (
+    //     id bigint generated always as identity primary key,
+    //     username text unique not null,
+    //     user_id text unique not null,
+    //     created_at timestamptz default now()
+    //   );
+    //   alter table ultron_users enable row level security;
+    //   create policy "public insert" on ultron_users for insert to anon with check (true);
+    //   create policy "public select" on ultron_users for select to anon using (true);
+    //
+    //   create table ultron_achievement_unlocks (
+    //     id bigint generated always as identity primary key,
+    //     user_id text not null,
+    //     achievement_id text not null,
+    //     unlocked_at timestamptz default now(),
+    //     unique(user_id, achievement_id)
+    //   );
+    //   alter table ultron_achievement_unlocks enable row level security;
+    //   create policy "public upsert" on ultron_achievement_unlocks for insert to anon with check (true);
+    //   create policy "public update" on ultron_achievement_unlocks for update to anon using (true);
+    //   create policy "public select2" on ultron_achievement_unlocks for select to anon using (true);
+    // ══════════════════════════════════════════════════════════════
+    const SUPABASE_URL = 'https://fjxdhcxokvggsvisrqww.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_udgOtU_wLmU2wQx0iTusaQ_C2zvLbnj';
+    const supabaseClient = (window.supabase && SUPABASE_URL && !SUPABASE_URL.includes('TU-PROYECTO'))
+        ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+        : null;
+    if (!supabaseClient) console.warn('[Ultron] Supabase no está configurado todavía: edita SUPABASE_URL y SUPABASE_ANON_KEY. Mientras tanto, el perfil se guarda solo en este navegador.');
+
+    // ══════════════════════════════════════════════════════════════
+    // SISTEMA DE LOGROS (tiempo jugado) — personalizables desde el perfil
+    // Cada logro desbloquea un color/tema aplicable al Omega Chat
+    // ══════════════════════════════════════════════════════════════
+    const ACHIEVEMENTS = [
+        { id:'novato',     nombre:'Principiante',     desc:'Juega 10 minutos en total', segundos:600,   icono:'🥉', color:'#00d2ff', filtro:'none' },
+        { id:'explorador', nombre:'Aburrido en clase', desc:'Juega 1 hora en total', segundos:3600,  icono:'🥈', color:'#b967ff', filtro:'hue-rotate(80deg) saturate(1.4)' },
+        { id:'veterano',   nombre:'Veterano',         desc:'Juega 10 horas en total',     segundos:36000,  icono:'🥇', color:'#ffd23f', filtro:'hue-rotate(150deg) saturate(1.5)' },
+        { id:'maestro',    nombre:'Maestro Ultron',   desc:'Juega 50 horas en total',    segundos:180000, icono:'🏆', color:'#ff2fb0', filtro:'hue-rotate(220deg) saturate(1.6)' },
+        { id:'leyenda',    nombre:'Friki',            desc:'Juega 150 horas en total',    segundos:360000, icono:'💎', color:'#2fffb0', filtro:'hue-rotate(260deg) saturate(1.5)' },
+        { id:'supremo',    nombre:'Friki Supremo',    desc:'Juega 1000 horas en total',   segundos:3600000, icono:'👑', color:'#ff3b3b', filtro:'hue-rotate(300deg) saturate(1.7)' },
+    ];
+
+    const CONFIG = {
+        1: { titulo: "Backrooms", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSKKh1u918ZKxGm7x_Zul7wNIYK2soB4y2EFQ&s", url: "https://raw.githack.com/derekonsio1023-gif/Fluffy-totus/main/backrooms.html", time: 0 },
+        2: { titulo: "Ball Survivor", img: "", url: "https://raw.githack.com/derekonsio1023-gif/Fluffy-totus/main/Ball_Survivor.html", time: 0 },
+        3: { titulo: "Trees Hate You", img: "https://i.pinimg.com/236x/2d/35/5f/2d355f62bd120ce318291d9d4e10a853.jpg", url: "", time: 0 },
+        4: { titulo: "Among Us", img: "https://upload.wikimedia.org/wikipedia/en/9/9a/Among_Us_cover_art.jpg", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/main/amongus.html", time: 0 },
+        5: { titulo: "Pou", img: "https://static.wikia.nocookie.net/pou/images/8/8d/Pou.png/revision/latest/thumbnail/width/360/height/360?cb=20220622133315", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/main/pou.html", time: 0 },
+        6: { titulo: "Plantas contra Zombies", img: "https://media.contentapi.ea.com/content/dam/gin/images/2025/07/pvzr-key-art.png.adapt.crop1x1.767p.png", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/main/plantsvszombies.html", time: 0 },
+        7: { titulo: "Super Mario 64", img: "https://m.media-amazon.com/images/M/MV5BY2QzZTVhYjctZWMyNy00MDlhLThhYTktZDg2M2EwNTE3ZDZkXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg", url: "https://raw.githack.com/CoolDude2349/Offline-HTML-Games-Pack/refs/heads/master/offline/sm64.html", time: 0 },
+        8: { titulo: "Super Mario 63", img: "https://static-cdn.jtvnw.net/ttv-boxart/215028170_IGDB-272x380.jpg", url: "https://raw.githack.com/CoolDude2349/Offline-HTML-Games-Pack/refs/heads/master/offline/sm63.html", time: 0 },
+        9: { titulo: "Subway Surfers", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRqaiUofERu5Ih_zo_ya5K44KEzoCKROAylKw&s", url: "https://raw.githack.com/CoolDude2349/Offline-HTML-Games-Pack/refs/heads/master/offline/subwaysurfershavana.html", time: 0 },
+        10: { titulo: "Minecraft(1.12)", img: "https://static.planetminecraft.com/files/image/minecraft/texture-pack/2021/406/14998532-pack_xl.webp", url: "https://raw.githack.com/catfoolyou/EagsWebTest/refs/heads/main/index.html", time: 0 },
+        11: { titulo: "Geometry Dash Lite", img: "https://e.snmc.io/lk/f/x/d2886defe7ca77323a01e50dc0d964e9/11618485", url: "https://raw.githack.com/CoolDude2349/Offline-HTML-Games-Pack/refs/heads/master/offline/geometrydashlite.html", time: 0 },
+        12: { titulo: "Happy Wheels", img: "https://m.media-amazon.com/images/M/MV5BYTY1YWQxMTAtMjhiNy00NTJhLTg3NTMtM2NlOTA3ZDdlMTYxXkEyXkFqcGc@._V1_.jpg", url: "https://raw.githack.com/CoolDude2349/Offline-HTML-Games-Pack/refs/heads/master/offline/happywheels.html", time: 0 },
+        13: { titulo: "Granny", img: "https://duracionde.com/storage/images/5f8c4d8e0c955.jpg", url: "https://raw.githack.com/CoolDude2349/Offline-HTML-Games-Pack/refs/heads/master/offline/granny.html", time: 0 },
+        14: { titulo: "Granny 2", img: "https://m.media-amazon.com/images/M/MV5BMGI4MDY1ZWItMTgxYi00NTljLWJiMTUtMjg0MmY0YTBhNzRjXkEyXkFqcGc@._V1_.jpg", url: "https://raw.githack.com/CoolDude2349/Offline-HTML-Games-Pack/refs/heads/master/offline/granny2.html", time: 0 },
+        15: { titulo: "Level Devil", img: "https://www.clavecd.es/wp-content/uploads/buy-level-devil-cd-key-compare-prices.jpeg", url: "https://raw.githack.com/CoolDude2349/Offline-HTML-Games-Pack/refs/heads/master/offline/leveldevil.html", time: 0 },
+        16: { titulo: "Paper.io 2", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ8RC6pkSzMJY6MlTONoAfJdrgI3T6428ShfA&s", url: "https://raw.githack.com/CoolDude2349/Offline-HTML-Games-Pack/refs/heads/master/offline/paperio2.htm", time: 0 },
+        17: { titulo: "Temple Run 2", img: "https://cdn.kobo.com/book-images/16218f1a-2e1d-4c29-969a-41814a2813d1/1200/1200/False/temple-run-2-tips-cheats-tricks-strategies.jpg", url: "https://raw.githack.com/CoolDude2349/Offline-HTML-Games-Pack/refs/heads/master/offline/templerun2.htm", time: 0 },
+        18: { titulo: "Bad parenting", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSptG75KAc6OGwNzCHoY99bH_XzApsmpkWkUw&s", url: "https://raw.githack.com/CoolDude2349/Offline-HTML-Games-Pack/refs/heads/master/offline/badparenting.html", time: 0 },
+        19: { titulo: "Bad piggies", img: "https://play-lh.googleusercontent.com/9R_cEu4l5xGHLUJveoPPKwoccItULyB4V7cT-Af2LUl1eGhUh8h9eiVKWERZbRtkfA=w526-h296-rw", url: "https://raw.githack.com/CoolDude2349/Offline-HTML-Games-Pack/refs/heads/master/offline/badpiggies.html", time: 0 },
+        20: { titulo: "Fireboy and Watergirl", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRC6XRG6CVo8mesqiCaYPyh5-4kpu42O2OhVw&s", url: "https://raw.githack.com/CoolDude2349/Offline-HTML-Games-Pack/refs/heads/master/offline/fireboyandwatergirl.html", time: 0 },
+        21: { titulo: "Five Nights at Freddy's", img: "https://store-images.s-microsoft.com/image/apps.14120.13976193533566168.c56d73e5-020f-4be5-860c-ae506c27e2ca.c96def99-b8ab-457a-bcb1-20784fa313be", url: "https://raw.githack.com/CoolDude2349/Offline-HTML-Games-Pack/refs/heads/master/offline/fnaf.html", time: 0 },
+        22: { titulo: "Five Nights at Freddy's 2", img: "https://m.media-amazon.com/images/M/MV5BNmM2MjIxYmItMDdhMC00ZjRkLTg0MDYtMzgzZjY5YzlmMTc0XkEyXkFqcGc@._V1_.jpg", url: "https://raw.githack.com/CoolDude2349/Offline-HTML-Games-Pack/refs/heads/master/offline/fnaf2.html", time: 0 },
+        23: { titulo: "Five Nights at Freddy's 3", img: "https://m.media-amazon.com/images/M/MV5BZmJhNzVlYTctYmJkYy00YzRlLWE1MjQtYzU4ZDExY2Q3NjBjXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg", url: "https://raw.githack.com/CoolDude2349/Offline-HTML-Games-Pack/refs/heads/master/offline/fnaf3.html", time: 0 },
+        24: { titulo: "Five Nights at Freddy's 4", img: "https://image.api.playstation.com/vulcan/img/cfn/11307Ro2GhaUYw-fApbXsGYVOkt3XJ5QhUFGGtQL1eyS7P0UKk_QcGWzQkPKjKKyh9_Jqo49ZVfSI3LKN3U1M5gHGUEpRgpA.png", url: "https://raw.githack.com/CoolDude2349/Offline-HTML-Games-Pack/refs/heads/master/offline/fnaf4.html", time: 0 },
+        25: { titulo: "Chess", img: "https://platoapp.com/images/8c834300-42d3-11ef-bfb7-a598d323cbfc-chess1.webp", url: "https://raw.githack.com/CoolDude2349/Offline-HTML-Games-Pack/refs/heads/master/offline/chess.html", time: 0 },
+        26: { titulo: "Cookie Clicker", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRwxJjLoTSKx5vjF124-udZ_qMVzoKso-W9rA&s", url: "https://raw.githack.com/CoolDude2349/Offline-HTML-Games-Pack/refs/heads/master/offline/cookieclicker.htm", time: 0 },
+        27: { titulo: "Death Chase", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQME5IrWhmeSqw9_fCkiycsUgErnL1tVGLrZQ&s", url: "https://raw.githack.com/CoolDude2349/Offline-HTML-Games-Pack/refs/heads/master/offline/deathchase.html", time: 0 },
+        28: { titulo: "Death Run 3D", img: "https://deathrun3d.io/rs/banner-death-run-3d.jpg", url: "https://raw.githack.com/CoolDude2349/Offline-HTML-Games-Pack/refs/heads/master/offline/deathrun3D.html", time: 0 },
+        29: { titulo: "Papa's Pizzeria", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSa0L7fACN2147vaqTlSal99s8r0W5KR2JmuA&s", url: "https://raw.githack.com/CoolDude2349/Offline-HTML-Games-Pack/refs/heads/master/offline/papaspizzeria.html", time: 0 },
+        30: { titulo: "sandgame", img: "https://play-lh.googleusercontent.com/_PYtjNVw6RuhlnI8lUvOLnGHaE-7CNddeqs1xisFyhWbTJaIW2-tEM5E1iAe6tUk8K4", url: "https://raw.githack.com/CoolDude2349/Offline-HTML-Games-Pack/refs/heads/master/offline/sandgame.html", time: 0 },
+        31: { titulo: "Stick fighter", img: "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=1200,height=1200,fit=cover,f=png/b584ae5c620cdc9761f9dcd28f82dc21/stick-fighter-logo.png", url: "https://raw.githack.com/CoolDude2349/Offline-HTML-Games-Pack/refs/heads/master/offline/stickfighter.html", time: 0 },
+        32: { titulo: "Bendy and the Ink Machine", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRuc2Q0Q4eRpNit9Hd9R4JqBzHtiAxxBeX_3g&s", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Bendy%20and%20the%20Ink%20Machine.html", time: 0 },
+        33: { titulo: "Buckshot Roulette", img: "https://imgproxy.eneba.games/u8RhIpIc7IvN4cqpLde_Tr4Z2K2pFeK5551U5sRDUHE/rs:fit:300/ar:1/czM6Ly9wcm9kdWN0/cy5lbmViYS5nYW1l/cy9wcm9kdWN0cy9f/aFM4X1JxTDhzZk04/MTNuMUVBRHpDRHhU/ZWtwT3plZW43SWla/UHFOeFpFLmpwZw", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Buckshot%20Roulette.html", time: 0 },
+        34: { titulo: "Terraria", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS2cGquk37ry9zMLKn_lIr7i1SnehsS1UJVYQ&s", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Terraria.html", time: 0 },
+        35: { titulo: "Clover Pit", img: "https://upload.wikimedia.org/wikipedia/en/thumb/c/c3/CloverPit_cover.jpeg/250px-CloverPit_cover.jpeg", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Clover%20Pit.html", time: 0 },
+        36: { titulo: "Five Nights at Epstein's", img: "https://speedstarsfree.io/data/image/game/five-nights-at-epsteins.png", url: "https://rawcdn.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Five%20Nights%20at%20Epstein's.html", time: 0 },
+        37: { titulo: "Hollow Knight_Silksong", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTmRiY66TiKY_tvA-ax-BW-KcacCWf1VWr9Jw&s", url: "https://raw.githack.com/aukak/hollow-knight/refs/heads/main/index.html", time: 0 },
+        38: { titulo: "-3", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSlq22aglgljV8GRZj5ZtALz14bcehBwulrUg&s", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/-3.html", time: 0 },
+        39: { titulo: "1v1.LoL", img: "https://cdn-bgp.bluestacks.com/BGP/latam/gametiles_lol.onevone.jpg", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/1v1.LoL.html", time: 0 },
+        40: { titulo: "Angry Birds", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQtNjW8vl1XSvlh853QSQwmg2ePkyu_g3UBeQ&s", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Angry%20Birds.html", time: 0 },
+        41: { titulo: "Plants vs Zombies 2", img: "https://cdn2.steamgriddb.com/thumb/98ab6c6b42317110e4ba005e3d868643.jpg", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Plants%20vs.%20Zombies%202%20Gardenless.html", time: 0 },
+        42: { titulo: "Animal Crossing", img: "https://gameongames.com/cdn/shop/products/animalcrossinggamecubefrontcover_600x600_crop_center.jpg?v=1605914457", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Animal Crossing (GAMECUBE).html", time: 0 },
+        43: { titulo: "Amanda the Adventurer", img: "https://static.wikia.nocookie.net/amanda-the-adventurer/images/9/98/Newamanda.png/revision/latest?cb=20250113124607", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Amanda%20the%20Adventurer.html", time: 0 },
+        44: { titulo: "Half Life", img: "https://static.wikia.nocookie.net/halflife7283/images/e/ec/Half-Lifeboxart.jpg/revision/latest?cb=20131211041722&path-prefix=es", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Half%20Life.html", time: 0 },
+        45: { titulo: "Fruit Ninja", img: "https://m.media-amazon.com/images/M/MV5BYmIwYTAwYzctOTIyZC00ZTY2LTljOWYtODJlYWE5YmNmMGI2XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Fruit%20Ninja.html", time: 0 },
+        46: { titulo: "Melon Playground", img: "https://www5.minijuegosgratis.com/v3/games/thumbnails/248275_7_sq.jpg", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Melon%20Playground.html", time: 0 },
+        47: { titulo: "Hotline Miami", pointerLock: true, img: "https://m.media-amazon.com/images/M/MV5BYzg1YmE4NDgtNjY5Ny00MDRjLWIwYTQtY2QwMTNiOTI4M2Y1XkEyXkFqcGc@._V1_.jpg", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Hotline%20Miami.html", time: 0 },
+        48: { titulo: "Jetpack Joyride", img: "https://m.media-amazon.com/images/M/MV5BMjE0ZTYyZjktMTU3Zi00MjQwLWJiZjgtNjEyZjZhYjJiZTA4XkEyXkFqcGc@._V1_.jpg", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Jetpack%20Joyride.html", time: 0 },
+        49: { titulo: "Moto X3M", img: "https://m.media-amazon.com/images/M/MV5BNzUwYjViNDItYmI4MC00M2E2LWE1YzUtYmYyYTRmZTAyMzBiXkEyXkFqcGc@._V1_QL75_UY281_CR11,0,190,281_.jpg", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Moto%20X3M.html", time: 0 },
+        50: { titulo: "Scary Shawarma Kiosk_ the ANOMALY", img: "https://m.media-amazon.com/images/M/MV5BNzUwYjViNDItYmI4MC00M2E2LWE1YzUtYmYyYTRmZTAyMzBiXkEyXkFqcGc@._V1_QL75_UY281_CR11,0,190,281_.jpg", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Scary%20Shawarma%20Kiosk_%20the ANOMALY.html", time: 0 },
+        51: { titulo: "Burrito Bison Launcha Libre", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTF8pEipJpKnbtsr7Ql_Uk1t8FN7Tn5-C2XsQ&s", url: "https://raw.githack.com/mountain658/BurritoBison/refs/heads/main/index.html", time: 0 },
+        52: { titulo: "Schoolboy Runaway", img: "https://m.media-amazon.com/images/M/MV5BMjhmOGIyNzctZWEyYy00ZWIwLTg5MzctYmUzMDM3OTMwNjJmXkEyXkFqcGc@._V1_QL75_UY281_CR7,0,190,281_.jpg", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Schoolboy%20Runaway.html", time: 0 },
+        53: { titulo: "ULTRAKILL", img: "https://hatorivalley.com/cdn/shop/files/ULTRAKILL_1.png?v=1757436444", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/ULTRAKILL.html", time: 0 },
+        54: { titulo: "Ultrapool", img: "https://images.dwncdn.net/images/t_app-icon-l/p/6a0b734c-1ec0-426b-b55f-0b3f8ba87da1/2011475881/ultrapool-logo", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Ultrapool.html", time: 0 },
+        55: { titulo: "Undertale Yellow", img: "https://upload.wikimedia.org/wikipedia/en/9/93/Undertale_Yellow.png", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Undertale%20Yellow.html", time: 0 },
+        56: { titulo: "Baldi's Basics", img: "https://m.media-amazon.com/images/M/MV5BZjc0ODgwMDgtYmY3Ni00NDNmLThmZWQtYTc4MjExY2E1NTkyXkEyXkFqcGc@._V1_QL75_UX140_CR0,1,140,207_.jpg", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Baldi's%20Basics.html", time: 0 },
+        57: { titulo: "Doom", img: "https://static.wikia.nocookie.net/wadguia/images/c/c3/Doom_cover.png/revision/latest?cb=20160522155501", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/DOOM.html", time: 0 },
+        58: { titulo: "Bloxorz", img: "https://bloxorz.org/wp-content/uploads/sites/55/2025/12/bloxorz.webp", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Bloxorz.html", time: 0 },
+        59: { titulo: "Cuphead", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT6Bp0Xpzeft0Ht7kRCPlHMlcFlTTOHec2HTQ&s", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Cuphead.html", time: 0 },
+        60: { titulo: "R.E.P.O", img: "https://images.g2a.com/360x600/1x1x1/repo-p10000510013/33d5982d7aca4b5ebffc8f63", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-Web-port-R.E.P.O/refs/heads/main/index7.html", time: 0 },
+        61: { titulo: "Raft", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTMerQl6ciu6J1VfbwJVg4OXEFlWSBdt8JQqA&s", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Raft.html", time: 0 },
+        62: { titulo: "Slope", img: "https://1games.io/data/image/game/slope/banner/slope.jpg", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Slope.html", time: 0 },
+        63: { titulo: "Tetris", img: "https://m.media-amazon.com/images/I/61M3rDwh4qL.png", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Tetris.html", time: 0 },
+        64: { titulo: "Stardew Valley", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQcqHdYh-E2kXt8La0P7zz4AQKcM6RSi41zdw&s", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Stardew%20Valley.html", time: 0 },
+        65: { titulo: "Sonic.EXE", img: "https://www.speedrun.com/static/game/2687r9dp/cover.jpg?v=09142d0", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Sonic.EXE (Original).html", time: 0 },
+        66: { titulo: "Sonic CD", img: "https://m.media-amazon.com/images/M/MV5BMGMwMmUyZGYtOTI2MS00MWEyLWI3OWMtZTYyYzZhMDJmZGExXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Sonic%20CD.html", time: 0 },
+        67: { titulo: "Plague Inc", img: "https://store-images.microsoft.com/image/apps.39696.13510798882964918.84c62c00-331b-45af-af2b-3a3e606cf731.573cd12b-dd2a-4227-b689-ef1931cac634", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Plague%20Inc.html", time: 0 },
+        68: { titulo: "Super Mario Bros Remastered", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSYDxnU1N8fLqni_IEVmXs3w9m4KfxtTkyV3A&s", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Super%20Mario%20Bros.%20Remastered.html", time: 0 },
+        69: { titulo: "That's Not My Neighbor", img: "https://images.g2a.com/323x433/1x1x1/thats-not-my-neighbor-p10000510251/25e3d2266ee84526bc8b7160", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/That's%20Not%20My%20Neighbor.html", time: 0 },
+        70: { titulo: "Sonic the Hedgehog 2", img: "https://www.speedrun.com/static/game/o6gl9nod/cover.png?v=97b4851", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Sonic%20the&20Hedgehog 2_%20Community's%20Cut.html", time: 0 },
+        71: { titulo: "Sonic the Hedgehog 3_ Angel Island Remastered", img: "https://m.media-amazon.com/images/I/91B6PQcmMhL._UF1000,1000_QL80_.jpg", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Sonic%20the%20Hedgehog 3_%20Angel%20Island%20Remastered.html", time: 0 },
+        72: { titulo: "A Difficult Game About Climbing", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRbLn1sXT5gXskVA2pH807L01eE8NZLMoMU3w&s", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/ADifficultGameAboutClimbing.html", time: 0 },
+        73: { titulo: "Amaze", img: "https://www.crazylabs.com/wp-content/uploads/2022/03/amaze-icon-512.png", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Amaze.html", time: 0 },
+        74: { titulo: "Antonblast", img: "https://m.media-amazon.com/images/M/MV5BOGZhYjZkMDEtODdjMS00NjgxLWFjZTctNTFkOTdmYmFjMWJmXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Antonblast.html", time: 0 },
+        75: { titulo: "BitLife", img: "https://modyolo.com/wp-content/uploads/2021/09/bitlife-life-simulator-150x150.jpg", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/BitLife.html", time: 0 },
+        76: { titulo: "Block Blast", img: "https://games.gg/cdn-cgi/image/width=1920,quality=75,format=auto,fit=scale-down,metadata=none,onerror=redirect/https://assets.games.gg/block_blast_cover_1a172ebca6.png", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Block%20Blast.html", time: 0 },
+        77: { titulo: "Gorilla Tag", img: "https://images.g2a.com/360x600/1x1x1/gorilla-tag-pc-steam-regalo-europa-i10000337885002/48527d135f684e09b4e6947e", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Gorilla%20Tag.html", time: 0 },
+        78: { titulo: "Jeffrey Epstein Basics In Education And Kidnapping", img: "https://i.ytimg.com/vi/6OsEjG8UxR8/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLD2atVN7pEI7Iq7s6MqlNVKTs1wyA", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Jeffrey%20Epstein%20Basics%20In%20Education%20And%20Kidnapping.html", time: 0 },
+        79: { titulo: "Phoenix Wright - Ace Attorney", img: "https://m.media-amazon.com/images/M/MV5BYzM3NjY4YmItMGM2Mi00ODljLTk0YmItYTJiN2VhMzFjOGI2XkEyXkFqcGc@._V1_.jpg", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Phoenix%20Wright%20-%20Ace%20Attorney.html", time: 0 },
+        80: { titulo: "Ragdoll Archers", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQfeqr1IxxVVe16B1DZIPqQACDj-FZ2lStevQ&s", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Ragdoll%20Archers.html", time: 0 },
+        81: { titulo: "World Box", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSB9SdYGTnB4eSuhSGaRdVOM9HGPSpJnpWYHg&s", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/World%20Box.html", time: 0 },
+        82: { titulo: "Steal a Brainrot", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSKt9Od6egkcelHNZ8o76TQ06CcKt8pivLyCQ&s", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Steal%20A%20Brainrot.html", time: 0 },
+        83: { titulo: "Drift Hunters", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUJdAOR4vMArlZu7aPjiEtEemD9xR4d1851A&s", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Drift%20Hunters.html", time: 0 },
+        84: { titulo: "Ultron Search", img: "https://yt3.googleusercontent.com/6ZXOtv-0G3CEEsqLmdno2viz32rQEKx4EVrZZGwICGvo5qfCtkljMRZAkj-MJeXblFYSIWN9=s900-c-k-c0x00ffffff-no-rj", url: "https://raw.githack.com/derekonsio1023-gif/Unblocked-Google/refs/heads/main/index15.html", time: 0 },
+        85: { titulo: "Basket Random", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS0qj4H4c1nnfsygBxoQEbJkkUZ7yY_LkTnkA&s", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Basket Random.html", time: 0 },
+        86: { titulo: "Basketball Stars", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTWYdnNiiICEr_JZ_mlp5hhExIHToVKfIJAVg&s", url: "https://raw.githack.com/Br3ntD/Basketball-stars-html/refs/heads/main/BasketBallStars.html", time: 0 },
+        87: { titulo: "Granny 3", img: "https://m.media-amazon.com/images/M/MV5BY2U1OGFhY2YtMTNjMi00OTk0LWFhYTAtMTRmY2I1NDE1MmViXkEyXkFqcGc@._V1_.jpg", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Granny 3.html", time: 0 },
+        88: { titulo: "Bouncemasters", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQSr0bFaXJzIPqn_8oevqecJRXTLCJkoPkYiQ&s", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Bouncemasters.html", time: 0 },
+        89: { titulo: "Pizza Tower", img: "https://m.media-amazon.com/images/M/MV5BZjEzYzZkODUtMTExNS00MzdiLWExYzUtZTI3ODdlNjM4M2E0XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Pizza Tower.html", time: 0 },
+        90: { titulo: "Sandtris", img: "https://play-lh.googleusercontent.com/0wlxBgbMnxjC-XR59SEIzD78fd7rbfzdN5BOsoXNQ7uPl1Wk-JPGB0sK8GZaR4Icw7SZGY15ZfdTlJtffh9sxQ", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Sandtris.html", time: 0 },
+        91: { titulo: "Slope 2", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRdOZ9g9Y6sTp3urXC8uU2KPPViEhW9sR2Tlg&s", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Slope%202.html", time: 0 },
+        92: { titulo: "Snowbattle.io", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS2jC6JJA06FISpCqZ12zN2o3avYkDuI6ywmQ&s", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Snowbattle.io.html", time: 0 },
+        93: { titulo: "Tomb Of The Mask", img: "https://upload.wikimedia.org/wikipedia/commons/9/91/Tomb_of_the_Mask_promo_art.png", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Tomb%20Of%20The%20Mask.html", time: 0 },
+        94: { titulo: "Twerk Race 3D", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQgP4KolU5AFMLn8353VKSrbmj9LvNRH12TYg&s", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Twerk%20Race%203D.html", time: 0 },
+        95: { titulo: "Highway Racer 2", img: "https://highwayracer.io/wp-content/uploads/2025/09/Highway-Racer-2-150x150.webp", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Highway%20Racer%202.html", time: 0 },
+        96: { titulo: "Gunspin", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTRjjZUS9lrE1R8EGxTmqXUVN163A5tUOJNcQ&s", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Gunspin.html", time: 0 },
+        97: { titulo: "Getting Over It with Bennett Foddy", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSDWifP7HHc201tciy6Qz_WY2u4SNn3tc9kqg&s", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Getting%20Over%20It%20with%20Bennett%20Foddy.html", time: 0 },
+        98: { titulo: "Hill Climb Racing Lite", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQGiZhSA1uMOVBvoq8PfuTvHJWUBFj8t2-LDg&s", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Hill%20Climb%20Racing%20Lite", time: 0 },
+        99: { titulo: "Get Yoked", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTAduGHL6q7qQ_uj119_zEGIkOakKUPqhG9_Q&s", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Get%20Yoked.html", time: 0 },
+        100: { titulo: "Stone Grass Mowing Simulator", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTV8lgtV6HWz9wgbUanpONA4ImsPAOT-7QBKg&s", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Stone%20Grass%20Mowing%20Simulator.html", time: 0 },
+        101: { titulo: "FNAF Sister Location", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTfoK-TKEHYXg2RvX4gY-Mi1wqSA8WGOwXaeQ&s", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Five%20Nights%20at%20Freddys's_Sister%20Location.html", time: 0 },
+        102: { titulo: "Draw Joust", img: "https://play-lh.googleusercontent.com/haXBNfhsLjGOwvX0SfsDA77cAgUennRTufP5J6fXOAUta6qOKHQ-prQJw5-Ns53Byb4", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Draw%20Joust.html", time: 0 },
+        103: { titulo: "Space Flight Simulator", img: "https://images.g2a.com/360x600/1x1x1/spaceflight-simulator-p10000302934/488c71e94ac842858362b537", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Space%20Flight%20Simulator.html", time: 0 },
+        104: { titulo: "Flip Master", img: "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co90ss.jpg", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Flip%20Master.html", time: 0 },
+        105: { titulo: "Omega Chat ES", img: "https://play-lh.googleusercontent.com/riJFhdp9Rc8SUrnYOac-im_VzBGb4P5BGSl124LvzLjtWaxYzSdl5u79ma-aKvE55AKF", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/UltronChat5.html", time: 0 },
+        106: { titulo: "Fears to Fathom: Home Alone", img: "https://m.media-amazon.com/images/M/MV5BNGZjOTBlYTctODcxNy00YTM1LTg2YTYtZTI3NzBmMDA4ZmJmXkEyXkFqcGc@._V1_.jpg", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Fears to Fathom_Home Alone.html", time: 0 },
+        107: { titulo: "Adventure Capitalist", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQQJiHmcJd1IiUOiydl8IZms18C0vqp3PJgaw&s", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Adventure Capatalist.html", time: 0 },
+        108: { titulo: "Aquapark.io", img: "https://dl.memuplay.com/new_market/img/com.cassette.aquapark.icon.2025-09-04-23-36-54.png", url: "https://raw.githack.com/bubbls/youtube-playables/refs/heads/main/aquapark-io/index.html", time: 0 },
+        109: { titulo: "Awesome Tanks", img: "https://games.lol/wp-content/uploads/2023/08/awesome-tanks-on-pc.jpg", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Awesome Tanks.html", time: 0 },
+        110: { titulo: "Bridge Race", img: "https://adspot.co/assets/upload/property-md/f8e384ffc345e7b993b15fab846cae27.jpg", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Bridge Race.html", time: 0 },
+        111: { titulo: "Build a Big Army", img: "https://static.playhop.com/images/bc069_17921938_1c101/0a45e2463/2a00000199c2407a_c8dfaec/f217585550f79110a2a9_14cf46/orig", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Build a Big Army.html", time: 0 },
+        112: { titulo: "Escape Road", img: "https://escaperoad.org/data/image/game/escape-road-game.png", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Escape Road.html", time: 0 },
+        113: { titulo: "Fallout", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT1fgenr8nG4NBIZCuoGLrSDyYKVSO3Rdcrkw&s", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Fallout.html", time: 0 },
+        114: { titulo: "Friday Night Funkin", img: "https://m.media-amazon.com/images/M/MV5BMmMwYzZjMzAtN2I3Ny00MTdhLTg1Y2YtNDZiMzhhODY3ZjJjXkEyXkFqcGc@._V1_QL75_UX190_CR0,2,190,281_.jpg", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Friday Night Funkin.html", time: 0 },
+        115: { titulo: "Giant Wanted", img: "https://play-lh.googleusercontent.com/SsLh93Lc6iQirKT-IuOMoufivtOKHOTJby2Q3YEMCRerTKrUAHoYTRnV9eMDjQP301CY=w240-h480-rw", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Giant Wanted.html", time: 0 },
+        116: { titulo: "Idle Lumber Inc", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRajGp3huptU7DLz1OZkLchMyHUvtiEPozlgw&s", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Idle Lumber Inc.html", time: 0 },
+        117: { titulo: "Idle Mining Empire", img: "https://www.contezero.com/user/pages/03.games/10.strategy/idle-mining-empire/IdleMiningEmpire.jpg", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Idle Mining Empire.html", time: 0 },
+        118: { titulo: "Snow Rider 3D", img: "https://www.hoodamath.com/large/300/snowrider3d_300.png", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Snow Rider 3D.html", time: 0 },
+        119: { titulo: "MyInstants", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQQGZtPcvusk8DB2o0xi8nQXNY6lMMEtSzvtw&s", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Soundboard.html", time: 0 },
+        120: { titulo: "Spiral Roll", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQoIPOUcdlFv-6j72cmcP-yj_57IV8-r3MM_g&s", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/Spiral Roll.html", time: 0 },
+        121: { titulo: "Rompe Ralph", img: "https://media.tenor.com/WqKfjVU23DwAAAAM/wreck-it-ralph-wir.gif", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/result.html", time: 0 },
+        122: { titulo: "FNF vs Shucks v2", img: "https://i1.sndcdn.com/artworks-ZLOdyMJ92DbacTqD-3ncfSg-t500x500.jpg", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/FNF/Friday Night Funkin vs Shucks v2.html", time: 0 },
+        123: { titulo: "FNF vs Zardy", img: "https://nu.vgmtreasurechest.com/soundtracks/friday-night-funkin-vs.-zardy-mod/cover.png", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/FNF/Friday Night Funkin vs Zardy.html", time: 0 },
+        124: { titulo: "FNF vs Tabi", img: "https://i.scdn.co/image/ab67616d0000b273d2b2c3e515863abaee580888", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/FNF/Friday Night Funkin vs Tabi.html", time: 0 },
+        125: { titulo: "FNF Heartbreak Havoc [Vs. Sky: REDUX]", img: "https://i1.sndcdn.com/artworks-IKUtHNkkq2Os1yj0-UiOT2g-t500x500.png", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/FNF/Friday Night Funkin'_ Heartbreak Havoc [Vs. Sky_ REDUX].html", time: 0 },
+        126: { titulo: "FNF AKAGE", img: "https://i1.sndcdn.com/artworks-JpzzSDIwkBKP7Mk5-o6bMlg-t500x500.png", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/FNF/Friday Night Funkin'_ AKAGE.html", time: 0 },
+        127: { titulo: "FNF vs Undertale", img: "https://i1.sndcdn.com/avatars-ec9qylCr9TfFr8JA-g1yOIQ-t240x240.jpg", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/FNF/Friday Night Funkin vs Undertale.html", time: 0 },
+        128: { titulo: "FNF vs Nonsense", img: "https://i1.sndcdn.com/artworks-k4GinYaeAVs53kTe-tyM8Zg-t500x500.jpg", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/FNF/Friday Night Funkin vs Nonsense.html", time: 0 },
+        129: { titulo: "FNF Sunday Night Suicide: Rookies Edition", img: "https://jetta.vgmtreasurechest.com/soundtracks/friday-night-funkin-sunday-night-suicide-rookies-edition-linux-macos-windows-gamerip-2024/SNSRTCover.png", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/FNF/Friday Night Funkin' Sunday Night Suicide_ Rookies Edition.html", time: 0 },
+        130: { titulo: "FNF VS Impostor B-Sides", img: "https://jetta.vgmtreasurechest.com/soundtracks/friday-night-funkin-vs.-impostor-b-sides-linux-macos-windows-gamerip-2023-2024/ImpostorBSidesCover.png", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/FNF/Friday Night Funkin' VS Impostor B-Sides.html", time: 0 },
+        131: { titulo: "FNF D-Sides", img: "https://i1.sndcdn.com/artworks-wrpe6y6l7yILoaF7-gAgcOA-t500x500.jpg", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/FNF/Friday Night Funkin' D-Sides.html" },
+        132: { titulo: "FNF Chaos Nightmare - Sonic Vs. Fleetway", img: "https://w8.snokido.com/img/large/fnf-chaos-nightmare.jpg", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/FNF/Friday Night Funkin'_ Chaos Nightmare - Sonic Vs. Fleetway.html" },
+        133: { titulo: "FNF VS. Impostor: Alternated", img: "https://nu.vgmtreasurechest.com/soundtracks/friday-night-funkin-vs.-impostor-alternated-windows-gamerip-2023/Main.jpg", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/FNF/Friday Night Funkin'_ VS. Impostor_ Alternated.html" },
+        134: { titulo: "FNF Gumballs", img: "https://i1.sndcdn.com/artworks-W8fan1opvBM6cwxG-tA79vA-t1080x1080.jpg", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/FNF/Friday Night Funkin'_ Gumballs.html" },
+        135: { titulo: "FNF Rev-Mixed", img: "https://i.ytimg.com/vi/JQiKoeogdt0/mqdefault.jpg", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/FNF/Friday Night Funkin'_ Rev-Mixed.html" },
+        136: { titulo: "FNF Wednesday's Infidelity", img: "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/co95jm.jpg", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/FNF/Friday Night Funkin’ Wednesday's Infidelity.html" },
+        137: { titulo: "FNF Vs. Dave and Bambi v3", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTDaIbmbAEaOn3xLEbewiVJlVp1AZHzyIuCpnAoigwrH1Y8nUeBWahiy3Q&s=10", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/FNF/Friday Night Funkin Vs. Dave and Bambi v3.html" },
+        138: { titulo: "Captchaware", img: "https://cdn.thememylogin.com/uploads/edd/2018/05/recaptcha.png", url: "https://raw.githack.com/barnicalstuff/captchaware/refs/heads/master/index.html" },
+        139: { titulo: "FNF Drop and Roll, but Playable", img: "https://fridaynightfunkin-fnf.com/storage/images/games/drop-and-roll-but-playable/dd300jpg.jpg", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/FNF/Friday Night Funkin' Drop and Roll, but Playable.html" },
+        140: { titulo: "FNF vs Carol V2", img: "https://i1.sndcdn.com/artworks-F5wo2oUT7S8hlN8c-TCdTAQ-t500x500.jpg", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/FNF/Friday Night Funkin vs Carol V2.html" },
+        141: { titulo: "FNF vs Sunday Remastered HD", img: "https://img.fnfmod.online/storage/images/games/fnf-vs-sunday-remastered-hd/sunday300jpg.jpg", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/FNF/Friday Night Funkin vs Sunday Remastered HD.html" },
+        142: { titulo: "FNF VS Impostor v4", img: "https://i1.sndcdn.com/artworks-R7AHQWe4FJ7ny1yn-iVnz2Q-t1080x1080.jpg", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/FNF/Friday Night Funkin VS Impostor v4.html" },
+        143: { titulo: "FNF vs Hypno Lullaby", img: "https://i1.sndcdn.com/artworks-1JVRDYhMAwB2yXs6-wbZCSQ-t500x500.jpg", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/FNF/Friday Night Funkin' vs Hypno Lullaby.html" },
+        144: { titulo: "FNF Mario's Madness", img: "https://i1.sndcdn.com/artworks-9apzhBjDhetCVkAy-aga3lg-t1080x1080.jpg", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/FNF/Friday Night Funkin'_ Mario's Madness.html" },
+        145: { titulo: "FNF vs Shaggy", img: "https://i1.sndcdn.com/artworks-wGsvne7whwgspHfs-grn4iw-t500x500.jpg", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/FNF/Friday Night Funkin vs Shaggy.html" },
+        146: { titulo: "FNF Vs. Cyber Sensation", img: "https://i1.sndcdn.com/artworks-PgbSByxGcy8zO1Dt-ogisxQ-t500x500.jpg", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/FNF/Friday Night Funkin Vs. Cyber Sensation.html" },
+        147: { titulo: "FNF VS. Sky", img: "https://cdn2.steamgriddb.com/logo/7ad0732636df966fa9dbf2ced5eb721d.png", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/FNF/Friday Night Funkin VS. Sky.html" },
+        148: { titulo: "FNF VS. KAPI", img: "https://m.media-amazon.com/images/M/MV5BN2ViZDA3MmUtNjc3NS00MTZiLTkxNDctNjNhN2NlOWZjZmM1XkEyXkFqcGc@._V1_.jpg", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/FNF/Friday Night Funkin VS. KAPI.html" },
+        149: { titulo: "FNF Pibby: Apocalypse", img: "https://yt3.googleusercontent.com/n1X7gqpFtnXw2vkzlZmWjOV_GpW7AUCo_VWrVaudxUQ0sYX2zWlNB2jQApSnGFeNpvXC9kqv=s900-c-k-c0x00ffffff-no-rj", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/FNF/Friday Night Funkin'_ Pibby_ Apocalypse.html" },
+        150: { titulo: "FNF Darkness Takeover", img: "https://i1.sndcdn.com/artworks-YMtZ3aJh5gKLASdQ-eDOOoQ-t500x500.jpg", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/FNF/Friday Night Funkin'_ Darkness Takeover.html" },
+        151: { titulo: "FNF Soft", img: "https://jetta.vgmtreasurechest.com/soundtracks/friday-night-funkin-soft-mod-soundtrack/cover.png", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/FNF/Friday Night Funkin’ Soft.html" },
+        152: { titulo: "FNF TWIDDLEFINGER", img: "https://cryptcultureshop.com/cdn/shop/files/TwiddlefingerInvertCC_grande.png?v=1735314128", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/FNF/Friday Night Funkin'_ TWIDDLEFINGER.html" },
+        153: { titulo: "FNF FIRE IN THE HOLE: Lobotomy Dash Funkin'", img: "https://fridaynightfunkin-fnf.com/storage/images/games/vs-lobotomy-dash-fire-in-the-hole/lo300jpg.jpg", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/FNF/Friday Night Funkin'_ FIRE IN THE HOLE_ Lobotomy Dash Funkin'.html" },
+        154: { titulo: "FNF 17 Bucks: Floor 1", img: "https://i.ytimg.com/vi/5lhxeaS6SqU/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLBVEncV4rYJo1TzZIYs0QRmwvVvaQ", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/FNF/Friday Night Funkin'_ 17 Bucks_ Floor 1.html" },
+        155: { titulo: "FNF vs. BOPCITY", img: "https://fridaynightfunkin-fnf.com/storage/images/games/vs-bopcity/bo300jpg.jpg", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/FNF/Friday Night Funkin'_ vs. BOPCITY.html" },
+        156: { titulo: "FNF Jeffy's Endless Aethos", img: "https://i1.sndcdn.com/artworks-vxbyjNvLOl762OeI-eudSBA-t1080x1080.jpg", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/FNF/Friday Night Funkin'_ Jeffy's Endless Aethos.html" },
+        157: { titulo: "FNF Indie Cross", img: "https://i1.sndcdn.com/artworks-wnIgdOrvhxbQP2hV-10Trfw-t500x500.jpg", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/FNF/Friday Night Funkin'_ Indie Cross.html" },
+        158: { titulo: "FNF Mistful Crimson Morning Reboot", img: "https://i.ytimg.com/vi/RNelxD2j4X0/hq720.jpg?sqp=-oaymwE7CK4FEIIDSFryq4qpAy0IARUAAAAAGAElAADIQj0AgKJD8AEB-AH-CYAC0AWKAgwIABABGH8gHygoMA8=&rs=AOn4CLDxqgJ8NbTBYAP8iHrW3xvBt70qvQ", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/FNF/Friday Night Funkin'_ Mistful Crimson Morning Reboot.html" },
+        159: { titulo: "FNF vs. QT", img: "https://i1.sndcdn.com/artworks-jWV8bczBXM0Us4nj-c5jRJQ-t500x500.jpg", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/FNF/Friday Night Funkin'_ vs. QT.html" },
+        160: { titulo: "FNF Sonic Legacy", img: "https://static.wikia.nocookie.net/fridaynightfunking/images/8/88/SonicLegacyLogo.png/revision/latest/scale-to-width/360?cb=20240219205617", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/FNF/Friday Night Funkin'_ Sonic Legacy.html" },
+        161: { titulo: "FNF vs. Garcello", img: "https://www1.minijuegosgratis.com/v3/games/thumbnails/237759_7_sq.jpg", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/FNF/Friday Night Funkin'_ vs. Garcello.html" },
+        162: { titulo: "FNF Creepypasta JP", img: "https://i1.sndcdn.com/artworks-QgrAWybQkRuW0BpL-MYrksw-t500x500.jpg", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/FNF/Friday Night Funkin'_ Creepypasta JP.html" },
+        163: { titulo: "FNF Hit Single Real", img: "https://i1.sndcdn.com/artworks-qBL4iRnyBqxhT79q-4L4Y4Q-t500x500.jpg", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/FNF/Friday Night Funkin'_ Hit Single Real.html" },
+        164: { titulo: "FNF vs. Tricky", img: "https://i1.sndcdn.com/artworks-CLAuXCUcNUJSTixT-oLSpCA-t500x500.jpg", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/FNF/Friday Night Funkin'_ vs. Tricky.html" },
+        165: { titulo: "FNF Sarvente's Mid-Fight Masses", img: "https://i1.sndcdn.com/artworks-nHmqfHD8GHnOwpjd-JH0Vzg-t500x500.jpg", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/FNF/Friday Night Funkin'_ Sarvente's Mid-Fight Masses.html" },
+        166: { titulo: "FNF Neo", img: "https://m.media-amazon.com/images/I/815-T4qNdBL.png", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/FNF/Friday Night Funkin'_ Neo.html" },
+        167: { titulo: "FNF Vs. Hatsune Miku", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQKKgs8j0_kb39x5v2jMceR672jnAPl5GFFDJlXmS8CNZIft7-vH4K35oxr&s=10", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/FNF/Friday Night Funkin'_ Vs. Hatsune Miku.html" },
+        168: { titulo: "FNF Vs. Hex", img: "https://i1.sndcdn.com/artworks-9HNjA1kGQy3cAg1L-UpYU8w-t500x500.jpg", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/FNF/Friday Night Funkin'_ Vs. Hex.html" },
+        169: { titulo: "FNF B-Sides", img: "https://i1.sndcdn.com/artworks-SzfFY9X4XQ8oYSPI-eI3oxA-t240x240.jpg", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/FNF/Friday Night Funkin'_ B-Sides.html" },
+        170: { titulo: "FNF V.S. Whitty", img: "https://i.pinimg.com/564x/90/e3/2a/90e32a2d6add8b12392bb8cee19183b5.jpg", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-games/refs/heads/main/FNF/Friday Night Funkin'_ V.S. Whitty.html" },
+        171: { titulo: "Drive Mad", img: "https://drivemadfree.com/assets/upload/drive-mad/webp/drive-mad.webp", url: "https://raw.githack.com/Arham43-ops/Drive-Mad-Game/refs/heads/main/index.html" },
+        172: { titulo: "Minecraft mobile", img: "https://assets-prd.ignimgs.com/2022/06/01/minecraftpocket-1654097809188.jpg?crop=1%3A1%2Csmart&format=jpg&auto=webp&quality=80", url: "https://raw.githack.com/SanGraphic/MCPEweb/refs/heads/main/index.html" },
+        173: { titulo: "Pacman", img: "https://lafrikileria.com/blog/wp-content/uploads/2022/05/aniversario-pac-man-640x371.jpg", url: "https://raw.githack.com/masonicGIT/pacman/refs/heads/master/index.html" },
+        174: { titulo: "Aquapark.io", img: "https://m.media-amazon.com/images/I/81sVKISRgML.png", url: "https://raw.githack.com/ahrdevelopers/aquaparkio/refs/heads/main/index.html" },
+        175: { titulo: "Arena 5", img: "", url: "https://raw.githack.com/kevinroast/arena5/refs/heads/master/index.html" },
+        176: { titulo: "Country Wars", img: "https://e.snmc.io/lk/f/x/a23d25e3fd99be98fe595b0a6014db8b/12904075", url: "https://raw.githack.com/Thisisanalthowcool/Country-Wars/refs/heads/main/index.html" },
+        177: { titulo: "Adventure Drivers", img: "https://ubg67.com/public/thumb/adventure-drivers.webp", url: "https://raw.githack.com/ThePrismOfficial/AdventureDrivers/refs/heads/master/index.html" },
+        178: { titulo: "Bad Ice Cream", img: "https://www4.minijuegosgratis.com/v3/games/thumbnails/16925_7_sq.jpg", url: "https://raw.githack.com/1002unblockedgames/BadIceCream/refs/heads/main/index.html" },
+        179: { titulo: "Bad Ice Cream 2", img: "https://www1.minijuegosgratis.com/v3/games/thumbnails/24137_7_sq.jpg", url: "https://raw.githack.com/1002unblockedgames/BadIceCream2/refs/heads/main/index.html" },
+        180: { titulo: "Bad Ice Cream 3", img: "https://cdn.blipzi.com/ba/di/bad-ice-cream-3-d.jpg", url: "https://raw.githack.com/1002unblockedgames/BadIceCream3/refs/heads/main/index.html" },
+        181: { titulo: "Baseball Bros", img: "https://bluewizard.com/wp-content/uploads/2025/06/image_480.png", url: "https://raw.githack.com/ubg42/BaseballBros/refs/heads/main/index.html" },
+        182: { titulo: "Basketball Stars", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQpMYC1imMffOLUSVrLu_x2CRLMAworPSm40YxIEFbQ1fJxxFNnKxi24er9&s=10", url: "https://raw.githack.com/BasketballStarsUnblocked/BasketballStarsUnblocked.github.io/refs/heads/main/index.html" },
+        183: { titulo: "Bottle Flip", img: "https://doondook.studio/wp-content/uploads/2022/12/1024.png", url: "https://raw.githack.com/ubg98/BottleFlip/refs/heads/gh-pages/index.html" },
+        184: { titulo: "Cut the Rope", img: "https://cdn.blipzi.com/cu/tt/cut-the-rope-d.jpg", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-CutTheRope-Web-port/refs/heads/master/index7.html" },
+        185: { titulo: "2048", img: "https://2048.gg/assets/img/2048-game.png", url: "https://raw.githack.com/gabrielecirulli/2048/refs/heads/master/index.html" },
+        186: { titulo: "Cluster Rush", img: "https://cluster-rush-games.github.io/uploads/2025/5/cluster-rush-1.png", url: "https://raw.githack.com/ubg42/ClusterRush/refs/heads/main/index.html" },
+        187: { titulo: "CircloO", img: "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=314,height=314,fit=cover,f=auto/971353830f129fd3f1446398792e6997/circloo-logo.png", url: "https://raw.githack.com/ubg98/CircloO/refs/heads/gh-pages/index.html" },
+        188: { titulo: "CircloO2", img: "https://growa-garden.io/storage/images/circloo-2.png", url: "https://raw.githack.com/ubg98/CircloO2/refs/heads/gh-pages/index.html" },
+        189: { titulo: "Stickman Golf", img: "https://www.coolmathgames.com/sites/default/files/stick-golf-game-icon.png", url: "https://raw.githack.com/hsinidev/stickman-golf-unblocked/refs/heads/master/index.html" },
+        190: { titulo: "Stickman Destruction", img: "https://www.onlinegames.io/media/posts/233/Stickman-Destruction.jpghttps://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=1200,height=1200,fit=cover,f=png/3c892779be9dabb3589586c83ad3eeed/ragdoll-hit-logo.png", url: "https://raw.githack.com/ahrdevelopers/stickman-destruction/refs/heads/main/index.html" },
+        191: { titulo: "Ragdoll Hit", img: "https://img.poki-cdn.com/cdn-cgi/image/q=78,scq=50,width=1200,height=1200,fit=cover,f=png/3c892779be9dabb3589586c83ad3eeed/ragdoll-hit-logo.png", url: "https://raw.githack.com/Collasperz/ragdoll-hit/refs/heads/main/index.html" },
+        192: { titulo: "Doge Miner", img: "https://cdn4.wouterplanet.com/covers/minigames/doge-coin-miner.webp", url: "https://raw.githack.com/xlegends/DogeMiner/refs/heads/main/index.html" },
+        193: { titulo: "Escape Road City 2", img: "https://azgames.io/upload/imgs/escaperoadcity2.png", url: "https://raw.githack.com/ubg42/EscapeRoadCity2/refs/heads/main/index.html" },
+        194: { titulo: "Escape Road 2", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSOyq7r1XHOV6qDcwyvn2_l9eNDxATVeWuIoZGwHFcrAk9JU4Ost9QoDf4&s=10", url: "https://raw.githack.com/escaperoad2online/escaperoad2online.github.io/refs/heads/main/index.html" },
+        195: { titulo: "Elastic Face", img: "https://static.wikia.nocookie.net/rickandmorty/images/6/6d/RickandMortyElasticMan.png/revision/latest?cb=20250518035022", url: "https://raw.githack.com/derekonsio1023-gif/Ultron-elastic-man-Web-port/refs/heads/main/index2.html" },
+        196: { titulo: "Papery planes", img: "https://play-lh.googleusercontent.com/D937mnGIXydP9quw1c1hv14nrx73bXqLrBr8x_fyLtgl3sJy2Djvfeat_feZnQdtyQ", url: "https://raw.githack.com/zynq-platform/papery-planes/refs/heads/main/index.html" },
+        197: { titulo: "Assassin's Creed: Altaïr's Chronicles", img: "https://tse4.mm.bing.net/th/id/OIP.D01AKTVFMU-3t8olpQu2DQAAAA?r=0&rs=1&pid=ImgDetMain&o=7&rm=3", url: "https://raw.githack.com/derekonsio1023-gif/ultron-emulatornds2/refs/heads/main/ACAC.html" },
+        198: { titulo: "Advance wars dor", img: "https://images.igdb.com/igdb/image/upload/t_cover_big_2x/cobblv.jpg", url: "https://raw.githack.com/derekonsio1023-gif/ultron-emulatornds2/refs/heads/main/AWD.html" },
+        199: { titulo: "Call of Duty: Black Ops", img: "https://assets-prd.ignimgs.com/2022/03/28/call-of-duty-black-ops-1-button-1640898530662-1648511082561.jpeg", url: "https://raw.githack.com/derekonsio1023-gif/ultron-emulatornds2/refs/heads/main/CDBO.html" },
+        200: { titulo: "Cod Modern Warfare Mobilized", img: "https://assets-prd.ignimgs.com/2022/03/29/codmobilized-1648512315653.jpg", url: "https://raw.githack.com/derekonsio1023-gif/ultron-emulatornds2/refs/heads/main/CMWM.html" },
+        201: { titulo: "Dogz", img: "https://images.igdb.com/igdb/image/upload/t_cover_big/co49zz.webp", url: "https://raw.githack.com/derekonsio1023-gif/ultron-emulatornds2/refs/heads/main/DOGZ.html" },
+        202: { titulo: "FIFA 10", img: "https://m.media-amazon.com/images/M/MV5BMDE0NjA3NDctNTdhMi00MmU4LWJjMmUtOGVlYTM3NzE4MzdhXkEyXkFqcGc@._V1_.jpg", url: "https://raw.githack.com/derekonsio1023-gif/ultron-emulatornds2/refs/heads/main/FIFA10.html" },
+        203: { titulo: "FIFA 11", img: "https://upload.wikimedia.org/wikipedia/en/f/f5/Fifa11_Game_Cover.jpg", url: "https://raw.githack.com/derekonsio1023-gif/ultron-emulatornds2/refs/heads/main/FIFA11.html" },
+        204: { titulo: "FIFA 6", img: "https://i.3djuegos.com/juegos/1135/fifa_06/fotos/ficha/fifa_06-1679646.webp", url: "https://raw.githack.com/derekonsio1023-gif/ultron-emulatornds2/refs/heads/main/FIFA6.html" },
+        205: { titulo: "FIFA 7", img: "https://static.wikia.nocookie.net/doblaje/images/e/ea/FIFA_07.jpg/revision/latest?cb=20230221070014&path-prefix=es", url: "https://raw.githack.com/derekonsio1023-gif/ultron-emulatornds2/refs/heads/main/FIFA7.html" },
+        206: { titulo: "FIFA 8", img: "https://m.media-amazon.com/images/M/MV5BYjQyZGIxMmMtNmY4Yy00NmQ0LWJkMzYtY2JiNWYwOGNkZmE3XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg", url: "https://raw.githack.com/derekonsio1023-gif/ultron-emulatornds2/refs/heads/main/FIFA8.html" },
+        207: { titulo: "FIFA 9", img: "https://m.media-amazon.com/images/M/MV5BZTI5MzVjNTUtYzRlMy00ZTFiLTliZDktZDg4NjNiZDVlN2RiXkEyXkFqcGc@._V1_.jpg", url: "https://raw.githack.com/derekonsio1023-gif/ultron-emulatornds2/refs/heads/main/FIFA9.html" },
+        208: { titulo: "FIFA Street 2", img: "https://m.media-amazon.com/images/M/MV5BODc0YzgyNTEtMTIwZS00Mjg3LTllNGItODhkZjY3NDc5YWU0XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg", url: "https://raw.githack.com/derekonsio1023-gif/ultron-emulatornds2/refs/heads/main/FIFAS2.html" },
+        209: { titulo: "FIFA Street 3", img: "https://m.media-amazon.com/images/M/MV5BYWZjMDY5ZWUtYjg4My00Mzk1LWFkMDYtMjdmNjFlMjQyMGM4XkEyXkFqcGc@._V1_.jpg", url: "https://raw.githack.com/derekonsio1023-gif/ultron-emulatornds2/refs/heads/main/FIFAS3.html" },
+        210: { titulo: "Mario Kart", img: "https://m.media-amazon.com/images/M/MV5BYTVkYWI3ZjgtZDI1Ni00ZTVkLThhMWItODk0NDdjM2UzNzg5XkEyXkFqcGc@._V1_.jpg", url: "https://raw.githack.com/derekonsio1023-gif/ultron-emulatornds2/refs/heads/main/MK.html" },
+        211: { titulo: "Mario Party", img: "https://upload.wikimedia.org/wikipedia/en/0/0f/Mario_Party_DS_US_cover.jpg", url: "https://raw.githack.com/derekonsio1023-gif/ultron-emulatornds2/refs/heads/main/MP.html" },
+        212: { titulo: "Metroid Prime Hunters", img: "https://m.media-amazon.com/images/M/MV5BZjJiNDZhMGItNzAwMS00MDdlLTk3YTQtNmM5NDRkZTYyMmQ2XkEyXkFqcGc@._V1_.jpg", url: "https://raw.githack.com/derekonsio1023-gif/ultron-emulatornds2/refs/heads/main/MPH.html" },
+        213: { titulo: "Megaman Zero Collection", img: "https://static.wikia.nocookie.net/esmegaman/images/8/87/MMZXLCART.jpg/revision/latest?cb=20191023044949", url: "https://raw.githack.com/derekonsio1023-gif/ultron-emulatornds2/refs/heads/main/MZC.html" },
+        214: { titulo: "Mario 64 DS", img: "https://i.redd.it/a6gqj2fmd6d71.jpg", url: "https://raw.githack.com/derekonsio1023-gif/ultron-emulatornds2/refs/heads/main/Mario64.html" },
+        215: { titulo: "Nintendogs Best Friends", img: "https://assets-prd.ignimgs.com/2022/02/08/nintendogsfriends-sq-1644340545859.jpg", url: "https://raw.githack.com/derekonsio1023-gif/ultron-emulatornds2/refs/heads/main/NBF.html" },
+        216: { titulo: "Nintendogs Chihuahua and Friends", img: "https://images.igdb.com/igdb/image/upload/t_original/co6pnx.webp", url: "https://raw.githack.com/derekonsio1023-gif/ultron-emulatornds2/refs/heads/main/NCF.html" },
+        217: { titulo: "Nintendogs Dachshund and Friends", img: "https://assets-prd.ignimgs.com/2022/02/08/nintendogsdachs-sq-1644340255186.jpg?crop=1%3A1%2Csmart&format=jpg&auto=webp&quality=80", url: "https://raw.githack.com/derekonsio1023-gif/ultron-emulatornds2/refs/heads/main/NDF.html" },
+        218: { titulo: "Nintendogs Dalmatian and Friends", img: "https://assets-prd.ignimgs.com/2023/03/25/nintenspots-1679770859263.jpg?crop=1%3A1%2Csmart&format=jpg&auto=webp&quality=80", url: "https://raw.githack.com/derekonsio1023-gif/ultron-emulatornds2/refs/heads/main/NDalmatianF.html" },
+        219: { titulo: "Nintendogs Lab and Friends", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlClIgMPGZ72t3x2FCbYtG0QPZOKy7VDSwISPOk9azgg&s=10", url: "https://raw.githack.com/derekonsio1023-gif/ultron-emulatornds2/refs/heads/main/NLF.html" },
+        220: { titulo: "Nintendogs Shiba and Friends", img: "https://i.ebayimg.com/images/g/iUsAAOSwZw1hHrm~/s-l1200.jpg", url: "https://raw.githack.com/derekonsio1023-gif/ultron-emulatornds2/refs/heads/main/NSF.html" },
+        221: { titulo: "New Super Mario Bros", img: "https://m.media-amazon.com/images/M/MV5BZDBiOGQyZDQtZjUxMS00ZGRmLWJiNzktYWNjN2Y5OGQyNWQ0XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg", url: "https://raw.githack.com/derekonsio1023-gif/ultron-emulatornds2/refs/heads/main/NSMB.html" },
+        222: { titulo: "Mario and Luigi: Partners in Time", img: "https://assets-prd.ignimgs.com/2022/02/26/marioluigipartners-sq1-1645905341381.jpg?crop=1%3A1%2Csmart&format=jpg&auto=webp&quality=80", url: "https://raw.githack.com/derekonsio1023-gif/ultron-emulatornds2/refs/heads/main/PT.html" },
+        223: { titulo: "Rabbids Go Home", img: "https://m.media-amazon.com/images/M/MV5BNDUxNzRkZjAtODk2OS00ZDVlLWI3NDEtNDFlNGNjNGRlYWRjXkEyXkFqcGc@._V1_.jpg", url: "https://raw.githack.com/derekonsio1023-gif/ultron-emulatornds2/refs/heads/main/RGH.html" },
+        224: { titulo: "Spider-man Battle for New York", img: "https://m.media-amazon.com/images/M/MV5BN2MzNTkxZWMtOTNiNC00NzNmLTlmODMtZmU4ZmJjMmI3ODJkXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg", url: "https://raw.githack.com/derekonsio1023-gif/ultron-emulatornds2/refs/heads/main/SBNY.html" },
+        225: { titulo: "Sonic Classic Collection", img: "https://assetsio.gnwcdn.com/co2v8f.jpg?width=2048&height=2048&fit=bounds&quality=85&format=jpg&auto=webp", url: "https://raw.githack.com/derekonsio1023-gif/ultron-emulatornds2/refs/heads/main/SCC.html" },
+        226: { titulo: "Spider-man Edge of Time", img: "https://m.media-amazon.com/images/M/MV5BM2I2NGJjOGQtNGQ5ZS00YmQzLWFmYmUtZDhlNWVjYWQ2NDI2XkEyXkFqcGc@._V1_.jpg", url: "https://raw.githack.com/derekonsio1023-gif/ultron-emulatornds2/refs/heads/main/SET.html" },
+        227: { titulo: "Spider-man Friend or Foe", img: "https://m.media-amazon.com/images/M/MV5BOTE4NGNjYjQtMDQxYy00NThkLWFmOTktZmJmMjQ4ZTczZDk3XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg", url: "https://raw.githack.com/derekonsio1023-gif/ultron-emulatornds2/refs/heads/main/SFF.html" },
+        228: { titulo: "Spider-man Shattered Dimensions", img: "https://static.wikia.nocookie.net/spiderman/images/e/e9/Spider-Man_Shattered_Dimensions.png/revision/latest?cb=20131128160610&path-prefix=es", url: "https://raw.githack.com/derekonsio1023-gif/ultron-emulatornds2/refs/heads/main/SSD.html" },
+        229: { titulo: "Spider-man web of Shadows", img: "https://upload.wikimedia.org/wikipedia/en/thumb/4/48/Web_of_shadows_boxart.jpg/250px-Web_of_shadows_boxart.jpg", url: "https://raw.githack.com/derekonsio1023-gif/ultron-emulatornds2/refs/heads/main/SWS.html" },
+        230: { titulo: "Spiderman 2", img: "https://assets-prd.ignimgs.com/2022/01/21/spiderman2-ds-sq-1642787790692.jpg", url: "https://raw.githack.com/derekonsio1023-gif/ultron-emulatornds2/refs/heads/main/Spiderman2.html" },
+        231: { titulo: "Spiderman 3", img: "https://assets-prd.ignimgs.com/2022/01/21/spiderman3-nds-sq-1642793391347.jpg", url: "https://raw.githack.com/derekonsio1023-gif/ultron-emulatornds2/refs/heads/main/Spiderman3.html" },
+        232: { titulo: "The Amazing Spider-man", img: "https://assetsio.gnwcdn.com/co2l1s.jpg?width=2048&height=2048&fit=bounds&quality=85&format=jpg&auto=webp", url: "https://raw.githack.com/derekonsio1023-gif/ultron-emulatornds2/refs/heads/main/TAS.html" },
+        233: { titulo: "Tomodachi Collection", img: "https://assetsio.gnwcdn.com/co2sr7.jpg?width=2048&height=2048&fit=bounds&quality=85&format=jpg&auto=webp", url: "https://raw.githack.com/derekonsio1023-gif/ultron-emulatornds2/refs/heads/main/TC.html" },
+        234: { titulo: "Tetris", img: "https://assetsio.gnwcdn.com/co2cnp.jpg?width=380&quality=85&format=jpg&auto=webp", url: "https://raw.githack.com/derekonsio1023-gif/ultron-emulatornds2/refs/heads/main/Tetris.html" },
+        235: { titulo: "Ultimate Spiderman", img: "https://assets-prd.ignimgs.com/2022/01/21/ultimatespiderman-nds-sq-1642792417075.jpg?crop=1%3A1%2Csmart&format=jpg&auto=webp&quality=80", url: "https://raw.githack.com/derekonsio1023-gif/ultron-emulatornds2/refs/heads/main/USpiderman.html" },
+        236: { titulo: "Yoshi Island", img: "https://assets-prd.ignimgs.com/2022/01/15/yoshisislandds-sq-1642212944617.jpg?crop=1%3A1%2Csmart&format=jpg&auto=webp&quality=80", url: "https://raw.githack.com/derekonsio1023-gif/ultron-emulatornds2/refs/heads/main/YI.html" },
+    };
+    const TOTAL_SLOTS = 236;
+    const STORAGE_KEY = 'ultron_play_counts_v2_local_fallback';
+    const LOADING_LOGO_URL = window.ULTRON_LOGO_URL || 'https://raw.githack.com/derekonsio1023-gif/Ultron-games/main/assets/logo.png';
+    const ULTRON_LOGO_URL = window.ULTRON_HEADER_LOGO_URL || 'https://raw.githack.com/derekonsio1023-gif/Ultron-games/main/assets/Ultron.png';
+    const LOADING_CONTENT = window.ULTRON_LOADING_CONTENT || { recomendaciones: [ { titulo: 'Prueba Google desbloqueado', detalle: 'Acceso rápido con protección visual y una interfaz más limpia.' }, { titulo: 'Reanudar último juego', detalle: 'Vuelve donde lo dejaste sin perder el progreso.' }, { titulo: 'Favoritos en Firebase', detalle: 'No dependen del about:blank ni del almacenamiento local.' } ], noticias: [ { titulo: 'Anuncio neón', detalle: 'Un bloque destacado para llamar la atención en la portada.' }, { titulo: 'Carga adaptativa', detalle: 'La barra se ajusta al juego que abras.' }, { titulo: 'Recomendaciones dinámicas', detalle: 'Puedes cambiar textos desde el propio código.' } ] };
+
+    let currentSort = 'default';
+    let playCountsCache = {};
+    let remoteCounterAvailable = false;
+    let remoteCounter = null;
+    let favorites = [];
+    let lastPlayedSlot = null;
+    let lastPlayedAt = null;
+    const FAVORITES_KEY = 'ultron_favorites_v1';
+    const UI_STATE_KEY = 'ultron_ui_state_v1';
+    const LAST_GAME_KEY = 'ultron_last_game_v1';
+    let currentGameData = null;
+    let isGameRunning = false;
+
+    function getStorage() { try { const t="__ultron_test__"; localStorage.setItem(t,"1"); localStorage.removeItem(t); return localStorage; } catch(e1) { try { const t="__ultron_test__"; sessionStorage.setItem(t,"1"); sessionStorage.removeItem(t); return sessionStorage; } catch(e2) { return null; } } }
+    const storage = getStorage();
+    function cargarContadoresLocales() { if(!storage) return {}; try { const r=storage.getItem(STORAGE_KEY); return r?JSON.parse(r):{}; } catch(e){ return {}; } }
+    function guardarContadoresLocales(d) { if(!storage) return; try { storage.setItem(STORAGE_KEY,JSON.stringify(d)); } catch(e){} }
+    function leerJsonSeguro(k,f) { if(!storage) return f; try { const r=storage.getItem(k); return r?JSON.parse(r):f; } catch(e){ return f; } }
+    function guardarJsonSeguro(k,v) { if(!storage) return; try { storage.setItem(k,JSON.stringify(v)); } catch(e){} }
+    function guardarUIState() { guardarJsonSeguro(UI_STATE_KEY,{ query: document.getElementById('search-input')?.value||'', sort: currentSort, lastPlayedSlot, lastPlayedAt }); guardarJsonSeguro(FAVORITES_KEY,favorites); if(lastPlayedSlot!=null) guardarJsonSeguro(LAST_GAME_KEY,{ slot:lastPlayedSlot, at:lastPlayedAt }); }
+    function cargarEstadoGuardado() { const storedFavorites=leerJsonSeguro(FAVORITES_KEY,[]); favorites=Array.isArray(storedFavorites)?storedFavorites.map(Number).filter(Number.isFinite):[]; const uiState=leerJsonSeguro(UI_STATE_KEY,{}); currentSort=uiState.sort||'default'; lastPlayedSlot=uiState.lastPlayedSlot??null; lastPlayedAt=uiState.lastPlayedAt??null; const lastGame=leerJsonSeguro(LAST_GAME_KEY,{}); if(lastGame&&typeof lastGame.slot!=='undefined'){ lastPlayedSlot=lastGame.slot; lastPlayedAt=lastGame.at||lastPlayedAt; } }
+    function isFavorite(slot){ return favorites.includes(Number(slot)); }
+    function toggleFavorite(slot){ slot=Number(slot); if(favorites.includes(slot)) favorites=favorites.filter(n=>n!==slot); else favorites=[...favorites,slot].sort((a,b)=>a-b); guardarUIState(); renderMenu(); }
+    function getGameBySlot(slot){ return CONFIG[Number(slot)]||null; }
+    function buildExportData(){ return { version:1, favorites, uiState:{ sort:currentSort, lastPlayedSlot, lastPlayedAt }, playCountsCache }; }
+    function aplicarImportData(d){ if(!d||typeof d!=='object') return false; if(Array.isArray(d.favorites)) favorites=d.favorites.map(Number).filter(Number.isFinite); if(d.uiState&&typeof d.uiState==='object'){ currentSort=d.uiState.sort||currentSort; lastPlayedSlot=d.uiState.lastPlayedSlot??lastPlayedSlot; lastPlayedAt=d.uiState.lastPlayedAt??lastPlayedAt; } if(d.playCountsCache&&typeof d.playCountsCache==='object'){ playCountsCache={...playCountsCache,...d.playCountsCache}; guardarContadoresLocales(playCountsCache); } guardarUIState(); const sel=document.getElementById('sort-select'); if(sel) sel.value=currentSort; renderMenu(); return true; }
+    // ── FIREBASE COUNTERS (reemplaza CounterAPI) ──────────────────
+    const _db2='ultron-bd064-default-rtdb.europe-west1.firebasedatabase';
+    function _getDB2(){ return `https://${_db2}.app`; }
+    function remoteKey(slot){ return `slot-${slot}`; }
+    function getGameCount(g,slot){ return Number(playCountsCache[remoteKey(slot)]||0); }
+    async function inicializarCounterAPI(){
+        remoteCounterAvailable=true;
+        return true;
+    }
+    async function cargarContadoresGlobales(){
+        const local=cargarContadoresLocales();
+        playCountsCache={...local};
+        try {
+            const res=await fetch(`${_getDB2()}/contadores.json`);
+            if(!res.ok) return;
+            const data=await res.json();
+            if(!data) return;
+            Object.entries(data).forEach(([key,val])=>{ playCountsCache[key]=Number(val)||0; });
+            guardarContadoresLocales(playCountsCache);
+        } catch(e){}
+    }
+    async function incrementarContador(game,slot){
+        const key=remoteKey(slot);
+        playCountsCache[key]=Number(playCountsCache[key]||0)+1;
+        guardarContadoresLocales(playCountsCache);
+        try {
+            const res=await fetch(`${_getDB2()}/contadores/${key}.json`);
+            const current=res.ok?(Number(await res.json())||0):0;
+            const nuevo=current+1;
+            await fetch(`${_getDB2()}/contadores/${key}.json`,{
+                method:'PUT',
+                headers:{'Content-Type':'application/json'},
+                body:JSON.stringify(nuevo)
+            });
+            playCountsCache[key]=nuevo;
+            guardarContadoresLocales(playCountsCache);
+        } catch(e){}
+    }
+    function escaparHTML(v){ return String(v??'').replace(/[&<>\"']/g,m=>({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' })[m]); }
+    function renderLoadingItems(items,containerId){ const cont=document.getElementById(containerId); if(!cont) return; const item=Array.isArray(items)&&items.length?items[0]:null; if(!item){ cont.innerHTML='<div class="item"><strong>Sin contenido</strong><em>Edita LOADING_CONTENT para personalizarlo.</em></div>'; return; } const label=containerId==='loading-news'?'NOVEDAD':'RECOMENDADO'; cont.innerHTML=`<div class="item item-single"><div class="mini-tag">${label}</div><strong>${escaparHTML(item.titulo||'')}</strong><em>${escaparHTML(item.detalle||'')}</em></div>`; }
+    function prepararPanelDeCarga(game){ const recsBase=(game&&Array.isArray(game.loadingRecomendaciones)&&game.loadingRecomendaciones.length)?game.loadingRecomendaciones:LOADING_CONTENT.recomendaciones; const newsBase=(game&&Array.isArray(game.loadingNoticias)&&game.loadingNoticias.length)?game.loadingNoticias:LOADING_CONTENT.noticias; const rec=recsBase&&recsBase.length?[recsBase[0]]:[]; const news=newsBase&&newsBase.length?[newsBase[0]]:[]; renderLoadingItems(rec,'loading-recommendation'); renderLoadingItems(news,'loading-news'); }
+    function estimateLoadMs(game){ let ms=2400; const title=(game?.titulo||'').toLowerCase(); const url=(game?.url||'').toLowerCase(); if(/raw\.githack\.com|raw\.githubusercontent\.com|github\.io/.test(url)) ms+=700; if(/google|sites|drive/.test(url)) ms+=500; if(/minecraft|terraria|cuphead|ultrakill|fnaf|stardew|half life|doom|geometry|gta|subway|among us/.test(title)) ms+=1200; if(/html$/.test(url)) ms-=180; if(/\b(about:blank)\b/.test(url)) ms+=400; return Math.max(1800,Math.min(ms,7000)); }
+    function setLoadingLogo(){ const img=document.getElementById('loading-logo'); if(img&&LOADING_LOGO_URL) img.src=LOADING_LOGO_URL; }
+    function getEntries(){ const entries=[]; for(let i=1;i<=TOTAL_SLOTS;i++) entries.push([i,CONFIG[i]||null]); return entries; }
+    function ordenarEntradas(entries){ const decorated=entries.map(([slot,game])=>({ slot, game, titulo:game?game.titulo:'Próximamente', count:game?getGameCount(game,slot):0 })); switch(currentSort){ case'popular': decorated.sort((a,b)=>(b.count-a.count)||a.titulo.localeCompare(b.titulo,'es')); break; case'unpopular': decorated.sort((a,b)=>(a.count-b.count)||a.titulo.localeCompare(b.titulo,'es')); break; case'az': decorated.sort((a,b)=>a.titulo.localeCompare(b.titulo,'es')); break; default: decorated.sort((a,b)=>a.slot-b.slot); } return decorated; }
+    function crearCard(slot,game){ const card=document.createElement('div'); card.className='card'; if(isFavorite(slot)) card.classList.add('favorite'); card.dataset.title=(game?game.titulo:'Próximamente').toLowerCase(); card.dataset.slot=String(slot); const tieneImagen=game&&game.img&&game.img!==''; const bgStyle=tieneImagen?`background-image: url('${game.img}')`:''; const titulo=game?game.titulo:'Próximamente'; const cuenta=game?getGameCount(game,slot):0; const favorito=isFavorite(slot); card.innerHTML=`<button class="fav-btn" type="button" aria-label="${favorito?'Quitar de favoritos':'Añadir a favoritos'}">${favorito?'★':'☆'}</button><button class="stealth-btn" type="button" title="Modo oculto" onclick="event.stopPropagation(); activarStealth(${slot})">👁</button><div class="card-thumb" style="${bgStyle}">${tieneImagen?'':'<span class="empty-icon">?</span>'}</div><div class="card-footer"><div class="card-title">${titulo}</div><div class="card-meta"><div class="card-status">${game?'ONLINE':'OFFLINE'}</div><div class="card-popularity">👥 ${cuenta}</div></div></div>`; const favBtn=card.querySelector('.fav-btn'); if(favBtn){ favBtn.addEventListener('click',(e)=>{ e.stopPropagation(); toggleFavorite(slot); }); } if(game&&game.url){ card.onclick=()=>lanzarJuego(game,slot); } return card; }
+    function renderFavorites(){ const grid=document.getElementById('favorites-grid'); if(!grid) return; grid.innerHTML=''; const favoritos=favorites.map(slot=>({ slot:Number(slot), game:getGameBySlot(slot) })).filter(i=>i.game); if(!favoritos.length){ const empty=document.createElement('div'); empty.className='favorite-empty'; empty.textContent='Aún no tienes favoritos. Pulsa la estrella en cualquier juego.'; grid.appendChild(empty); return; } favoritos.forEach(({slot,game})=>grid.appendChild(crearCard(slot,game))); }
+    function renderMenu(){ const grid=document.getElementById('main-grid'); const ordered=ordenarEntradas(getEntries()); grid.innerHTML=''; for(const item of ordered) grid.appendChild(crearCard(item.slot,item.game)); actualizarBusqueda(); actualizarContadoresUI(); renderFavorites(); }
+    function actualizarBusqueda(){ const input=document.getElementById('search-input'); const query=(input?.value||'').trim().toLowerCase(); const cards=document.querySelectorAll('#main-grid .card'); const count=document.getElementById('results-count'); let visibles=0; cards.forEach(card=>{ const titulo=card.dataset.title||''; const coincide=!query||titulo.includes(query); card.classList.toggle('hidden',!coincide); if(coincide) visibles++; }); if(count) count.textContent=query?`${visibles} resultado${visibles===1?'':'s'}`:`${cards.length} juegos`; }
+    function actualizarContadoresUI(){ document.querySelectorAll('#main-grid .card').forEach(card=>{ const slot=Number(card.dataset.slot||0); const game=CONFIG[slot]; const count=game?getGameCount(game,slot):0; const countEl=card.querySelector('.card-popularity'); if(countEl) countEl.textContent=`👥 ${count}`; }); }
+    async function lanzarJuego(game,slot){ await incrementarContador(game,slot); actualizarContadoresUI(); lastPlayedSlot=Number(slot); lastPlayedAt=new Date().toISOString(); guardarUIState(); const menu=document.getElementById('menu-view'); const loader=document.getElementById('loading-screen'); const runtime=document.getElementById('game-runtime'); const frame=document.getElementById('game-frame'); const progressBar=document.getElementById('progress-bar'); const loadingStats=document.getElementById('loading-stats'); menu.style.display='none'; loader.style.display='flex'; runtime.style.display='none'; isGameRunning=false; currentGameData=game; localStorage.setItem('ultron_last_game',JSON.stringify(game)); aplicarTemaOmegaChat(game); mostrarBotonesJuego(); setLoadingLogo(); prepararPanelDeCarga(game); frame.onload=null; frame.src='about:blank'; let loaded=false; let progress=0; const estimatedLoadMs=estimateLoadMs(game); const start=performance.now(); const hardTimeoutMs=Math.max(estimatedLoadMs+4000,9000); progressBar.style.width='0%'; loadingStats.innerText=`SINCRONIZANDO: 0%`; const interval=setInterval(()=>{ const elapsed=performance.now()-start; const target=Math.min(94,(elapsed/estimatedLoadMs)*94); progress=Math.max(progress,target); progressBar.style.width=progress.toFixed(1)+'%'; loadingStats.innerText=`SINCRONIZANDO: ${Math.round(progress)}%`; if(!loaded&&elapsed>hardTimeoutMs) finishLoading(true); },80); const finishLoading=(force=false)=>{ if(loaded&&!force) return; loaded=true; clearInterval(interval); progressBar.style.width='100%'; loadingStats.innerText='¡SISTEMA LISTO!'; setTimeout(()=>{ loader.style.display='none'; runtime.style.display='block'; isGameRunning=true; iniciarTrackingTiempo(); if(game.pointerLock){ runtime.addEventListener('click',()=>{ try{ frame.contentDocument?.body?.requestPointerLock?.(); }catch(e){} }); document.addEventListener('keydown',(e)=>{ if(e.key==='Escape'&&document.pointerLockElement) document.exitPointerLock?.(); }); } },650); }; frame.onload=()=>{ if(frame.src==='about:blank') return; progress=Math.max(progress,96); progressBar.style.width='96%'; loadingStats.innerText='SINCRONIZANDO: 96%'; setTimeout(()=>finishLoading(),500); }; frame.src=game.url; let rotateIndex=0; const rotateTimer=setInterval(()=>{ if(loaded){ clearInterval(rotateTimer); return; } rotateIndex++; const recs=(game&&Array.isArray(game.loadingRecomendaciones)&&game.loadingRecomendaciones.length)?game.loadingRecomendaciones:LOADING_CONTENT.recomendaciones; const news=(game&&Array.isArray(game.loadingNoticias)&&game.loadingNoticias.length)?game.loadingNoticias:LOADING_CONTENT.noticias; renderLoadingItems([recs[rotateIndex%recs.length]],'loading-recommendation'); renderLoadingItems([news[rotateIndex%news.length]],'loading-news'); },2200); }
+    function cerrarJuego(){ document.getElementById('game-runtime').style.display='none'; document.getElementById('game-frame').src='about:blank'; document.getElementById('game-frame').style.filter='none'; document.getElementById('menu-view').style.display='block'; document.getElementById('pause-menu').classList.remove('active'); document.getElementById('stealth-overlay').classList.remove('active'); ocultarBotonesJuego(); isGameRunning=false; currentGameData=null; pararTrackingTiempo(); window.scrollTo(0,0); }
+    function reanudarUltimoJuego(){ const slot=Number(lastPlayedSlot); const game=getGameBySlot(slot); if(!game){ alert('No hay un juego reciente para reanudar.'); return; } lanzarJuego(game,slot); }
+    function mostrarBotonesJuego(){ const c=document.getElementById('game-controls'); if(c) c.style.display='flex'; }
+    function ocultarBotonesJuego(){ const c=document.getElementById('game-controls'); if(c) c.style.display='none'; }
+    function guardarProgresoManual(){ if(!currentGameData) return; const data={ ultimoJuego:currentGameData, fecha:new Date().toISOString() }; localStorage.setItem('ultron_manual_save',JSON.stringify(data)); alert('Progreso guardado correctamente'); }
+    function exportarProgreso(){ const payload={ favoritos:JSON.parse(localStorage.getItem('ultron_favorites')||'[]'), ultimoJuego:JSON.parse(localStorage.getItem('ultron_last_game')||'null'), guardadoManual:JSON.parse(localStorage.getItem('ultron_manual_save')||'null') }; const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'}); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='ultron-save.json'; a.click(); URL.revokeObjectURL(url); }
+    function importarProgreso(file){ if(!file) return; const reader=new FileReader(); reader.onload=(e)=>{ try { const data=JSON.parse(e.target.result); if(data.favoritos) localStorage.setItem('ultron_favorites',JSON.stringify(data.favoritos)); if(data.ultimoJuego) localStorage.setItem('ultron_last_game',JSON.stringify(data.ultimoJuego)); if(data.guardadoManual) localStorage.setItem('ultron_manual_save',JSON.stringify(data.guardadoManual)); alert('Progreso importado correctamente'); location.reload(); } catch(err){ alert('Archivo inválido'); } }; reader.readAsText(file); }
+    async function initUltron(){ cargarLogoHeader(); initLangScreen(); renderSugerencias(); const input=document.getElementById('search-input'); const clearBtn=document.getElementById('clear-search'); const sortSelect=document.getElementById('sort-select'); const resumeBtn=document.getElementById('resume-last-btn'); const manualSaveBtn=document.getElementById('save-progress-btn'); const exportSaveBtn=document.getElementById('export-progress-btn'); const importInput=document.getElementById('import-progress-file'); cargarEstadoGuardado(); if(sortSelect) sortSelect.value=currentSort; if(input) input.value=leerJsonSeguro(UI_STATE_KEY,{})?.query||''; if(input){ input.addEventListener('input',()=>{ actualizarBusqueda(); guardarUIState(); }); input.addEventListener('keydown',(e)=>{ if(e.key==='Escape'){ input.value=''; actualizarBusqueda(); guardarUIState(); input.blur(); } }); } if(clearBtn&&input){ clearBtn.addEventListener('click',()=>{ input.value=''; actualizarBusqueda(); guardarUIState(); input.focus(); }); } if(sortSelect){ sortSelect.addEventListener('change',()=>{ currentSort=sortSelect.value; guardarUIState(); renderMenu(); }); } if(resumeBtn) resumeBtn.addEventListener('click',reanudarUltimoJuego); if(manualSaveBtn) manualSaveBtn.addEventListener('click',()=>{ guardarUIState(); alert('Progreso guardado en este navegador.'); }); if(exportSaveBtn){ exportSaveBtn.addEventListener('click',()=>{ guardarUIState(); descargarJSON('ultron-progreso.json',buildExportData()); }); } if(importInput){ importInput.addEventListener('change',async()=>{ const file=importInput.files?.[0]; if(!file) return; try { const text=await file.text(); const data=JSON.parse(text); if(aplicarImportData(data)) alert('Progreso importado correctamente.'); else alert('El archivo no contiene un progreso válido.'); } catch(e){ alert('No se pudo importar el archivo.'); } finally { importInput.value=''; } }); } window.addEventListener('beforeunload',guardarUIState); const saveBtn=document.getElementById('save-progress-btn'); const exportBtn=document.getElementById('export-progress-btn'); const importBtn=document.getElementById('import-progress-btn'); const importFile=document.getElementById('import-progress-file'); if(saveBtn) saveBtn.addEventListener('click',guardarProgresoManual); if(exportBtn) exportBtn.addEventListener('click',exportarProgreso); if(importBtn&&importFile){ importBtn.addEventListener('click',()=>importFile.click()); importFile.addEventListener('change',(e)=>importarProgreso(e.target.files[0])); } await inicializarCounterAPI(); await cargarContadoresGlobales(); renderMenu(); }
+    window.addEventListener('load',initUltron);
+    const I18N={ es:{ searchPlaceholder:'Buscar juego, saga o palabra clave...', searchHint:'Búsqueda rápida sin complicaciones', clearBtn:'Limpiar', newsTitle:'Novedades Ultron', newsBadge:'NUEVO', news1Title:'+20 Juegos nuevos añadidos', news1Desc:'Pizza Tower, Cuphead, R.E.P.O, Undertale Yellow, ULTRAKILL y muchos más han llegado.', news2Title:'Soporte multiidioma', news2Desc:'Ultron ahora soporta Español e Inglés. Elige tu idioma al entrar.', news3Title:'Modo Oculto en cada juego', news3Desc:'Cada juego tiene ahora un botón de modo oculto para situaciones de emergencia.', news4Title:'Caja de sugerencias', news4Desc:'¿Echas de menos un juego? Ahora puedes sugerirlo directamente.', favoritesTitle:'Favoritos', unlockedTitle:'Juegos desbloqueados (1-100)', suggestionsTitle:'Sugerencias de Juegos', suggestionsDesc:'¿Conoces un juego que debería estar en Ultron? ¡Escribe tu sugerencia y el equipo la revisará!', suggestSend:'Sugerir 🚀', suggestionsEmpty:'Aún no hay sugerencias. ¡Sé el primero!', suggestionPlaceholder:'Nombre del juego que quieres ver...', paused:'⏸ PAUSADO', continue:'▶ Continuar', exitGame:'✕ Salir del juego', stealthBack:'← Volver', sortDefault:'Orden original', sortPopular:'Más populares', sortUnpopular:'Menos populares', sortAZ:'A-Z', resumeBtn:'Reanudar último juego', saveBtn:'Guardar manualmente', exportBtn:'Exportar progreso', importLabel:'Importar progreso', saveGame:'💾 Guardar', exportGame:'📤 Exportar', importGame:'📥 Importar', loading:'SINCRONIZANDO', ready:'¡SISTEMA LISTO!', disconnectBtn:'Desconectar', loadingRecsTitle:'Recomendaciones', loadingNewsTitle:'Noticias' }, en:{ searchPlaceholder:'Search game, saga or keyword...', searchHint:'Quick search, no hassle', clearBtn:'Clear', newsTitle:'Ultron News', newsBadge:'NEW', news1Title:'+20 New games added', news1Desc:'Pizza Tower, Cuphead, R.E.P.O, Undertale Yellow, ULTRAKILL and many more have arrived.', news2Title:'Multi-language support', news2Desc:'Ultron now supports Spanish and English. Choose your language on entry.', news3Title:'Stealth Mode on every game', news3Desc:'Every game now has a stealth button for emergency situations.', news4Title:'Suggestions box', news4Desc:'Missing a game? You can now suggest it directly from the page.', favoritesTitle:'Favorites', unlockedTitle:'Unlocked games (1-100)', suggestionsTitle:'Game Suggestions', suggestionsDesc:'Know a game that should be on Ultron? Write your suggestion and the team will review it!', suggestSend:'Suggest 🚀', suggestionsEmpty:'No suggestions yet. Be the first!', suggestionPlaceholder:'Name of the game you want to see...', paused:'⏸ PAUSED', continue:'▶ Continue', exitGame:'✕ Exit game', stealthBack:'← Back', sortDefault:'Default order', sortPopular:'Most popular', sortUnpopular:'Least popular', sortAZ:'A-Z', resumeBtn:'Resume last game', saveBtn:'Save manually', exportBtn:'Export progress', importLabel:'Import progress', saveGame:'💾 Save', exportGame:'📤 Export', importGame:'📥 Import', loading:'SYNCING', ready:'SYSTEM READY!', disconnectBtn:'Disconnect', loadingRecsTitle:'Recommendations', loadingNewsTitle:'News' } };
+    let currentLang='es';
+    function selectLanguage(lang){ currentLang=lang; try{ localStorage.setItem('ultron_lang',lang); }catch(e){} document.getElementById('lang-screen').style.display='none'; document.getElementById('html-root').lang=lang; applyI18n(); comprobarPerfilUsuario(); }
+    function applyI18n(){ const t=I18N[currentLang]||I18N.es; document.querySelectorAll('[data-i18n]').forEach(el=>{ const key=el.getAttribute('data-i18n'); if(t[key]!==undefined) el.textContent=t[key]; }); document.querySelectorAll('[data-i18n-placeholder]').forEach(el=>{ const key=el.getAttribute('data-i18n-placeholder'); if(t[key]!==undefined) el.placeholder=t[key]; }); const clearBtn=document.getElementById('clear-search'); if(clearBtn) clearBtn.textContent=t.clearBtn; const resumeBtn=document.getElementById('resume-last-btn'); if(resumeBtn) resumeBtn.textContent=t.resumeBtn; const saveBtn=document.getElementById('manual-save-btn'); if(saveBtn) saveBtn.textContent=t.saveBtn; const exportBtn=document.getElementById('export-save-btn'); if(exportBtn) exportBtn.textContent=t.exportBtn; const importLabel=document.querySelector('label[for="import-save-input"]'); if(importLabel) importLabel.textContent=t.importLabel; const backBtn=document.getElementById('back-btn'); if(backBtn) backBtn.textContent=t.disconnectBtn; const stealthBackBtn=document.getElementById('stealth-back-btn'); if(stealthBackBtn) stealthBackBtn.textContent=t.stealthBack; const sugInput=document.getElementById('suggestion-input'); if(sugInput) sugInput.placeholder=t.suggestionPlaceholder; const saveGameBtn=document.getElementById('save-progress-btn'); if(saveGameBtn) saveGameBtn.textContent=t.saveGame; const exportGameBtn=document.getElementById('export-progress-btn'); if(exportGameBtn) exportGameBtn.textContent=t.exportGame; const sortSelect=document.getElementById('sort-select'); if(sortSelect){ const opts=sortSelect.options; if(opts[0]) opts[0].textContent=t.sortDefault; if(opts[1]) opts[1].textContent=t.sortPopular; if(opts[2]) opts[2].textContent=t.sortUnpopular; if(opts[3]) opts[3].textContent=t.sortAZ; } }
+    function initLangScreen(){ const c=document.getElementById('lang-particles'); for(let i=0;i<40;i++){ const p=document.createElement('div'); p.className='lang-particle'; p.style.cssText=`left:${Math.random()*100}%; width:${Math.random()*3+1}px; height:${Math.random()*3+1}px; animation-duration:${Math.random()*8+6}s; animation-delay:${Math.random()*8}s; opacity:0;`; c.appendChild(p); } try{ const saved=localStorage.getItem('ultron_lang'); if(saved&&(saved==='es'||saved==='en')){ selectLanguage(saved); return; } }catch(e){} }
+    function toggleNews(){ document.getElementById('news-box').classList.toggle('collapsed'); }
+    const STEALTH_IMAGES=['https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Culinary_fruits_front_view.jpg/1200px-Culinary_fruits_front_view.jpg','https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/Colosseum_in_Rome%2C_Italy_-_April_2007.jpg/1200px-Colosseum_in_Rome%2C_Italy_-_April_2007.jpg','https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Binoculars_from_the_front.jpg/1200px-Binoculars_from_the_front.jpg'];
+    function activarStealth(slot){ const game=CONFIG[slot]; if(!game) return; stealthActiveSlot=slot; stealthGameData=game; if(isGameRunning&&currentGameData) mostrarStealth(); else mostrarStealth(); }
+    let stealthActiveSlot=null,stealthGameData=null;
+    function mostrarStealth(){ const ov=document.getElementById('stealth-overlay'); const img=document.getElementById('stealth-img'); const disp=document.getElementById('stealth-url-display'); const chosen=STEALTH_IMAGES[Math.floor(Math.random()*STEALTH_IMAGES.length)]; img.src=chosen; disp.textContent=chosen; ov.classList.add('active'); }
+    function salirStealth(){ document.getElementById('stealth-overlay').classList.remove('active'); if(isGameRunning&&currentGameData) mostrarMenuPausa(); }
+    function mostrarStealthEnJuego(){ mostrarStealth(); }
+    function mostrarMenuPausa(){ const pm=document.getElementById('pause-menu'); const pn=document.getElementById('pause-game-name'); if(currentGameData) pn.textContent=currentGameData.titulo||''; pm.classList.add('active'); }
+    function continuarJuego(){ document.getElementById('pause-menu').classList.remove('active'); }
+    const _f={ a:'AIzaSyDqTsr', b:'VLpRL1tF0Z0', c:'JKLUfUAQ4PE', d:'2lRUuM' }; const _db='ultron-bd064-default-rtdb.europe-west1.firebasedatabase'; function _getKey(){ return _f.a+_f.b+_f.c+_f.d; } function _getDB(){ return `https://${_db}.app`; } const FIREBASE_URL=()=>`${_getDB()}/sugerencias.json`;
+    async function cargarSugerenciasFirebase(){ try { const res=await fetch(`${_getDB()}/sugerencias.json`); if(!res.ok) return []; const data=await res.json(); if(!data) return []; return Object.values(data).filter(s=>!s.lang||s.lang===currentLang).sort((a,b)=>b.time>a.time?1:-1).slice(0,50); } catch(e){ return []; } }
+    async function guardarSugerenciaFirebase(text){ try { const now=new Date(); const timeStr=now.toLocaleDateString(currentLang==='en'?'en-GB':'es-ES',{ day:'2-digit', month:'short', hour:'2-digit', minute:'2-digit' }); const item={ text, time:now.toISOString(), timeStr, lang:currentLang }; const res=await fetch(`${_getDB()}/sugerencias.json`,{ method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(item) }); return res.ok; } catch(e){ return false; } }
+    async function renderSugerencias(){ const container=document.getElementById('suggestions-list'); if(!container) return; const t=I18N[currentLang]||I18N.es; container.innerHTML=`<div class="suggestions-empty" style="opacity:0.5">⏳ Cargando...</div>`; const list=await cargarSugerenciasFirebase(); if(!list.length){ container.innerHTML=`<div class="suggestions-empty">${t.suggestionsEmpty}</div>`; return; } container.innerHTML=list.map(s=>{ const initials=(s.text||'?').charAt(0).toUpperCase(); const timeLabel=s.timeStr||s.time||''; return `<div class="suggestion-item"><div class="suggestion-avatar">${initials}</div><div class="suggestion-text">${escapeHTML(s.text)}</div><div class="suggestion-time">${timeLabel}</div></div>`; }).join(''); }
+    function escapeHTML(str){ return (str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+    async function enviarSugerencia(){ const input=document.getElementById('suggestion-input'); const btn=document.querySelector('.suggestions-send-btn'); const text=(input?.value||'').trim(); if(!text) return; if(btn){ btn.disabled=true; btn.style.opacity='0.5'; } const ok=await guardarSugerenciaFirebase(text); if(ok){ input.value=''; await renderSugerencias(); } else { const t=I18N[currentLang]||I18N.es; alert(currentLang==='en'?'Could not send suggestion. Try again.':'No se pudo enviar la sugerencia. Inténtalo de nuevo.'); } if(btn){ btn.disabled=false; btn.style.opacity='1'; } }
+    document.addEventListener('DOMContentLoaded',()=>{ const sugInput=document.getElementById('suggestion-input'); if(sugInput) sugInput.addEventListener('keydown',(e)=>{ if(e.key==='Enter') enviarSugerencia(); }); });
+    function descargarJSON(nombre,data){ const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'}); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download=nombre; a.click(); setTimeout(()=>URL.revokeObjectURL(url),2500); }
+
+    // ══════════════════════════════════════════════════════════════
+    // PERFIL DE USUARIO (nombre + ID de 9 caracteres, guardado en Supabase)
+    // ══════════════════════════════════════════════════════════════
+    function generarId9(){ const chars='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'; let id=''; for(let i=0;i<9;i++) id+=chars[Math.floor(Math.random()*chars.length)]; return id; }
+    function cargarPerfilLocal(){ return leerJsonSeguro('ultron_profile',null); }
+    function guardarPerfilLocal(p){ guardarJsonSeguro('ultron_profile',p); }
+
+    async function comprobarUsernameDisponible(username){
+        if(!supabaseClient) return true; // Supabase no configurado: no se puede validar de forma global
+        try{
+            const { data, error } = await supabaseClient.from('ultron_users').select('username').eq('username',username).maybeSingle();
+            if(error){ console.warn('[Ultron] Error comprobando username en Supabase:',error.message); return true; }
+            return !data;
+        }catch(e){ return true; }
+    }
+    async function registrarUsuarioSupabase(username,userId){
+        if(!supabaseClient) return true;
+        try{
+            const { error } = await supabaseClient.from('ultron_users').insert({ username, user_id:userId });
+            if(error) console.warn('[Ultron] Error guardando usuario en Supabase:',error.message);
+            return !error;
+        }catch(e){ return false; }
+    }
+
+    function comprobarPerfilUsuario(){
+        const perfil=cargarPerfilLocal();
+        const pantalla=document.getElementById('user-setup-screen');
+        if(perfil && perfil.username && perfil.userId){
+            if(pantalla) pantalla.style.display='none';
+            actualizarPillPerfil(perfil);
+        } else if(pantalla){
+            pantalla.style.display='flex';
+            const idPreview=document.getElementById('user-setup-id-preview');
+            if(idPreview) idPreview.textContent=generarId9();
+        }
+    }
+
+    async function confirmarUsuario(){
+        const input=document.getElementById('user-setup-input');
+        const errorEl=document.getElementById('user-setup-error');
+        const btn=document.getElementById('user-setup-btn');
+        const username=(input?.value||'').trim();
+        if(errorEl) errorEl.textContent='';
+        if(username.length<3){ if(errorEl) errorEl.textContent='El nombre debe tener al menos 3 caracteres.'; return; }
+        if(!/^[a-zA-Z0-9_\-\.]+$/.test(username)){ if(errorEl) errorEl.textContent='Solo letras, números, guiones y guion bajo.'; return; }
+        if(btn){ btn.disabled=true; btn.textContent='Comprobando...'; }
+        const disponible=await comprobarUsernameDisponible(username);
+        if(!disponible){
+            if(errorEl) errorEl.textContent='Ese nombre de usuario ya está en uso. Elige otro.';
+            if(btn){ btn.disabled=false; btn.textContent='Confirmar'; }
+            return;
+        }
+        const userId=document.getElementById('user-setup-id-preview')?.textContent || generarId9();
+        const guardadoRemoto=await registrarUsuarioSupabase(username,userId);
+        const perfil={ username, userId, createdAt:new Date().toISOString() };
+        guardarPerfilLocal(perfil);
+        actualizarPillPerfil(perfil);
+        const pantalla=document.getElementById('user-setup-screen');
+        if(pantalla) pantalla.style.display='none';
+        if(btn){ btn.disabled=false; btn.textContent='Confirmar'; }
+        if(!guardadoRemoto && supabaseClient) console.warn('[Ultron] El usuario se guardó localmente pero no se pudo sincronizar con Supabase.');
+    }
+
+    function actualizarPillPerfil(perfil){
+        const pill=document.getElementById('profile-pill');
+        const nameEl=document.getElementById('profile-username-display');
+        const idEl=document.getElementById('profile-id-display');
+        if(!pill) return;
+        pill.style.display='flex';
+        if(nameEl) nameEl.textContent=perfil.username;
+        if(idEl) idEl.textContent='ID: '+perfil.userId;
+        actualizarBadgeEquipado();
+    }
+
+    // ══════════════════════════════════════════════════════════════
+    // LOGROS POR TIEMPO JUGADO + NOTIFICACIONES + CUSTOMIZACIÓN
+    // ══════════════════════════════════════════════════════════════
+    let playtimeInterval=null;
+    function iniciarTrackingTiempo(){
+        if(playtimeInterval) return;
+        playtimeInterval=setInterval(()=>{
+            if(!isGameRunning) return;
+            const total=Number(leerJsonSeguro('ultron_playtime_total',0))+1;
+            guardarJsonSeguro('ultron_playtime_total',total);
+            comprobarLogros(total);
+        },1000);
+    }
+    function pararTrackingTiempo(){ if(playtimeInterval){ clearInterval(playtimeInterval); playtimeInterval=null; } }
+
+    function comprobarLogros(totalSegundos){
+        const desbloqueados=leerJsonSeguro('ultron_achievements_unlocked',[]);
+        ACHIEVEMENTS.forEach(a=>{
+            if(totalSegundos>=a.segundos && !desbloqueados.includes(a.id)){
+                desbloqueados.push(a.id);
+                guardarJsonSeguro('ultron_achievements_unlocked',desbloqueados);
+                mostrarNotificacionLogro(a);
+                sincronizarLogroSupabase(a.id);
+            }
+        });
+    }
+
+    function mostrarNotificacionLogro(a){
+        const toast=document.createElement('div');
+        toast.className='achievement-toast';
+        toast.innerHTML=`<div class="achievement-toast-icon">${a.icono}</div><div class="achievement-toast-body"><div class="achievement-toast-title">¡Logro desbloqueado!</div><div class="achievement-toast-name">${escaparHTML(a.nombre)}</div></div>`;
+        document.body.appendChild(toast);
+        requestAnimationFrame(()=>toast.classList.add('show'));
+        setTimeout(()=>{ toast.classList.remove('show'); setTimeout(()=>toast.remove(),550); },5000);
+    }
+
+    async function sincronizarLogroSupabase(achievementId){
+        if(!supabaseClient) return;
+        const perfil=cargarPerfilLocal(); if(!perfil) return;
+        try{
+            await supabaseClient.from('ultron_achievement_unlocks').upsert({ user_id:perfil.userId, achievement_id:achievementId, unlocked_at:new Date().toISOString() },{ onConflict:'user_id,achievement_id' });
+        }catch(e){}
+    }
+
+    function formatearTiempoJugado(seg){ const h=Math.floor(seg/3600); const m=Math.floor((seg%3600)/60); return h>0?`${h}h ${m}m jugadas`:`${m}m jugados`; }
+
+    function actualizarBadgeEquipado(){
+        const equippedId=leerJsonSeguro('ultron_equipped_achievement',null);
+        const icon=document.getElementById('profile-badge-icon');
+        if(!icon) return;
+        const logro=ACHIEVEMENTS.find(a=>a.id===equippedId);
+        icon.textContent=logro?logro.icono:'';
+        icon.style.display=logro?'inline-flex':'none';
+        icon.title=logro?logro.nombre:'';
+    }
+
+    function abrirPerfil(){ renderPerfil(); const p=document.getElementById('profile-panel'); if(p) p.style.display='flex'; }
+    function cerrarPerfilPanel(){ const p=document.getElementById('profile-panel'); if(p) p.style.display='none'; }
+
+    function renderPerfil(){
+        const perfil=cargarPerfilLocal(); if(!perfil) return;
+        const unEl=document.getElementById('profile-panel-username'); if(unEl) unEl.textContent='👤 '+perfil.username;
+        const idEl=document.getElementById('profile-panel-id'); if(idEl) idEl.textContent='ID: '+perfil.userId;
+        const totalSeg=Number(leerJsonSeguro('ultron_playtime_total',0));
+        const timeEl=document.getElementById('profile-panel-time'); if(timeEl) timeEl.textContent='⏱ '+formatearTiempoJugado(totalSeg);
+        const unlockedIds=leerJsonSeguro('ultron_achievements_unlocked',[]);
+        const equippedId=leerJsonSeguro('ultron_equipped_achievement',null);
+        const chatFiltro=leerJsonSeguro('ultron_chat_filter','none');
+        const list=document.getElementById('profile-achievements-list');
+        if(!list) return;
+        list.innerHTML=ACHIEVEMENTS.map(a=>{
+            const unlocked=unlockedIds.includes(a.id);
+            const equipped=equippedId===a.id;
+            const activo=chatFiltro===a.filtro;
+            return `<div class="achievement-item ${unlocked?'unlocked':'locked'}">
+                <div class="achievement-icon" style="color:${unlocked?a.color:'#444'}">${a.icono}</div>
+                <div class="achievement-info"><div class="achievement-name">${escaparHTML(a.nombre)}</div><div class="achievement-desc">${escaparHTML(a.desc)}</div></div>
+                ${unlocked?`<div class="achievement-actions">
+                    <button class="ach-btn ${equipped?'active':''}" onclick="equiparLogro('${a.id}')">${equipped?'✓ Insignia':'Usar insignia'}</button>
+                    <button class="ach-btn ${activo?'active':''}" onclick="aplicarColorChat('${a.id}')" style="border-color:${a.color}">${activo?'✓ Color chat':'Color Omega Chat'}</button>
+                </div>`:''}
+            </div>`;
+        }).join('');
+    }
+
+    function equiparLogro(id){
+        const equippedId=leerJsonSeguro('ultron_equipped_achievement',null);
+        if(equippedId===id){
+            guardarJsonSeguro('ultron_equipped_achievement',null);
+        } else {
+            guardarJsonSeguro('ultron_equipped_achievement',id);
+        }
+        actualizarBadgeEquipado();
+        renderPerfil();
+    }
+
+    function aplicarColorChat(id){
+        const a=ACHIEVEMENTS.find(x=>x.id===id); if(!a) return;
+        const chatFiltro=leerJsonSeguro('ultron_chat_filter','none');
+        if(chatFiltro===a.filtro){
+            guardarJsonSeguro('ultron_chat_filter','none');
+            guardarJsonSeguro('ultron_chat_color','#00d2ff');
+        } else {
+            guardarJsonSeguro('ultron_chat_filter',a.filtro);
+            guardarJsonSeguro('ultron_chat_color',a.color);
+        }
+        if(currentGameData) aplicarTemaOmegaChat(currentGameData);
+        renderPerfil();
+    }
+
+    function aplicarTemaOmegaChat(game){
+        const frame=document.getElementById('game-frame');
+        if(!frame) return;
+        const esOmegaChat=game && (game.titulo||'').toLowerCase().includes('omega');
+        if(esOmegaChat){
+            const filtro=leerJsonSeguro('ultron_chat_filter','none');
+            frame.style.filter=filtro;
+            // Intento adicional: si UltronChat5.html llega a escuchar postMessage, puede
+            // usar esto para re-temizar sus propios colores internos.
+            const enviarTema=()=>{ try{ frame.contentWindow?.postMessage({ type:'ULTRON_THEME', color:leerJsonSeguro('ultron_chat_color','#00d2ff') },'*'); }catch(e){} };
+            if(frame.dataset.themeBound!=='1'){ frame.addEventListener('load',enviarTema); frame.dataset.themeBound='1'; }
+        } else {
+            frame.style.filter='none';
+        }
+    }
+
+    function cargarLogoHeader(){
+        const logoImg=document.getElementById('ultron-logo');
+        if(logoImg) logoImg.src=ULTRON_LOGO_URL;
+    }
+</script>
+</body>
+</html>
