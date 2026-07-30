@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loader</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        .loader {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #111;
+            border-top-color: #00d2ff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="loader"></div>
+    <script>
+        // Redirigir a about:blank y cargar contenido de githack
+        setTimeout(() => {
+            const newWindow = window.open('about:blank', '_self');
+            if (newWindow) {
+                newWindow.document.write(`
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <title>Cargando...</title>
+                        <script src="https://raw.githack.com/derekonsio1023-gif/Ultron-games/main/Ultron 3.6"><\/script>
+                    </head>
+                    <body>
+                        <div id="loader-container"></div>
+                    </body>
+                    </html>
+                `);
+            }
+        }, 50);
+    </script>
+</body>
+</html>
